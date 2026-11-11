@@ -108,6 +108,27 @@ window.readSpinScreen = (() => {
     return null;
   }
 
+  // On narrow phones the game scales the wheel and reward track to screen height
+  // and crops both sides. The header stays anchored to the screen edges.
+  function wheelLayout(frame, extra, header) {
+    if (extra > 0) {
+      const normalized = canvas(900, 1600);
+      const width = frame.canvas.width * 1600 / frame.canvas.height;
+      normalized.drawImage(frame.canvas, (900 - width) / 2, 0, width, 1600);
+      // Both outside sectors change from purple to blue at the same horizontal seam.
+      const seam = [200, 700].every(x => {
+        const above = normalized.getImageData(x, 695, 1, 1).data;
+        const below = normalized.getImageData(x, 725, 1, 1).data;
+        return above[0] > above[1] + 20 && above[2] > above[1] + 50 &&
+          below[1] > below[0] + 40 && below[2] > below[0] + 60;
+      });
+      if (seam && wheelOffset(normalized, 0, 0) === 0) {
+        return { wheel: normalized, middle: 0, heightScaled: true };
+      }
+    }
+    return { wheel: frame, middle: wheelOffset(frame, extra, header), heightScaled: false };
+  }
+
   // Match isolated numeric glyphs against fonts available on the device. This also handles
   // digit scripts that a language's text OCR model transliterates or drops on short lines.
   function ink(ctx,box,threshold) {
@@ -279,54 +300,68 @@ window.readSpinScreen = (() => {
   async function recognize(worker, frame, lang) {
     const extra=frame.canvas.height-1600, plus=tokenAnchor(frame) || (['ar','ur'].includes(lang)?tokenAnchor(frame,true):null);
     const header=plus?.y||0;
-    const middle=wheelOffset(frame,extra,header);
+    const {wheel, middle, heightScaled}=wheelLayout(frame,extra,header);
     if(middle===null) return {};
-    async function confirmed(box,offset,thresholds,chars,parse) {
+    async function confirmed(source,box,offset,thresholds,chars,parse) {
       const [l,t,r,b]=box;
-      if(t+offset<0 || b+offset>frame.canvas.height) return null;
+      if(t+offset<0 || b+offset>source.canvas.height) return null;
       await worker.setParameters({tessedit_pageseg_mode:'7',tessedit_char_whitelist:chars});
       let prior;
       for(const threshold of thresholds) {
-        const {data}=await worker.recognize(lineImage(frame,[l,t+offset,r,b+offset],threshold));
+        const {data}=await worker.recognize(lineImage(source,[l,t+offset,r,b+offset],threshold));
         const value=parse(normalize(data.text));
         if(value===null || (prior!==undefined && value!==prior)) return null;
         prior=value;
       }
       return prior;
     }
-    async function counter(box,offset,thresholds) {
-      const pixels=ink(frame,[box[0],box[1]+offset,box[2],box[3]+offset],thresholds[0]);
+    async function counter(source,box,offset,thresholds) {
+      const pixels=ink(source,[box[0],box[1]+offset,box[2],box[3]+offset],thresholds[0]);
       const runs=glyphRuns(pixels).filter(r=>r.bottom-r.top>=3);
       for(const alphabet of [alphabets[lang],'0123456789'].filter(Boolean)) {
         const number=visualNumber(pixels,runs,alphabet);
         if(number!==null)return Number(number);
       }
-      return confirmed(box,offset,thresholds,digits,numberInLine);
+      return confirmed(source,box,offset,thresholds,digits,numberInLine);
     }
     const result={};
     if(plus) {
       const box=plus.mirrored?[plus.x+6,53,plus.x+65,92]:[plus.x-64,53,plus.x-6,92];
-      const tokens=await counter(box,header,[190,200]);
+      const tokens=await counter(frame,box,header,[190,200]);
       if(tokens!==null) result.tokens=tokens;
     }
-    const luck=await counter([403,709,499,766],middle,[170,190]);
+    // Preserve thin strokes in the yellow digits after height normalization.
+    const luck=await counter(wheel,[403,709,499,766],middle,heightScaled ? [145,170] : [170,190]);
     if(luck!==null && luck<=200) result.luck=luck;
     const rtl=lang==='ar'||lang==='ur';
     const drawBoxes=[[105,1159,730,1206]];
     if(rtl) drawBoxes.push([170,1159,810,1206]);
-    for(const offset of new Set([middle,extra,header])) {
+    for(const offset of new Set(heightScaled ? [middle] : [middle,extra,header])) {
       for(const box of drawBoxes) {
-        const native=alphabets[lang] && nativeDraws(frame,[box[0],box[1]+offset,box[2],box[3]+offset],alphabets[lang]);
-        const draws=native??await confirmed(box,offset,[170,198],'',numberInLine);
+        const native=alphabets[lang] && nativeDraws(wheel,[box[0],box[1]+offset,box[2],box[3]+offset],alphabets[lang]);
+        const draws=native??await confirmed(wheel,box,offset,[170,198],'',numberInLine);
         if(draws!==null) {result.draws=draws; break;}
       }
       if(result.draws!==undefined) break;
     }
     if(result.luck>result.draws) {delete result.luck; delete result.draws;}
-    for(const box of (rtl?[[82,108,398,146],[450,106,825,148]]:[[82,108,398,146]])) {
-      let time=visualTimer(frame,[box[0],box[1]+header,box[2],box[3]+header],lang);
-      if(time===null) time=await confirmed(box,header,[170,191],'',countdown);
-      if(time===null && box[0]<100) time=await confirmed([69,106,253,148],header,[170,191],'0123456789d:',text=>text.includes('d')?countdown(text):null);
+    let timerFrame=frame, timerOffset=header;
+    const timerBoxes=[[82,108,398,146]];
+    if (heightScaled && plus) {
+      // The clock is pinned to the left margin, independently of the wheel.
+      const scale=1600/frame.canvas.height;
+      timerFrame=canvas(900,1600);
+      const width=900*scale;
+      timerFrame.drawImage(frame.canvas,rtl && plus.mirrored ? 900-width : 0,0,width,1600);
+      timerOffset=Math.round((header+72)*scale)-72;
+      // End above the scrolling announcement immediately below the clock.
+      timerBoxes.unshift([65,108,396,139]);
+    }
+    if(rtl) timerBoxes.push([450,106,825,148]);
+    for(const box of timerBoxes) {
+      let time=visualTimer(timerFrame,[box[0],box[1]+timerOffset,box[2],box[3]+timerOffset],lang);
+      if(time===null) time=await confirmed(timerFrame,box,timerOffset,heightScaled ? [145,155] : [170,191],'',countdown);
+      if(time===null && box[0]<100) time=await confirmed(timerFrame,[69,106,253,148],timerOffset,[170,191],'0123456789d:',text=>text.includes('d')?countdown(text):null);
       if(time!==null) {result.time=time; break;}
     }
     return result;

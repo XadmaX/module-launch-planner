@@ -4,12 +4,12 @@ An unofficial event planner for Last Z players. [Open the planner](https://last-
 
 ## Read a screenshot on your phone
 
-1. Take a portrait screenshot of **Module Spin** with the game in English and the wheel unobstructed.
-2. [Choose the screenshot in the planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#screenshot). The first reading downloads the OCR engine and its English model. The browser processes the image on your device.
+1. Take a portrait screenshot of **Module Spin** with the wheel unobstructed.
+2. [Choose the screenshot in the planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#screenshot). Set **Game language in the screenshot** to the language shown in the game. It initially follows the planner language and remembers a separate choice. Changing it while reviewing a screenshot reads the image again. The first reading downloads the OCR engine and the required language data. The browser processes the image on your device.
 3. Compare tokens, Luck, draws and the countdown with the preview. Correct any value or fill in a blank. The timer format is **days:hours:minutes:seconds** (for example, **4:09:04:07**).
 4. Select **Apply and recalculate**. The planner rounds the countdown up to remaining event days and keeps your budget and store settings.
 
-The English 9:16 wheel is the tested game layout. Other aspect ratios can require manual corrections. A screenshot reflects the moment it was taken.
+The browser reader supports all 23 planner locales, including both Chinese scripts. Original English 9:16 screenshots and generated localized examples were used for validation. Localized layouts, fonts and other aspect ratios can require corrections. A screenshot reflects the moment it was taken.
 
 ## Use the manual planner offline
 
@@ -21,7 +21,7 @@ The English 9:16 wheel is the tested game layout. Other aspect ratios can requir
 
 ## Optional: read the numbers from a screenshot
 
-[Download the helper ZIP](https://github.com/XadmaX/module-launch-planner/archive/refs/heads/main.zip) and extract it on your Windows PC or Mac. The helper reads a **saved image** on your computer. It does not connect to BlueStacks. If you already have a suitable screenshot from your phone or emulator, skip straight to the reader setup.
+[Download the helper ZIP](https://github.com/XadmaX/module-launch-planner/archive/refs/heads/main.zip) and extract it on your Windows PC or Mac. This optional desktop helper expects the English game screen. It reads a **saved image** on your computer. It does not connect to BlueStacks. If you already have a suitable screenshot from your phone or emulator, skip straight to the reader setup.
 
 ### 1. Get a suitable screenshot
 
@@ -84,4 +84,4 @@ Original code and interface translations are licensed under MIT (see LICENSE). L
 
 ## Host the screenshot reader
 
-Place `index.html` and `spin-reader.js` together. Run `sh prepare-ocr.sh` from this directory to prepare the pinned browser runtime and English model in `ocr/`. Serve those files on one origin over HTTP or HTTPS. Opening the downloaded HTML directly supports manual planning and links to the hosted screenshot reader. The runtime is loaded only when an image is selected. Third-party OCR assets retain their own licenses.
+Place `index.html` and `spin-reader.js` together. Run `sh prepare-ocr.sh` from this directory with Node/npm and Python 3 to prepare the pinned browser runtime and language models in `ocr/`. Serve those files on one origin over HTTP or HTTPS. Opening the downloaded HTML directly supports manual planning and links to the hosted screenshot reader. The runtime is loaded only when an image is selected. Third-party OCR assets retain their own licenses.

@@ -65,12 +65,14 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 #spin-review{border-top:1px solid var(--edge);margin-top:14px;padding-top:16px}.scan-review-grid{display:grid;grid-template-columns:minmax(100px,200px) 1fr;gap:18px;align-items:start}
 #scan-preview{max-width:100%;max-height:360px;object-fit:contain;border-radius:8px}.scan-edit button{margin-top:16px}
 @media(max-width:540px){.scan-review-grid{grid-template-columns:1fr}#scan-preview{max-height:250px;justify-self:center}}
+.game-lang{margin-bottom:12px;max-width:22rem}.game-lang select{font:inherit;padding:8px;border:1px solid var(--edge);border-radius:10px;background:var(--paper);color:var(--ink)}
 </style></head>
 <body><div id="module-launch">
 <nav aria-label="Last Z Planner"><div class="wordmark"><span class="orbit" aria-hidden="true"></span>Last Z Planner</div><a href="#parameters"><span data-i18n="settings" data-suffix=" ↓">Параметры плана ↓</span></a><select id="language" aria-label="Language / Язык" dir="ltr"><option value="en" lang="en">English</option><option value="ru" lang="ru">Русский</option><option value="uk" lang="uk">Українська</option><option value="de" lang="de">Deutsch</option><option value="tr" lang="tr">Türkçe</option><option value="es" lang="es">Español</option><option value="ar" lang="ar">العربية</option><option value="zh-Hans" lang="zh-Hans">简体中文</option><option value="zh-Hant" lang="zh-Hant">繁體中文</option><option value="ja" lang="ja">日本語</option><option value="ko" lang="ko">한국어</option><option value="fr" lang="fr">Français</option><option value="ca" lang="ca">Català</option><option value="pt-BR" lang="pt-BR">Português (Brasil)</option><option value="it" lang="it">Italiano</option><option value="pl" lang="pl">Polski</option><option value="id" lang="id">Bahasa Indonesia</option><option value="vi" lang="vi">Tiếng Việt</option><option value="th" lang="th">ไทย</option><option value="nl" lang="nl">Nederlands</option><option value="ms" lang="ms">Bahasa Melayu</option><option value="hi" lang="hi">हिन्दी</option><option value="ur" lang="ur">اردو</option></select></nav>
 <header class="hero"><div><div class="kicker"><span data-i18n="event" data-suffix=" · Last Z">Событие · Last Z</span></div><h1>Module Launch</h1><p><span data-i18n="goal">Цель — модуль VI за 200 вращений</span></p></div>
 <div class="gauge"><canvas id="gauge" aria-hidden="true"></canvas><div class="reading"><strong data-out="current">—</strong><small><span data-i18n="progress">вращений из 200</span></small></div></div></header>
 <section class="panel scan" id="screenshot">
+<label class="form-label game-lang"><span data-i18n="gameLanguage"></span><select id="game-language" dir="ltr"></select></label>
 <label class="form-label"><strong data-i18n="screen"></strong><input id="spin-file" type="file" accept="image/png,image/jpeg,image/webp"></label>
 <p class="note" data-i18n="open"></p>
 <p class="note" id="scan-status" role="status"></p>
@@ -178,7 +180,8 @@ const locales = {
     "blueprints": "Чертежи",
     "extra": "Доплата",
     "guarantee": "До гарантии VII при текущем Luck, вращений",
-    "open": "Открой Module Spin на английском.",
+    "gameLanguage": "Язык игры на скриншоте",
+    "open": "Открой колесо Module Spin и закрой окна наград.",
     "read": "Считать из BlueStacks",
     "failed": "Не удалось считать колесо. Проверь хелпер и английский экран Module Spin.",
     "import": "Импорт JSON хелпера",
@@ -238,7 +241,8 @@ const locales = {
     "blueprints": "Blueprints",
     "extra": "Extra cost",
     "guarantee": "Draws until a guaranteed VII at current Luck",
-    "open": "Open Module Spin in English.",
+    "gameLanguage": "Game language in the screenshot",
+    "open": "Open Module Spin and close any reward windows.",
     "read": "Read from BlueStacks",
     "failed": "Could not read the wheel. Check the helper and the English wheel screen.",
     "import": "Import helper JSON",
@@ -298,7 +302,8 @@ const locales = {
     "blueprints": "Planos",
     "extra": "Coste adicional",
     "guarantee": "Giros hasta el VII garantizado con la suerte actual",
-    "open": "Abre Module Spin en inglés.",
+    "gameLanguage": "Idioma del juego en la captura",
+    "open": "Abre la ruleta de módulos y cierra las ventanas de recompensas.",
     "read": "Leer desde BlueStacks",
     "failed": "No se pudo leer la rueda. Comprueba el lector y la pantalla en inglés.",
     "import": "Importar JSON del lector",
@@ -358,7 +363,8 @@ const locales = {
     "blueprints": "Креслення",
     "extra": "Доплата",
     "guarantee": "Обертань до гарантованого VII за поточної удачі",
-    "open": "Відкрий Module Spin англійською.",
+    "gameLanguage": "Мова гри на знімку",
+    "open": "Відкрий колесо Module Spin і закрий вікна нагород.",
     "read": "Зчитати з BlueStacks",
     "failed": "Не вдалося зчитати колесо. Перевір помічник та англомовний екран.",
     "import": "Імпортувати JSON помічника",
@@ -418,7 +424,8 @@ const locales = {
     "blueprints": "Baupläne",
     "extra": "Zusatzkosten",
     "guarantee": "Drehungen bis zum garantierten VII bei aktuellem Glück",
-    "open": "Öffne Module Spin auf Englisch.",
+    "gameLanguage": "Spielsprache im Screenshot",
+    "open": "Öffne das Modulrad und schließe alle Belohnungsfenster.",
     "read": "Aus BlueStacks einlesen",
     "failed": "Das Rad konnte nicht gelesen werden. Prüfe den Helfer und die englische Spielansicht.",
     "import": "JSON des Helfers importieren",
@@ -478,7 +485,8 @@ const locales = {
     "blueprints": "Planlar",
     "extra": "Ek maliyet",
     "guarantee": "Mevcut şansla VII garantisine kalan çevirme",
-    "open": "Module Spin ekranını İngilizce aç.",
+    "gameLanguage": "Ekran görüntüsündeki oyun dili",
+    "open": "Modül çarkını açıp ödül pencerelerini kapat.",
     "read": "BlueStacks’ten oku",
     "failed": "Çark okunamadı. Yardımcıyı ve İngilizce oyun ekranını kontrol et.",
     "import": "Yardımcı JSON dosyasını içe aktar",
@@ -538,7 +546,8 @@ const locales = {
     "blueprints": "蓝图",
     "extra": "额外费用",
     "guarantee": "按当前幸运值，距离保底 VII 还需的次数",
-    "open": "请打开英文版 Module Spin 界面。",
+    "gameLanguage": "截图中的游戏语言",
+    "open": "打开模块转盘，关闭奖励弹窗。",
     "read": "从 BlueStacks 读取",
     "failed": "无法读取转盘。请检查助手和英文游戏界面。",
     "import": "导入助手 JSON 文件",
@@ -598,7 +607,8 @@ const locales = {
     "blueprints": "藍圖",
     "extra": "額外費用",
     "guarantee": "依目前幸運值，距離保底 VII 還需的次數",
-    "open": "請開啟英文版 Module Spin 畫面。",
+    "gameLanguage": "截圖中的遊戲語言",
+    "open": "打開模組轉盤，關閉獎勵視窗。",
     "read": "從 BlueStacks 讀取",
     "failed": "無法讀取轉盤。請檢查助手和英文遊戲畫面。",
     "import": "匯入助手 JSON 檔",
@@ -658,7 +668,8 @@ const locales = {
     "blueprints": "Plans",
     "extra": "Coût supplémentaire",
     "guarantee": "Tours avant le VII garanti avec la chance actuelle",
-    "open": "Ouvre Module Spin en anglais.",
+    "gameLanguage": "Langue du jeu sur la capture",
+    "open": "Ouvrez la roue des modules et fermez les fenêtres de récompense.",
     "read": "Lire depuis BlueStacks",
     "failed": "Lecture impossible. Vérifie l’assistant et l’écran de jeu en anglais.",
     "import": "Importer le JSON de l’assistant",
@@ -718,7 +729,8 @@ const locales = {
     "blueprints": "設計図",
     "extra": "追加費用",
     "guarantee": "現在の幸運値でVII確定までの抽選回数",
-    "open": "英語版のModule Spinを開いてください。",
+    "gameLanguage": "スクリーンショットのゲーム言語",
+    "open": "モジュールのルーレットを開き、報酬画面を閉じてください。",
     "read": "BlueStacksから読み取る",
     "failed": "読み取れません。ヘルパーと英語のゲーム画面を確認してください。",
     "import": "ヘルパーのJSONを読み込む",
@@ -778,7 +790,8 @@ const locales = {
     "blueprints": "설계도",
     "extra": "추가 비용",
     "guarantee": "현재 행운 기준 VII 확정까지 남은 회전 수",
-    "open": "영어로 Module Spin 화면을 여세요.",
+    "gameLanguage": "스크린샷의 게임 언어",
+    "open": "모듈 룰렛을 열고 보상 창을 닫으세요.",
     "read": "BlueStacks에서 읽기",
     "failed": "읽을 수 없습니다. 도우미와 영어 게임 화면을 확인하세요.",
     "import": "도우미 JSON 가져오기",
@@ -838,7 +851,8 @@ const locales = {
     "blueprints": "Plànols",
     "extra": "Cost addicional",
     "guarantee": "Girs fins al VII garantit amb la sort actual",
-    "open": "Obre Module Spin en anglès.",
+    "gameLanguage": "Idioma del joc a la captura",
+    "open": "Obre la ruleta de mòduls i tanca les finestres de recompenses.",
     "read": "Llegeix des de BlueStacks",
     "failed": "No s’ha pogut llegir la roda. Comprova l’assistent i la pantalla en anglès.",
     "import": "Importa el JSON de l’assistent",
@@ -898,7 +912,8 @@ const locales = {
     "blueprints": "Projetos",
     "extra": "Custo adicional",
     "guarantee": "Giros até o VII garantido com a sorte atual",
-    "open": "Abra Module Spin em inglês.",
+    "gameLanguage": "Idioma do jogo na captura",
+    "open": "Abra a roleta de módulos e feche as janelas de recompensas.",
     "read": "Ler do BlueStacks",
     "failed": "Não foi possível ler a roda. Confira o assistente e a tela em inglês.",
     "import": "Importar JSON do assistente",
@@ -958,7 +973,8 @@ const locales = {
     "blueprints": "Progetti",
     "extra": "Costo aggiuntivo",
     "guarantee": "Giri fino al VII garantito con la fortuna attuale",
-    "open": "Apri Module Spin in inglese.",
+    "gameLanguage": "Lingua del gioco nello screenshot",
+    "open": "Apri la ruota dei moduli e chiudi le finestre delle ricompense.",
     "read": "Leggi da BlueStacks",
     "failed": "Lettura non riuscita. Controlla l’assistente e la schermata in inglese.",
     "import": "Importa JSON dell’assistente",
@@ -1018,7 +1034,8 @@ const locales = {
     "blueprints": "Schematy",
     "extra": "Dopłata",
     "guarantee": "Obroty do gwarantowanego VII przy obecnym szczęściu",
-    "open": "Otwórz Module Spin w języku angielskim.",
+    "gameLanguage": "Język gry na zrzucie ekranu",
+    "open": "Otwórz koło modułów i zamknij okna nagród.",
     "read": "Odczytaj z BlueStacks",
     "failed": "Odczyt nie powiódł się. Sprawdź pomocnika i angielski ekran gry.",
     "import": "Importuj JSON pomocnika",
@@ -1078,7 +1095,8 @@ const locales = {
     "blueprints": "Cetak biru",
     "extra": "Biaya tambahan",
     "guarantee": "Putaran hingga jaminan VII dengan keberuntungan saat ini",
-    "open": "Buka Module Spin dalam bahasa Inggris.",
+    "gameLanguage": "Bahasa game pada tangkapan layar",
+    "open": "Buka roda modul dan tutup jendela hadiah.",
     "read": "Baca dari BlueStacks",
     "failed": "Roda tidak terbaca. Periksa alat bantu dan layar permainan berbahasa Inggris.",
     "import": "Impor JSON dari alat bantu",
@@ -1138,7 +1156,8 @@ const locales = {
     "blueprints": "Bản thiết kế",
     "extra": "Chi phí thêm",
     "guarantee": "Số lượt để chắc chắn nhận VII với điểm may mắn hiện tại",
-    "open": "Mở Module Spin bằng tiếng Anh.",
+    "gameLanguage": "Ngôn ngữ trò chơi trong ảnh",
+    "open": "Mở vòng quay mô-đun và đóng các cửa sổ phần thưởng.",
     "read": "Đọc từ BlueStacks",
     "failed": "Không đọc được vòng quay. Kiểm tra trợ lý và màn hình trò chơi tiếng Anh.",
     "import": "Nhập tệp JSON của trợ lý",
@@ -1198,7 +1217,8 @@ const locales = {
     "blueprints": "مخططات",
     "extra": "التكلفة الإضافية",
     "guarantee": "الدورات اللازمة لضمان المستوى السابع وفق الحظ الحالي",
-    "open": "افتح شاشة Module Spin باللغة الإنجليزية.",
+    "gameLanguage": "لغة اللعبة في لقطة الشاشة",
+    "open": "افتح عجلة الوحدات وأغلق نوافذ المكافآت.",
     "read": "قراءة من BlueStacks",
     "failed": "تعذرت قراءة العجلة. تحقق من الأداة وشاشة اللعبة بالإنجليزية.",
     "import": "استيراد ملف JSON من الأداة",
@@ -1258,7 +1278,8 @@ const locales = {
     "blueprints": "พิมพ์เขียว",
     "extra": "ค่าใช้จ่ายเพิ่มเติม",
     "guarantee": "จำนวนครั้งจนถึงการันตีระดับ VII ตามค่าโชคปัจจุบัน",
-    "open": "เปิดหน้า Module Spin ภาษาอังกฤษ",
+    "gameLanguage": "ภาษาของเกมในภาพหน้าจอ",
+    "open": "เปิดวงล้อโมดูลแล้วปิดหน้าต่างรางวัล",
     "read": "อ่านจาก BlueStacks",
     "failed": "อ่านวงล้อไม่ได้ ตรวจสอบตัวช่วยและหน้าจอเกมภาษาอังกฤษ",
     "import": "นำเข้า JSON จากตัวช่วย",
@@ -1318,7 +1339,8 @@ const locales = {
     "blueprints": "Blauwdrukken",
     "extra": "Extra kosten",
     "guarantee": "Draaien tot gegarandeerd niveau VII bij huidig geluk",
-    "open": "Open Module Spin in het Engels.",
+    "gameLanguage": "Speltaal op de screenshot",
+    "open": "Open het modulewiel en sluit de beloningsvensters.",
     "read": "Uitlezen uit BlueStacks",
     "failed": "Het rad kon niet worden gelezen. Controleer de helper en het Engelse spelscherm.",
     "import": "JSON van de helper importeren",
@@ -1378,7 +1400,8 @@ const locales = {
     "blueprints": "Pelan reka bentuk",
     "extra": "Kos tambahan",
     "guarantee": "Putaran sehingga jaminan VII mengikut tuah semasa",
-    "open": "Buka Module Spin dalam bahasa Inggeris.",
+    "gameLanguage": "Bahasa permainan dalam tangkapan skrin",
+    "open": "Buka roda modul dan tutup tetingkap ganjaran.",
     "read": "Baca daripada BlueStacks",
     "failed": "Roda tidak dapat dibaca. Semak pembantu dan skrin permainan bahasa Inggeris.",
     "import": "Import JSON pembantu",
@@ -1438,7 +1461,8 @@ const locales = {
     "blueprints": "ब्लूप्रिंट",
     "extra": "अतिरिक्त लागत",
     "guarantee": "वर्तमान भाग्य पर VII की गारंटी तक स्पिन",
-    "open": "Module Spin अंग्रेज़ी में खोलें।",
+    "gameLanguage": "स्क्रीनशॉट में गेम की भाषा",
+    "open": "मॉड्यूल का पहिया खोलें और इनाम वाली विंडो बंद करें।",
     "read": "BlueStacks से पढ़ें",
     "failed": "रीडर और अंग्रेज़ी गेम स्क्रीन जाँचें।",
     "import": "हेल्पर का JSON आयात करें",
@@ -1498,7 +1522,8 @@ const locales = {
     "blueprints": "نقشے",
     "extra": "اضافی لاگت",
     "guarantee": "موجودہ قسمت پر درجہ ہفتم کی ضمانت تک اسپن",
-    "open": "Module Spin انگریزی میں کھولیں۔",
+    "gameLanguage": "اسکرین شاٹ میں گیم کی زبان",
+    "open": "ماڈیول کا پہیہ کھولیں اور انعامات کی ونڈوز بند کریں۔",
     "read": "BlueStacks سے پڑھیں",
     "failed": "ریڈر اور کھیل کی انگریزی اسکرین چیک کریں۔",
     "import": "ہیلپر کی JSON فائل درآمد کریں",
@@ -1520,11 +1545,15 @@ locale ||= (navigator.languages||[]).map(matchLanguage).find(Boolean) || 'en';
 function t(key,params={}) {
   return locales[locale][key].replace(/\{(\w+)\}/g,(_,name)=>params[name] ?? '');
 }
+const gameLanguage=document.getElementById('game-language');
+gameLanguage.replaceChildren(...Array.from(selector.options,option=>option.cloneNode(true)));
+let preferredGame='';
+try{preferredGame=matchLanguage(localStorage.getItem('module-launch.game-language'))||'';}catch{}
 const n = value=>Number(value).toLocaleString(locale);
 function labels(){
   document.documentElement.lang=locale;
   document.documentElement.dir=['ar','ur'].includes(locale)?'rtl':'ltr';
-  root.lang=locale;selector.value=locale;
+  root.lang=locale;selector.value=locale;gameLanguage.value=preferredGame||locale;
   for(const el of root.querySelectorAll('[data-i18n]'))el.textContent=t(el.dataset.i18n,{n:el.dataset.count})+(el.dataset.suffix||'');
 }
 labels();
@@ -1704,7 +1733,24 @@ if(location.protocol==='file:') {
   link.dataset.i18n='screen';
   link.textContent=t('screen');
   picker.closest('label').replaceWith(link);
+  gameLanguage.closest('label').hidden=true;
 }
+async function readPreview(){
+  gameLanguage.disabled=true; picker.disabled=true; review.hidden=true;
+  scanStatus('readingScreen');
+  try{
+    let values={};
+    try {values=await window.readSpinScreen(preview,gameLanguage.value);} catch {/* Keep the image available for manual review. */}
+    for(const [key,input] of Object.entries(scanFields)) input.value=values[key]??'';
+    review.hidden=false;
+    scanStatus(Object.values(scanFields).some(input=>input.value==='')?'missingScreen':'');
+  } finally {gameLanguage.disabled=false;picker.disabled=false;}
+}
+gameLanguage.addEventListener('change',async()=>{
+  preferredGame=gameLanguage.value;
+  try{localStorage.setItem('module-launch.game-language',preferredGame);}catch{}
+  if(previewURL && !picker.disabled) await readPreview();
+});
 picker.addEventListener('change',async()=>{
   const file=picker.files[0];
   if(!file)return;
@@ -1717,11 +1763,7 @@ picker.addEventListener('change',async()=>{
     previewURL=URL.createObjectURL(file);
     preview.src=previewURL;
     await preview.decode();
-    let values={};
-    try {values=await window.readSpinScreen(preview);} catch {/* Keep the image available for manual review. */}
-    for(const [key,input] of Object.entries(scanFields)) input.value=values[key]??'';
-    review.hidden=false;
-    scanStatus(Object.values(scanFields).some(input=>input.value==='')?'missingScreen':'');
+    await readPreview();
   } catch {
     clearReview();
     scanStatus('badScreen');

@@ -66,8 +66,15 @@ def parse_frame(path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("image", type=Path)
+    parser.add_argument("-o", "--output", type=Path, help="write UTF-8 JSON to this file")
     args = parser.parse_args()
     try:
-        print(json.dumps(parse_frame(args.image)))
+        result = json.dumps(parse_frame(args.image))
+        if args.output is None:
+            print(result)
+        elif args.output.resolve() == args.image.resolve():
+            raise ReadError("Choose an output file different from the screenshot.")
+        else:
+            args.output.write_text(result + "\n", encoding="utf-8")
     except (ReadError, OSError, subprocess.SubprocessError) as exc:
         parser.exit(1, f"Could not read screenshot: {exc}\n")

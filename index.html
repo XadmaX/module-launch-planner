@@ -60,11 +60,32 @@ details h3{font-size:16px;margin:4px 0 0}
 .text-destructive{color:#932f1b}
 @media(max-width:740px){main{grid-template-columns:1fr}.hero{min-height:205px;grid-template-columns:1.2fr 1fr}.gauge{max-width:180px}.reading{padding-bottom:4px}.hero p{font-size:14px}}
 @media(max-width:490px){#module-launch{padding-top:16px}nav{margin-bottom:15px}.hero{padding:23px 16px;border-radius:22px;gap:5px;min-height:163px}h1{font-size:clamp(30px,7.5vw,38px)}.kicker{font-size:10px;letter-spacing:.08em}.hero p{font-size:12px}.reading strong{font-size:32px}.reading small{font-size:10px;margin-top:1px}.reading{padding:0}.panel,details{border-radius:19px}main{gap:12px}.column{gap:12px}}
-nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-radius:12px;padding:8px;background:var(--paper);color:var(--ink);font:inherit} [dir=rtl] li{padding:0 33px 0 0}[dir=rtl] li:before{left:auto;right:0}.panel,.metrics>div{min-width:0;overflow-wrap:anywhere} </style></head>
+nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-radius:12px;padding:8px;background:var(--paper);color:var(--ink);font:inherit} [dir=rtl] li{padding:0 33px 0 0}[dir=rtl] li:before{left:auto;right:0}.panel,.metrics>div{min-width:0;overflow-wrap:anywhere} .scan{margin-top:16px}.scan strong{font-size:18px;color:var(--ink)}
+.scan input[type=file]{font:inherit;max-width:100%;margin:5px 0}.scan input::file-selector-button{background:#19594e;color:white;border:0;border-radius:1rem;padding:9px 14px;margin-inline-end:8px}
+#spin-review{border-top:1px solid var(--edge);margin-top:14px;padding-top:16px}.scan-review-grid{display:grid;grid-template-columns:minmax(100px,200px) 1fr;gap:18px;align-items:start}
+#scan-preview{max-width:100%;max-height:360px;object-fit:contain;border-radius:8px}.scan-edit button{margin-top:16px}
+@media(max-width:540px){.scan-review-grid{grid-template-columns:1fr}#scan-preview{max-height:250px;justify-self:center}}
+</style></head>
 <body><div id="module-launch">
 <nav aria-label="Last Z Planner"><div class="wordmark"><span class="orbit" aria-hidden="true"></span>Last Z Planner</div><a href="#parameters"><span data-i18n="settings" data-suffix=" ↓">Параметры плана ↓</span></a><select id="language" aria-label="Language / Язык" dir="ltr"><option value="en" lang="en">English</option><option value="ru" lang="ru">Русский</option><option value="uk" lang="uk">Українська</option><option value="de" lang="de">Deutsch</option><option value="tr" lang="tr">Türkçe</option><option value="es" lang="es">Español</option><option value="ar" lang="ar">العربية</option><option value="zh-Hans" lang="zh-Hans">简体中文</option><option value="zh-Hant" lang="zh-Hant">繁體中文</option><option value="ja" lang="ja">日本語</option><option value="ko" lang="ko">한국어</option><option value="fr" lang="fr">Français</option><option value="ca" lang="ca">Català</option><option value="pt-BR" lang="pt-BR">Português (Brasil)</option><option value="it" lang="it">Italiano</option><option value="pl" lang="pl">Polski</option><option value="id" lang="id">Bahasa Indonesia</option><option value="vi" lang="vi">Tiếng Việt</option><option value="th" lang="th">ไทย</option><option value="nl" lang="nl">Nederlands</option><option value="ms" lang="ms">Bahasa Melayu</option><option value="hi" lang="hi">हिन्दी</option><option value="ur" lang="ur">اردو</option></select></nav>
 <header class="hero"><div><div class="kicker"><span data-i18n="event" data-suffix=" · Last Z">Событие · Last Z</span></div><h1>Module Launch</h1><p><span data-i18n="goal">Цель — модуль VI за 200 вращений</span></p></div>
-<div class="gauge"><canvas id="gauge" aria-hidden="true"></canvas><div class="reading"><strong data-out="current">—</strong><small><span data-i18n="progress">вращений из 200</span></small></div></div></header><main><div><p data-out="error" role="alert" class="text-destructive" hidden></p><div class="column" data-out="result" aria-live="polite">
+<div class="gauge"><canvas id="gauge" aria-hidden="true"></canvas><div class="reading"><strong data-out="current">—</strong><small><span data-i18n="progress">вращений из 200</span></small></div></div></header>
+<section class="panel scan" id="screenshot">
+<label class="form-label"><strong data-i18n="screen"></strong><input id="spin-file" type="file" accept="image/png,image/jpeg,image/webp"></label>
+<p class="note" data-i18n="open"></p>
+<p class="note" id="scan-status" role="status"></p>
+<form id="spin-review" hidden>
+<h2 data-i18n="reviewScreen"></h2>
+<div class="scan-review-grid">
+<img id="scan-preview" alt="Module Spin" decoding="async">
+<div class="scan-edit"><div class="viz-controls">
+<label class="form-label"><span data-i18n="tokens"></span><input id="scan-tokens" class="form-control" type="number" inputmode="numeric" min="0" max="99999" required></label>
+<label class="form-label">Luck<input id="scan-luck" class="form-control" type="number" inputmode="numeric" min="0" max="200" required></label>
+<label class="form-label"><span data-i18n="draws"></span><input id="scan-draws" class="form-control" type="number" inputmode="numeric" min="0" max="99999" required></label>
+<label class="form-label"><span data-i18n="timeLeft"></span><input id="scan-time" class="form-control" type="text" dir="ltr" placeholder="4:09:04:07" required></label>
+</div><button type="submit" data-i18n="applyScreen"></button></div></div></form>
+</section>
+<main><div><p data-out="error" role="alert" class="text-destructive" hidden></p><div class="column" data-out="result" aria-live="polite">
 <div class="panel task"><h2><span data-i18n="today">Что делать сегодня</span></h2><ol data-out="today"></ol></div>
 <section class="panel"><h2><span data-i18n="forecast">Прогноз к концу события</span></h2><div class="metrics"><div><span><span data-i18n="free">Без расхода слитков</span></span><strong data-out="free"></strong></div><div><span><span data-i18n="ceiling">Максимум с бюджетом</span></span><strong data-out="ceiling"></strong></div></div><p data-out="breakdown" class="note"></p>
 <div class="award compact"><h3 data-out="reward"></h3><p data-out="prize"></p><p data-out="gap" class="note"></p></div></section>
@@ -98,12 +119,21 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <label class="form-check"><input class="form-check-input" name="tier2" type="checkbox" checked> <span data-i18n="tier2" data-suffix=" · +3">3 своих запуска Tier 2 · +3</span></label>
 </div>
 <p class="text-small text-muted"><span data-i18n="limits">Расчёт от уровня 2 купленного пропуска. Каждый следующий вход даёт новый уровень (до 7) и один Daily Freebie. Учтены только наборы на 10 / 15 / 25 жетонов. Цены пополнения — со среза 10 ноября, игровые номиналы считаются повторяемыми, веб-наборы — по одному каждого номинала. Бонусы за будущий рост мощности в прогноз не входят.</span></p>
-</div></details></aside></main></div><script>
+</div></details></aside></main></div><script src="spin-reader.js"></script>
+<script>
 (() => {
 const root = document.getElementById('module-launch');
 
 const locales = {
   "ru": {
+    "screen": "Выбрать скриншот Module Spin",
+    "readingScreen": "Распознаю на устройстве…",
+    "reviewScreen": "Сверь значения со скриншотом",
+    "timeLeft": "Осталось (дни:часы:минуты:секунды)",
+    "applyScreen": "Применить и пересчитать",
+    "missingScreen": "Заполни пустые поля по снимку.",
+    "badScreen": "Выбери читаемый скриншот PNG или JPEG.",
+    "invalidScreen": "Проверь значения и формат таймера.",
     "helperGuide": "Как установить и запустить хелпер",
     "settings": "Параметры плана",
     "event": "Событие",
@@ -156,6 +186,14 @@ const locales = {
     "limits": "Пропуск уровней 2–7, подарок за каждый сброс. Наборы по 10, 15 и 25. Игровые пополнения повторяемые, каждый веб-набор учитывается один раз. Сверь цены. Бонусы за мощность не включены."
   },
   "en": {
+    "screen": "Choose Module Spin screenshot",
+    "readingScreen": "Reading on this device…",
+    "reviewScreen": "Check the values against the screenshot",
+    "timeLeft": "Time left (days:hours:minutes:seconds)",
+    "applyScreen": "Apply and recalculate",
+    "missingScreen": "Fill in any empty fields from the image.",
+    "badScreen": "Choose a readable PNG or JPEG screenshot.",
+    "invalidScreen": "Check the values and timer format.",
     "helperGuide": "How to install and run the helper",
     "settings": "Plan settings",
     "event": "Event",
@@ -208,6 +246,14 @@ const locales = {
     "limits": "Pass levels 2–7. One gift per reset. Packs: 10, 15, 25. In-game top-ups repeat; each web offer counts once. Check prices. Power bonuses excluded."
   },
   "es": {
+    "screen": "Elegir captura de Module Spin",
+    "readingScreen": "Leyendo en este dispositivo…",
+    "reviewScreen": "Compara los valores con la captura",
+    "timeLeft": "Tiempo restante (días:horas:minutos:segundos)",
+    "applyScreen": "Aplicar y recalcular",
+    "missingScreen": "Completa los campos vacíos con la captura.",
+    "badScreen": "Elige una captura PNG o JPEG legible.",
+    "invalidScreen": "Revisa los valores y el formato del tiempo.",
     "helperGuide": "Cómo instalar y usar el lector",
     "settings": "Ajustes del plan",
     "event": "Evento",
@@ -260,6 +306,14 @@ const locales = {
     "limits": "Pase de nivel 2–7 y un regalo por reinicio. Paquetes de 10, 15 y 25. Las recargas del juego se repiten; cada oferta web cuenta una vez. Comprueba los precios. Se excluyen los bonos de potencia."
   },
   "uk": {
+    "screen": "Вибрати знімок Module Spin",
+    "readingScreen": "Розпізнавання на пристрої…",
+    "reviewScreen": "Звір значення зі знімком",
+    "timeLeft": "Залишилось (дні:години:хвилини:секунди)",
+    "applyScreen": "Застосувати й перерахувати",
+    "missingScreen": "Заповни порожні поля за знімком.",
+    "badScreen": "Вибери читабельний знімок PNG або JPEG.",
+    "invalidScreen": "Перевір значення й формат таймера.",
     "helperGuide": "Як установити й запустити помічник",
     "settings": "Параметри плану",
     "event": "Подія",
@@ -312,6 +366,14 @@ const locales = {
     "limits": "Перепустка рівнів 2–7, подарунок за скидання. Набори по 10, 15 і 25. Ігрові поповнення повторювані, кожну вебпропозицію враховано раз. Перевір ціни. Бонуси за потужність виключено."
   },
   "de": {
+    "screen": "Module-Spin-Screenshot auswählen",
+    "readingScreen": "Wird auf diesem Gerät gelesen…",
+    "reviewScreen": "Werte mit dem Screenshot vergleichen",
+    "timeLeft": "Restzeit (Tage:Stunden:Minuten:Sekunden)",
+    "applyScreen": "Übernehmen und neu berechnen",
+    "missingScreen": "Leere Felder anhand des Bildes ergänzen.",
+    "badScreen": "Bitte einen lesbaren PNG- oder JPEG-Screenshot wählen.",
+    "invalidScreen": "Werte und Zeitformat prüfen.",
     "helperGuide": "Helfer installieren und starten",
     "settings": "Planeinstellungen",
     "event": "Event",
@@ -364,6 +426,14 @@ const locales = {
     "limits": "Passstufen 2–7, ein Geschenk pro Tageswechsel. Pakete mit 10, 15 oder 25 Marken. Aufladungen im Spiel sind wiederholbar, Webangebote zählen je einmal. Preise prüfen. Stärkeboni sind ausgeschlossen."
   },
   "tr": {
+    "screen": "Module Spin ekran görüntüsü seç",
+    "readingScreen": "Bu cihazda okunuyor…",
+    "reviewScreen": "Değerleri ekran görüntüsüyle karşılaştır",
+    "timeLeft": "Kalan süre (gün:saat:dakika:saniye)",
+    "applyScreen": "Uygula ve yeniden hesapla",
+    "missingScreen": "Boş alanları görsele göre doldur.",
+    "badScreen": "Okunabilir bir PNG veya JPEG seç.",
+    "invalidScreen": "Değerleri ve süre biçimini kontrol et.",
     "helperGuide": "Yardımcı aracı kurma ve çalıştırma",
     "settings": "Plan ayarları",
     "event": "Etkinlik",
@@ -416,6 +486,14 @@ const locales = {
     "limits": "Bilet seviyeleri 2–7, her sıfırlamada bir hediye. Paketler 10, 15, 25 jeton. Oyun içi yüklemeler tekrarlanabilir; her web teklifi bir kez sayılır. Fiyatları kontrol et. Güç bonusları hariçtir."
   },
   "zh-Hans": {
+    "screen": "选择 Module Spin 截图",
+    "readingScreen": "正在设备上识别…",
+    "reviewScreen": "对照截图核对数值",
+    "timeLeft": "剩余时间（天:时:分:秒）",
+    "applyScreen": "应用并重新计算",
+    "missingScreen": "请根据截图补全空白字段。",
+    "badScreen": "请选择清晰的 PNG 或 JPEG 截图。",
+    "invalidScreen": "请检查数值和时间格式。",
     "helperGuide": "如何安装和运行助手",
     "settings": "计划设置",
     "event": "活动",
@@ -468,6 +546,14 @@ const locales = {
     "limits": "通行证等级 2–7，每次重置赠送一份礼物。礼包含 10、15 或 25 枚代币。游戏内充值可重复，每种网页优惠只计一次。请核对价格。不含战力奖励。"
   },
   "zh-Hant": {
+    "screen": "選擇 Module Spin 截圖",
+    "readingScreen": "正在裝置上辨識…",
+    "reviewScreen": "對照截圖確認數值",
+    "timeLeft": "剩餘時間（天:時:分:秒）",
+    "applyScreen": "套用並重新計算",
+    "missingScreen": "請依截圖填寫空白欄位。",
+    "badScreen": "請選擇清晰的 PNG 或 JPEG 截圖。",
+    "invalidScreen": "請檢查數值與時間格式。",
     "helperGuide": "如何安裝及執行助手",
     "settings": "計畫設定",
     "event": "活動",
@@ -520,6 +606,14 @@ const locales = {
     "limits": "通行證等級 2–7，每次重設贈送一份禮物。禮包含 10、15 或 25 枚代幣。遊戲內儲值可重複，每種網頁優惠只計一次。請核對價格。不含戰力獎勵。"
   },
   "fr": {
+    "screen": "Choisir une capture de Module Spin",
+    "readingScreen": "Lecture sur cet appareil…",
+    "reviewScreen": "Vérifiez les valeurs sur la capture",
+    "timeLeft": "Temps restant (jours:heures:minutes:secondes)",
+    "applyScreen": "Appliquer et recalculer",
+    "missingScreen": "Complétez les champs vides à partir de la capture.",
+    "badScreen": "Choisissez une capture PNG ou JPEG lisible.",
+    "invalidScreen": "Vérifiez les valeurs et le format du temps.",
     "helperGuide": "Installer et lancer l’assistant",
     "settings": "Paramètres du plan",
     "event": "Événement",
@@ -572,6 +666,14 @@ const locales = {
     "limits": "Pass de niveau 2 à 7, un cadeau par jour. Lots de 10, 15 et 25. Recharges en jeu répétables, chaque offre web compte une fois. Vérifie les prix. Bonus de puissance exclus."
   },
   "ja": {
+    "screen": "Module Spin のスクリーンショットを選ぶ",
+    "readingScreen": "端末で読み取り中…",
+    "reviewScreen": "画像と数値を照合してください",
+    "timeLeft": "残り時間（日:時:分:秒）",
+    "applyScreen": "適用して再計算",
+    "missingScreen": "画像を見て空欄を入力してください。",
+    "badScreen": "鮮明な PNG または JPEG 画像を選んでください。",
+    "invalidScreen": "数値と時間の形式を確認してください。",
     "helperGuide": "ヘルパーのインストールと起動方法",
     "settings": "プラン設定",
     "event": "イベント",
@@ -624,6 +726,14 @@ const locales = {
     "limits": "対象パスレベルは2～7。日次更新ごとにギフト1個。パックは10、15、25枚。ゲーム内チャージは繰り返し可、各ウェブ商品は1回まで。価格を確認してください。戦力ボーナスは含みません。"
   },
   "ko": {
+    "screen": "Module Spin 스크린샷 선택",
+    "readingScreen": "기기에서 읽는 중…",
+    "reviewScreen": "스크린샷과 수치를 비교하세요",
+    "timeLeft": "남은 시간 (일:시:분:초)",
+    "applyScreen": "적용하고 다시 계산",
+    "missingScreen": "이미지를 보고 빈칸을 채우세요.",
+    "badScreen": "선명한 PNG 또는 JPEG 스크린샷을 선택하세요.",
+    "invalidScreen": "수치와 시간 형식을 확인하세요.",
     "helperGuide": "도우미 설치 및 실행 방법",
     "settings": "계획 설정",
     "event": "이벤트",
@@ -676,6 +786,14 @@ const locales = {
     "limits": "패스 2~7레벨, 초기화마다 선물 1개. 팩은 10개, 15개, 25개입니다. 게임 내 충전은 반복 가능하며 웹 상품은 종류별로 한 번 계산합니다. 가격을 확인하세요. 전투력 보너스는 제외합니다."
   },
   "ca": {
+    "screen": "Tria una captura de Module Spin",
+    "readingScreen": "Llegint en aquest dispositiu…",
+    "reviewScreen": "Comprova els valors amb la captura",
+    "timeLeft": "Temps restant (dies:hores:minuts:segons)",
+    "applyScreen": "Aplica i torna a calcular",
+    "missingScreen": "Omple els camps buits amb la captura.",
+    "badScreen": "Tria una captura PNG o JPEG llegible.",
+    "invalidScreen": "Revisa els valors i el format del temps.",
     "helperGuide": "Com instal·lar i executar el lector",
     "settings": "Ajustos del pla",
     "event": "Esdeveniment",
@@ -728,6 +846,14 @@ const locales = {
     "limits": "Passi de nivell 2–7 i un regal per reinici. Paquets de 10, 15 i 25. Les recàrregues del joc es poden repetir; cada oferta web compta un cop. Comprova els preus. S’exclouen els bons de potència."
   },
   "pt-BR": {
+    "screen": "Escolher captura do Module Spin",
+    "readingScreen": "Lendo neste dispositivo…",
+    "reviewScreen": "Confira os valores na captura",
+    "timeLeft": "Tempo restante (dias:horas:minutos:segundos)",
+    "applyScreen": "Aplicar e recalcular",
+    "missingScreen": "Preencha os campos vazios com base na captura.",
+    "badScreen": "Escolha uma captura PNG ou JPEG legível.",
+    "invalidScreen": "Confira os valores e o formato do tempo.",
     "helperGuide": "Como instalar e executar o assistente",
     "settings": "Configurações do plano",
     "event": "Evento",
@@ -780,6 +906,14 @@ const locales = {
     "limits": "Passe de nível 2–7, um presente por reinício. Pacotes de 10, 15 e 25. Recargas no jogo podem se repetir; cada oferta online conta uma vez. Confira os preços. Bônus de poder excluídos."
   },
   "it": {
+    "screen": "Scegli uno screenshot di Module Spin",
+    "readingScreen": "Lettura sul dispositivo…",
+    "reviewScreen": "Confronta i valori con lo screenshot",
+    "timeLeft": "Tempo rimasto (giorni:ore:minuti:secondi)",
+    "applyScreen": "Applica e ricalcola",
+    "missingScreen": "Completa i campi vuoti guardando l’immagine.",
+    "badScreen": "Scegli uno screenshot PNG o JPEG leggibile.",
+    "invalidScreen": "Controlla i valori e il formato del tempo.",
     "helperGuide": "Come installare e avviare l’assistente",
     "settings": "Impostazioni del piano",
     "event": "Evento",
@@ -832,6 +966,14 @@ const locales = {
     "limits": "Pass di livello 2–7, un regalo per reset. Pacchetti da 10, 15 e 25. Le ricariche in gioco sono ripetibili; ogni offerta web conta una volta. Verifica i prezzi. Bonus potenza esclusi."
   },
   "pl": {
+    "screen": "Wybierz zrzut ekranu Module Spin",
+    "readingScreen": "Odczytywanie na urządzeniu…",
+    "reviewScreen": "Porównaj wartości ze zrzutem ekranu",
+    "timeLeft": "Pozostały czas (dni:godziny:minuty:sekundy)",
+    "applyScreen": "Zastosuj i przelicz",
+    "missingScreen": "Uzupełnij puste pola na podstawie obrazu.",
+    "badScreen": "Wybierz czytelny zrzut PNG lub JPEG.",
+    "invalidScreen": "Sprawdź wartości i format czasu.",
     "helperGuide": "Jak zainstalować i uruchomić pomocnika",
     "settings": "Ustawienia planu",
     "event": "Wydarzenie",
@@ -884,6 +1026,14 @@ const locales = {
     "limits": "Przepustka poziomu 2–7, prezent przy każdym resecie. Pakiety 10, 15 i 25. Doładowania w grze można powtarzać; każda oferta internetowa liczy się raz. Sprawdź ceny. Bez premii za moc."
   },
   "id": {
+    "screen": "Pilih tangkapan layar Module Spin",
+    "readingScreen": "Membaca di perangkat ini…",
+    "reviewScreen": "Cocokkan nilai dengan gambar",
+    "timeLeft": "Waktu tersisa (hari:jam:menit:detik)",
+    "applyScreen": "Terapkan dan hitung ulang",
+    "missingScreen": "Isi kolom kosong sesuai gambar.",
+    "badScreen": "Pilih tangkapan layar PNG atau JPEG yang jelas.",
+    "invalidScreen": "Periksa nilai dan format waktu.",
     "helperGuide": "Cara memasang dan menjalankan alat bantu",
     "settings": "Pengaturan rencana",
     "event": "Event",
@@ -936,6 +1086,14 @@ const locales = {
     "limits": "Pass level 2–7, satu hadiah tiap reset. Paket 10, 15, dan 25. Isi ulang dalam game dapat diulang; tiap penawaran web dihitung sekali. Periksa harga. Bonus kekuatan tidak dihitung."
   },
   "vi": {
+    "screen": "Chọn ảnh chụp Module Spin",
+    "readingScreen": "Đang đọc trên thiết bị…",
+    "reviewScreen": "Đối chiếu các số với ảnh",
+    "timeLeft": "Thời gian còn lại (ngày:giờ:phút:giây)",
+    "applyScreen": "Áp dụng và tính lại",
+    "missingScreen": "Điền các ô trống theo ảnh.",
+    "badScreen": "Chọn ảnh PNG hoặc JPEG rõ nét.",
+    "invalidScreen": "Kiểm tra các số và định dạng thời gian.",
     "helperGuide": "Cách cài đặt và chạy công cụ hỗ trợ",
     "settings": "Cài đặt kế hoạch",
     "event": "Sự kiện",
@@ -988,6 +1146,14 @@ const locales = {
     "limits": "Vé cấp 2–7, mỗi lần đặt lại có một quà. Gói 10, 15, 25 xu. Có thể nạp nhiều lần trong trò chơi; mỗi ưu đãi web chỉ tính một lần. Kiểm tra giá. Chưa tính thưởng sức mạnh."
   },
   "ar": {
+    "screen": "اختر لقطة شاشة Module Spin",
+    "readingScreen": "جارٍ التعرّف على الجهاز…",
+    "reviewScreen": "راجع القيم مع لقطة الشاشة",
+    "timeLeft": "الوقت المتبقي (أيام:ساعات:دقائق:ثوانٍ)",
+    "applyScreen": "تطبيق وإعادة الحساب",
+    "missingScreen": "املأ الحقول الفارغة من الصورة.",
+    "badScreen": "اختر لقطة واضحة بصيغة PNG أو JPEG.",
+    "invalidScreen": "تحقق من القيم وتنسيق الوقت.",
     "helperGuide": "كيفية تثبيت الأداة وتشغيلها",
     "settings": "إعدادات الخطة",
     "event": "الفعالية",
@@ -1040,6 +1206,14 @@ const locales = {
     "limits": "مستويات التذكرة ٢–٧ وهدية مع كل تجديد. الحزم من ١٠ و١٥ و٢٥ رمزًا. يمكن تكرار الشحن داخل اللعبة ويُحسب كل عرض ويب مرة واحدة. تحقق من الأسعار. لا يشمل التقدير مكافآت القوة."
   },
   "th": {
+    "screen": "เลือกภาพหน้าจอ Module Spin",
+    "readingScreen": "กำลังอ่านบนอุปกรณ์…",
+    "reviewScreen": "ตรวจสอบค่ากับภาพหน้าจอ",
+    "timeLeft": "เวลาที่เหลือ (วัน:ชั่วโมง:นาที:วินาที)",
+    "applyScreen": "ยืนยันและคำนวณใหม่",
+    "missingScreen": "กรอกช่องว่างตามภาพ",
+    "badScreen": "เลือกภาพหน้าจอ PNG หรือ JPEG ที่ชัดเจน",
+    "invalidScreen": "ตรวจสอบค่าและรูปแบบเวลา",
     "helperGuide": "วิธีติดตั้งและเรียกใช้ตัวช่วย",
     "settings": "ตั้งค่าแผน",
     "event": "กิจกรรม",
@@ -1092,6 +1266,14 @@ const locales = {
     "limits": "พาสระดับ 2–7 ได้ของขวัญหนึ่งชิ้นต่อการรีเซ็ต แพ็ก 10, 15 และ 25 เหรียญ เติมในเกมซ้ำได้ ข้อเสนอบนเว็บนับอย่างละหนึ่งครั้ง ตรวจสอบราคา ไม่รวมโบนัสพลัง"
   },
   "nl": {
+    "screen": "Module Spin-screenshot kiezen",
+    "readingScreen": "Lezen op dit apparaat…",
+    "reviewScreen": "Vergelijk de waarden met de screenshot",
+    "timeLeft": "Resterende tijd (dagen:uren:minuten:seconden)",
+    "applyScreen": "Toepassen en herberekenen",
+    "missingScreen": "Vul lege velden in aan de hand van de afbeelding.",
+    "badScreen": "Kies een leesbare PNG- of JPEG-screenshot.",
+    "invalidScreen": "Controleer de waarden en de tijdnotatie.",
     "helperGuide": "De helper installeren en starten",
     "settings": "Planinstellingen",
     "event": "Evenement",
@@ -1144,6 +1326,14 @@ const locales = {
     "limits": "Pasniveau 2–7, één geschenk per reset. Pakketten van 10, 15 en 25. Opwaarderen in het spel kan vaker; elke webaanbieding telt één keer. Controleer de prijzen. Krachtbonussen tellen niet mee."
   },
   "ms": {
+    "screen": "Pilih tangkapan skrin Module Spin",
+    "readingScreen": "Sedang membaca pada peranti…",
+    "reviewScreen": "Semak nilai pada tangkapan skrin",
+    "timeLeft": "Masa berbaki (hari:jam:minit:saat)",
+    "applyScreen": "Gunakan dan kira semula",
+    "missingScreen": "Isi medan kosong mengikut gambar.",
+    "badScreen": "Pilih tangkapan skrin PNG atau JPEG yang jelas.",
+    "invalidScreen": "Semak nilai dan format masa.",
     "helperGuide": "Cara memasang dan menjalankan pembantu",
     "settings": "Tetapan pelan",
     "event": "Acara",
@@ -1196,6 +1386,14 @@ const locales = {
     "limits": "Pas tahap 2–7, satu hadiah setiap tetapan semula. Pek 10, 15 dan 25 token. Tambah nilai dalam permainan boleh diulang; setiap tawaran web dikira sekali. Semak harga. Bonus kuasa dikecualikan."
   },
   "hi": {
+    "screen": "Module Spin का स्क्रीनशॉट चुनें",
+    "readingScreen": "डिवाइस पर पढ़ा जा रहा है…",
+    "reviewScreen": "स्क्रीनशॉट से मान मिलाएँ",
+    "timeLeft": "शेष समय (दिन:घंटे:मिनट:सेकंड)",
+    "applyScreen": "लागू करें और फिर से गणना करें",
+    "missingScreen": "तस्वीर देखकर खाली फ़ील्ड भरें।",
+    "badScreen": "साफ़ PNG या JPEG स्क्रीनशॉट चुनें।",
+    "invalidScreen": "मान और समय का प्रारूप जाँचें।",
     "helperGuide": "हेल्पर इंस्टॉल और चलाने का तरीका",
     "settings": "योजना सेटिंग",
     "event": "इवेंट",
@@ -1248,6 +1446,14 @@ const locales = {
     "limits": "पास स्तर 2–7। हर रीसेट पर एक उपहार। 10, 15 और 25 के पैक। गेम में रिचार्ज दोहरा सकते हैं; हर वेब ऑफ़र एक बार गिना जाता है। कीमतें जाँचें। शक्ति बोनस शामिल नहीं हैं।"
   },
   "ur": {
+    "screen": "Module Spin کا اسکرین شاٹ منتخب کریں",
+    "readingScreen": "ڈیوائس پر پڑھا جا رہا ہے…",
+    "reviewScreen": "اسکرین شاٹ سے اعداد ملائیں",
+    "timeLeft": "باقی وقت (دن:گھنٹے:منٹ:سیکنڈ)",
+    "applyScreen": "لاگو کریں اور دوبارہ حساب لگائیں",
+    "missingScreen": "تصویر دیکھ کر خالی خانے پُر کریں۔",
+    "badScreen": "واضح PNG یا JPEG اسکرین شاٹ منتخب کریں۔",
+    "invalidScreen": "اعداد اور وقت کا فارمیٹ چیک کریں۔",
     "helperGuide": "ہیلپر انسٹال کرنے اور چلانے کا طریقہ",
     "settings": "منصوبے کی ترتیبات",
     "event": "ایونٹ",
@@ -1458,20 +1664,82 @@ function persist(){
   const values=Object.fromEntries(fields.map(f=>[f.name,f.type==='checkbox'?f.checked:f.valueAsNumber]));
   try{localStorage.setItem(storageKey,JSON.stringify({modelContent:null,privateContent:{moduleLaunch:values}}));}catch{}
 }
-root.addEventListener('input',()=>{if(render())persist();});
+root.addEventListener('input',event=>{if(fields.includes(event.target) && render())persist();});
+function applyReading(v){
+    if(![['tokens',99999],['draws',99999],['luck',200],['seconds',604800]].every(([k,max])=>Number.isSafeInteger(v[k])&&v[k]>=0&&v[k]<=max)||v.luck>v.draws)throw Error();
+    for(const [k,value] of Object.entries({tokens:v.tokens,draws:v.draws,luck:v.luck,days:Math.ceil(v.seconds/86400)}))root.querySelector('[name="'+k+'"]').value=value;
+    render(); persist();
+}
 let importMessage='';
 document.getElementById('import-json').addEventListener('change',async e=>{
   const file=e.target.files[0]; if(!file)return;
   try{
     if(file.size>16384)throw Error();
     const v=JSON.parse(await file.text());
-    if(![['tokens',99999],['draws',99999],['luck',200],['seconds',604800]].every(([k,max])=>Number.isSafeInteger(v[k])&&v[k]>=0&&v[k]<=max)||v.luck>v.draws)throw Error();
-    for(const [k,value] of Object.entries({tokens:v.tokens,draws:v.draws,luck:v.luck,days:Math.ceil(v.seconds/86400)}))root.querySelector('[name="'+k+'"]').value=value;
-    render(); persist(); importMessage='imported';
+    applyReading(v); importMessage='example';
   }catch{importMessage='failed';}
   document.getElementById('import-status').textContent=t(importMessage);
   e.target.value='';
 });
+const picker=document.getElementById('spin-file');
+const review=document.getElementById('spin-review');
+const preview=document.getElementById('scan-preview');
+const scanFields=Object.fromEntries(['tokens','luck','draws','time'].map(key=>
+  [key,document.getElementById('scan-'+key)]));
+let scanMessage='', previewURL='';
+function scanStatus(key) {
+  scanMessage=key;
+  document.getElementById('scan-status').textContent=key?t(key):'';
+}
+function clearReview() {
+  review.hidden=true;
+  review.reset();
+  preview.removeAttribute('src');
+  if(previewURL) URL.revokeObjectURL(previewURL);
+  previewURL='';
+}
+if(location.protocol==='file:') {
+  const link=document.createElement('a');
+  link.href='https://last-z-module-launch.framedrabbit4.chatgpt.site/#screenshot';
+  link.dataset.i18n='screen';
+  link.textContent=t('screen');
+  picker.closest('label').replaceWith(link);
+}
+picker.addEventListener('change',async()=>{
+  const file=picker.files[0];
+  if(!file)return;
+  clearReview();
+  picker.value='';
+  picker.disabled=true;
+  scanStatus('readingScreen');
+  try {
+    if(file.size>32*1024*1024) throw Error('image too large');
+    previewURL=URL.createObjectURL(file);
+    preview.src=previewURL;
+    await preview.decode();
+    let values={};
+    try {values=await window.readSpinScreen(preview);} catch {/* Keep the image available for manual review. */}
+    for(const [key,input] of Object.entries(scanFields)) input.value=values[key]??'';
+    review.hidden=false;
+    scanStatus(Object.values(scanFields).some(input=>input.value==='')?'missingScreen':'');
+  } catch {
+    clearReview();
+    scanStatus('badScreen');
+  } finally {picker.disabled=false;}
+});
+review.addEventListener('submit',event=>{
+  event.preventDefault();
+  const time=/^(\d):([01]?\d|2[0-3]):([0-5]\d):([0-5]\d)$/.exec(scanFields.time.value.trim());
+  if(!time) {scanStatus('invalidScreen'); scanFields.time.focus(); return;}
+  const [days,hours,minutes,seconds]=time.slice(1).map(Number);
+  try {
+    applyReading({tokens:scanFields.tokens.valueAsNumber,luck:scanFields.luck.valueAsNumber,
+      draws:scanFields.draws.valueAsNumber,seconds:((days*24+hours)*60+minutes)*60+seconds});
+    clearReview();
+    scanStatus('example');
+  } catch {scanStatus('invalidScreen');}
+});
+
 let saved;
 try{saved=JSON.parse(localStorage.getItem(storageKey));}catch{}
 restore(saved);
@@ -1479,7 +1747,7 @@ restore(saved);
 selector.addEventListener('change',()=>{
   locale=selector.value;
   try{localStorage.setItem('module-launch.locale',locale);}catch{}
-  labels();render();
+  labels();render();scanStatus(scanMessage);
   if(importMessage)document.getElementById('import-status').textContent=t(importMessage);
 });
 })();

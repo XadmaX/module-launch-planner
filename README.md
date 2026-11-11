@@ -1,8 +1,17 @@
 # Module Launch Planner
 
-An unofficial, offline event planner for Last Z players.
+An unofficial event planner for Last Z players. [Open the planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/) on your phone or computer.
 
-## Start here — no installation required
+## Read a screenshot on your phone
+
+1. Take a portrait screenshot of **Module Spin** with the game in English and the wheel unobstructed.
+2. [Choose the screenshot in the planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#screenshot). The first reading downloads the OCR engine and its English model. The browser processes the image on your device.
+3. Compare tokens, Luck, draws and the countdown with the preview. Correct any value or fill in a blank. The timer format is **days:hours:minutes:seconds** (for example, **4:09:04:07**).
+4. Select **Apply and recalculate**. The planner rounds the countdown up to remaining event days and keeps your budget and store settings.
+
+The English 9:16 wheel is the tested game layout. Other aspect ratios can require manual corrections. A screenshot reflects the moment it was taken.
+
+## Use the manual planner offline
 
 1. [Download the planner ZIP](https://github.com/XadmaX/module-launch-planner/archive/refs/heads/main.zip) (or use **Code → Download ZIP** on GitHub).
 2. Extract the ZIP. In the extracted folder, double-click **index.html** to open the planner in your browser.
@@ -72,3 +81,7 @@ The calculator models the paid Prime Pass from level 2, three token pack sizes, 
 ## License and attribution
 
 Original code and interface translations are licensed under MIT (see LICENSE). Last Z and its game content belong to their respective owners. This project is independent of OMNILOJO. The license applies to the project code. Consult the [publisher's terms](https://last-z.com/terms/es/tos.html) when using the game. Pillow and Tesseract are separately installed dependencies under their own licenses.
+
+## Host the screenshot reader
+
+Place `index.html` and `spin-reader.js` together. Run `sh prepare-ocr.sh` from this directory to prepare the pinned browser runtime and English model in `ocr/`. Serve those files on one origin over HTTP or HTTPS. Opening the downloaded HTML directly supports manual planning and links to the hosted screenshot reader. The runtime is loaded only when an image is selected. Third-party OCR assets retain their own licenses.

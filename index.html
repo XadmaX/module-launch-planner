@@ -79,6 +79,19 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 #manual-hint{position:relative;margin:0 0 12px;padding:12px 14px;background:#24493e;color:white;border-radius:12px;line-height:1.45}
 #manual-hint::after{content:"";position:absolute;inset-block-end:-6px;inset-inline-start:18px;width:12px;height:12px;transform:rotate(45deg);background:#24493e}
 #manual-action{margin:12px 0;justify-self:start}#manual-pending{border-inline-start:3px solid #9c671b;padding:8px 12px;background:#fff4d9}
+.stock-screens{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px}
+.stock-card{border:1px solid var(--edge);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.stock-card h3{margin:0}.stock-example{float:inline-end;display:grid;gap:2px;width:78px;margin-inline-start:8px;background:#edf3e9;color:var(--ink);padding:5px;border-radius:8px;font-size:11px;line-height:1.2}
+.stock-example img{width:100%;height:60px;object-fit:contain}.stock-card ul{list-style:none;padding:0;margin:5px 0}.stock-card li{padding:0;margin:3px 0}.stock-card li::before{content:none}
+#example-dialog img{max-width:min(78vw,420px);object-fit:contain}.stock-card input{width:100%}
+.stock-diagram{font:600 4px/1.25 system-ui,sans-serif;direction:ltr;text-align:start;display:grid;align-content:start;gap:.5em;width:15em;max-width:100%;padding:.65em;border-radius:.65em;margin:auto;box-sizing:border-box;color:#fff4d9;background:linear-gradient(150deg,#423e47,#20252a)}
+#stock-diagram-large .stock-diagram{font-size:clamp(12px,4vw,19px);margin:6px auto 12px}
+.diagram-head,.diagram-row{display:flex;align-items:center;justify-content:space-between;gap:.35em;padding:.55em;border-radius:.25em}
+.diagram-head{background:#413328;font-weight:700}.diagram-balance{background:#241d18;color:#ffe18b;border:1px solid #ffcf54;padding:.2em .4em;white-space:nowrap}
+.diagram-hero{font-size:2.2em;line-height:1.25;text-align:center;padding:.2em;background:#845d31;border-radius:.12em}
+.diagram-tiles{display:grid;grid-template-columns:1fr 1fr;gap:.4em}.diagram-tile{background:#e8b156;color:#49371d;padding:.8em .2em;text-align:center;border-radius:.25em}
+.diagram-row{background:#586160}.diagram-row b{color:#ffdf8c}.diagram-row.current{background:#7b622f;outline:1px solid #ffce59}.diagram-row em{font-style:normal;color:#b8f2a8}
+.diagram-row.offer{background:#41626a}.diagram-row small{font:inherit;font-size:.75em}
 </style></head>
 <body><div id="module-launch">
 <nav aria-label="Last Z Planner"><div class="wordmark"><span class="orbit" aria-hidden="true"></span>Last Z Planner</div><a href="#parameters"><span data-i18n="settings" data-suffix=" ↓">Параметры плана ↓</span></a><select id="language" aria-label="Language / Язык" dir="ltr"><option value="en" lang="en">English</option><option value="ru" lang="ru">Русский</option><option value="uk" lang="uk">Українська</option><option value="de" lang="de">Deutsch</option><option value="tr" lang="tr">Türkçe</option><option value="es" lang="es">Español</option><option value="ar" lang="ar">العربية</option><option value="zh-Hans" lang="zh-Hans">简体中文</option><option value="zh-Hant" lang="zh-Hant">繁體中文</option><option value="ja" lang="ja">日本語</option><option value="ko" lang="ko">한국어</option><option value="fr" lang="fr">Français</option><option value="ca" lang="ca">Català</option><option value="pt-BR" lang="pt-BR">Português (Brasil)</option><option value="it" lang="it">Italiano</option><option value="pl" lang="pl">Polski</option><option value="id" lang="id">Bahasa Indonesia</option><option value="vi" lang="vi">Tiếng Việt</option><option value="th" lang="th">ไทย</option><option value="nl" lang="nl">Nederlands</option><option value="ms" lang="ms">Bahasa Melayu</option><option value="hi" lang="hi">हिन्दी</option><option value="ur" lang="ur">اردو</option></select></nav>
@@ -99,6 +112,7 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <dialog id="example-dialog" aria-labelledby="example-title">
 <h2 id="example-title" data-i18n="screenExample"></h2>
 <img src="module-spin-example.webp" alt="Last Z · Module Spin" width="540" height="960">
+<div id="stock-diagram-large" hidden></div>
 <form method="dialog"><button type="submit" autofocus data-i18n="closeExample"></button></form>
 </dialog>
 <p class="note" id="scan-status" role="status"></p>
@@ -112,6 +126,7 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <label class="form-label"><span data-i18n="draws"></span><input id="scan-draws" class="form-control" type="number" inputmode="numeric" min="0" max="99999" required></label>
 <label class="form-label"><span data-i18n="timeLeft"></span><input id="scan-time" class="form-control" type="text" dir="ltr" placeholder="4:09:04:07" required></label>
 </div><button type="submit" data-i18n="applyScreen"></button></div></div></form>
+<div id="stock-screens" class="stock-screens"></div>
 </section>
 <main><div><p data-out="error" role="alert" class="text-destructive" hidden></p><div class="column" data-out="result" aria-live="polite">
 <p hidden id="manual-pending" class="note" data-i18n="manualPending"></p><div class="panel task"><h2><span data-i18n="today">Что делать сегодня</span></h2><ol data-out="today"></ol></div>
@@ -133,11 +148,12 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <div class="viz-controls">
 <label class="form-label"><span data-i18n="bars">Слитки на руках</span><input class="form-control" name="bars" type="number" min="0" max="999999" value="0" required></label>
 <label class="form-label"><span data-i18n="luck">Luck сейчас</span><input class="form-control" name="luck" type="number" min="0" max="200" value="60" required></label>
-<label class="form-label"><span data-i18n="pass">Уже получен уровень Spin Pass (Prime)</span><input class="form-control" name="pass" type="number" min="2" max="7" value="3" required></label>
+<label class="form-label"><span data-i18n="passLevel">Уже получен уровень Spin Pass</span><input class="form-control" name="pass" type="number" min="1" max="7" value="3" required></label>
 <label class="form-label"><span data-i18n="pack" data-count="15">Осталось наборов по 15</span><input class="form-control" name="medium" type="number" min="0" max="2" value="2" required></label>
 <label class="form-label"><span data-i18n="pack" data-count="25">Осталось наборов по 25</span><input class="form-control" name="large" type="number" min="0" max="3" value="3" required></label>
 </div>
 <div class="compact">
+<label class="form-check"><input class="form-check-input" name="prime" type="checkbox" checked> Prime Pass</label>
 <label class="form-check"><input class="form-check-input" name="passToday" type="checkbox"> <span data-i18n="passToday">Следующий уровень пропуска уже доступен сегодня</span></label>
 <label class="form-check"><input class="form-check-input" name="gift" type="checkbox"> <span data-i18n="gift">Сегодняшний Daily Freebie ещё доступен</span></label>
 <label class="form-check"><input class="form-check-input" name="daily" type="checkbox"> <span data-i18n="daily">Дневной набор за 499 слитков сегодня ещё доступен</span></label>
@@ -150,7 +166,7 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <label class="form-check"><input class="form-check-input" name="tier2" type="checkbox" checked> <span data-i18n="tier2" data-suffix=" · +3">3 своих запуска Tier 2 · +3</span></label>
 </div>
 <p class="text-small text-muted"><span data-i18n="limits">Расчёт от уровня 2 купленного пропуска. Каждый следующий вход даёт новый уровень (до 7) и один Daily Freebie. Учтены только наборы на 10 / 15 / 25 жетонов. Цены пополнения — со среза 10 ноября, игровые номиналы считаются повторяемыми, веб-наборы — по одному каждого номинала. Бонусы за будущий рост мощности в прогноз не входят.</span></p>
-</div></details></aside></main></div><script src="spin-reader.js"></script>
+</div></details></aside></main></div><script src="stock-reader.js"></script><script src="spin-reader.js"></script>
 <script>
 (() => {
 const root = document.getElementById('module-launch');
@@ -162,6 +178,15 @@ if (features.desktopHelperImport) {
 
 const locales = {
   "ru": {
+    "screenDiagram": "Схема экрана",
+    "barsScreen": "В игре открой Gold Bar Mall (магазин слитков). На снимке должен быть виден баланс вверху справа.",
+    "passScreen": "В событии Module Launch нажми Spin Pass внизу справа. Покажи верх экрана и строку текущего уровня с наградами.",
+    "shopScreen": "На колесе Module Spin нажми Pack справа. Прокрути в самый верх, чтобы в кадр попали ежедневный подарок и лимиты наборов.",
+    "passLevel": "Полученный уровень пропуска",
+    "moreScreens": "Добавить скриншоты",
+    "unread": "Не прочитано. Сверься с примером и выбери другой снимок.",
+    "answerYes": "Да",
+    "answerNo": "Нет",
     "manualBudget": "Укажи, сколько ещё готов потратить. Можно оставить 0 €.",
     "manualStock": "Введи остаток слитков и проверь пропуск и предложения магазина.",
     "manualTasks": "Отметь только те задания, которые ещё планируешь выполнить.",
@@ -233,6 +258,15 @@ const locales = {
     "limits": "Пропуск уровней 2–7, подарок за каждый сброс. Наборы по 10, 15 и 25. Игровые пополнения повторяемые, каждый веб-набор учитывается один раз. Сверь цены. Бонусы за мощность не включены."
   },
   "en": {
+    "screenDiagram": "Screen guide",
+    "barsScreen": "Open Gold Bar Mall in the game. Include your balance at the top right.",
+    "passScreen": "In Module Launch, tap Spin Pass at the bottom right. Include the header and the reward row for your current level.",
+    "shopScreen": "On Module Spin, tap Pack on the right. Scroll to the top to show the daily gift and pack limits.",
+    "passLevel": "Claimed pass level",
+    "moreScreens": "Add screenshots",
+    "unread": "Unread. Check the example and choose another screenshot.",
+    "answerYes": "Yes",
+    "answerNo": "No",
     "manualBudget": "Enter how much more you want to spend. €0 is fine.",
     "manualStock": "Enter your gold bars and check your pass and shop offers.",
     "manualTasks": "Select the tasks you still plan to complete.",
@@ -304,6 +338,15 @@ const locales = {
     "limits": "Pass levels 2–7. One gift per reset. Packs: 10, 15, 25. In-game top-ups repeat; each web offer counts once. Check prices. Power bonuses excluded."
   },
   "es": {
+    "screenDiagram": "Esquema de pantalla",
+    "barsScreen": "Abre Gold Bar Mall en el juego. Incluye el saldo de lingotes de arriba a la derecha.",
+    "passScreen": "En Module Launch toca Spin Pass abajo a la derecha. Muestra la cabecera y las recompensas del nivel actual.",
+    "shopScreen": "En la ruleta toca Pack a la derecha. Sube al principio para mostrar el regalo diario y los límites de los paquetes.",
+    "passLevel": "Nivel del pase cobrado",
+    "moreScreens": "Añadir capturas",
+    "unread": "No se pudo leer. Consulta el ejemplo y elige otra captura.",
+    "answerYes": "Sí",
+    "answerNo": "No",
     "manualBudget": "Indica cuánto más quieres gastar. Puedes dejar 0 €.",
     "manualStock": "Introduce tus lingotes y revisa el pase y las ofertas de la tienda.",
     "manualTasks": "Marca las tareas que aún piensas completar.",
@@ -375,6 +418,15 @@ const locales = {
     "limits": "Pase de nivel 2–7 y un regalo por reinicio. Paquetes de 10, 15 y 25. Las recargas del juego se repiten; cada oferta web cuenta una vez. Comprueba los precios. Se excluyen los bonos de potencia."
   },
   "uk": {
+    "screenDiagram": "Схема екрана",
+    "barsScreen": "У грі відкрий Gold Bar Mall (магазин зливків). Покажи баланс угорі праворуч.",
+    "passScreen": "У події Module Launch натисни Spin Pass унизу праворуч. Покажи верх екрана й рядок нагород поточного рівня.",
+    "shopScreen": "На колесі Module Spin натисни Pack праворуч. Прокрути вгору до щоденного подарунка й лімітів наборів.",
+    "passLevel": "Отриманий рівень пропуску",
+    "moreScreens": "Додати знімки",
+    "unread": "Не розпізнано. Звірся зі зразком й вибери інший знімок.",
+    "answerYes": "Так",
+    "answerNo": "Ні",
     "manualBudget": "Укажи, скільки ще готовий витратити. Можна залишити 0 €.",
     "manualStock": "Введи залишок зливків і перевір перепустку та пропозиції магазину.",
     "manualTasks": "Познач лише ті завдання, які ще плануєш виконати.",
@@ -446,6 +498,15 @@ const locales = {
     "limits": "Перепустка рівнів 2–7, подарунок за скидання. Набори по 10, 15 і 25. Ігрові поповнення повторювані, кожну вебпропозицію враховано раз. Перевір ціни. Бонуси за потужність виключено."
   },
   "de": {
+    "screenDiagram": "Bildschirmansicht",
+    "barsScreen": "Öffne im Spiel die Gold Bar Mall. Zeige den Goldbarrenbestand oben rechts.",
+    "passScreen": "Tippe in Module Launch unten rechts auf Spin Pass. Zeige die Kopfzeile und die Belohnungen deiner aktuellen Stufe.",
+    "shopScreen": "Tippe am Rad rechts auf Pack. Scrolle ganz nach oben, bis Tagesgeschenk und Paketlimits sichtbar sind.",
+    "passLevel": "Abgeholte Passstufe",
+    "moreScreens": "Screenshots hinzufügen",
+    "unread": "Nicht erkannt. Vergleiche das Beispiel und wähle ein anderes Bild.",
+    "answerYes": "Ja",
+    "answerNo": "Nein",
     "manualBudget": "Gib ein, wie viel du noch ausgeben möchtest. 0 € ist auch möglich.",
     "manualStock": "Gib deine Goldbarren ein und prüfe deinen Pass und die Shopangebote.",
     "manualTasks": "Wähle die Aufgaben, die du noch erledigen möchtest.",
@@ -517,6 +578,15 @@ const locales = {
     "limits": "Passstufen 2–7, ein Geschenk pro Tageswechsel. Pakete mit 10, 15 oder 25 Marken. Aufladungen im Spiel sind wiederholbar, Webangebote zählen je einmal. Preise prüfen. Stärkeboni sind ausgeschlossen."
   },
   "tr": {
+    "screenDiagram": "Ekran şeması",
+    "barsScreen": "Oyunda Gold Bar Mall mağazasını aç. Sağ üstteki külçe bakiyen görünsün.",
+    "passScreen": "Module Launch içinde sağ alttaki Spin Pass sekmesine dokun. Üst bölüm ve mevcut seviyenin ödül satırı görünsün.",
+    "shopScreen": "Module Spin çarkında sağdaki Pack düğmesine dokun. Günlük hediye ve paket limitleri görünecek şekilde en üste kaydır.",
+    "passLevel": "Ödülü alınan geçiş seviyesi",
+    "moreScreens": "Ekran görüntüsü ekle",
+    "unread": "Okunamadı. Örneğe bakıp başka bir görüntü seç.",
+    "answerYes": "Evet",
+    "answerNo": "Hayır",
     "manualBudget": "Ne kadar daha harcamak istediğini gir. 0 € da seçebilirsin.",
     "manualStock": "Altın külçelerini gir, geçiş kartını ve mağaza tekliflerini kontrol et.",
     "manualTasks": "Hâlâ tamamlamayı planladığın görevleri seç.",
@@ -588,6 +658,15 @@ const locales = {
     "limits": "Bilet seviyeleri 2–7, her sıfırlamada bir hediye. Paketler 10, 15, 25 jeton. Oyun içi yüklemeler tekrarlanabilir; her web teklifi bir kez sayılır. Fiyatları kontrol et. Güç bonusları hariçtir."
   },
   "zh-Hans": {
+    "screenDiagram": "界面示意图",
+    "barsScreen": "在游戏中打开金条商城 Gold Bar Mall，截入右上角的金条余额。",
+    "passScreen": "在 Module Launch 活动中点右下角的 Spin Pass。截入顶部和当前等级的奖励行。",
+    "shopScreen": "在转盘右侧点 Pack，滚动到列表顶部，截入每日赠礼和礼包限购次数。",
+    "passLevel": "已领奖的通行证等级",
+    "moreScreens": "添加截图",
+    "unread": "未能识别。请参考示例并选择另一张截图。",
+    "answerYes": "是",
+    "answerNo": "否",
     "manualBudget": "输入还打算花多少钱。可以填 0 欧元。",
     "manualStock": "输入金条余额，核对通行证和商店优惠。",
     "manualTasks": "勾选你接下来打算完成的任务。",
@@ -659,6 +738,15 @@ const locales = {
     "limits": "通行证等级 2–7，每次重置赠送一份礼物。礼包含 10、15 或 25 枚代币。游戏内充值可重复，每种网页优惠只计一次。请核对价格。不含战力奖励。"
   },
   "zh-Hant": {
+    "screenDiagram": "畫面示意圖",
+    "barsScreen": "在遊戲中打開金條商城 Gold Bar Mall，截入右上角的金條餘額。",
+    "passScreen": "在 Module Launch 活動中點右下角的 Spin Pass，截入頂部和目前等級的獎勵列。",
+    "shopScreen": "在轉盤右側點 Pack，捲動到清單頂端，截入每日贈禮和禮包限購次數。",
+    "passLevel": "已領獎的通行證等級",
+    "moreScreens": "新增截圖",
+    "unread": "無法辨識。請參考範例並選擇另一張截圖。",
+    "answerYes": "是",
+    "answerNo": "否",
     "manualBudget": "輸入還打算花多少錢。可以填 0 歐元。",
     "manualStock": "輸入金條餘額，核對通行證和商店優惠。",
     "manualTasks": "勾選接下來打算完成的任務。",
@@ -730,6 +818,15 @@ const locales = {
     "limits": "通行證等級 2–7，每次重設贈送一份禮物。禮包含 10、15 或 25 枚代幣。遊戲內儲值可重複，每種網頁優惠只計一次。請核對價格。不含戰力獎勵。"
   },
   "fr": {
+    "screenDiagram": "Schéma de l’écran",
+    "barsScreen": "Ouvre Gold Bar Mall dans le jeu. Inclus le solde de lingots en haut à droite.",
+    "passScreen": "Dans Module Launch, touche Spin Pass en bas à droite. Montre le haut de l’écran et les récompenses du niveau actuel.",
+    "shopScreen": "Sur la roue, touche Pack à droite. Remonte tout en haut pour montrer le cadeau quotidien et les limites des lots.",
+    "passLevel": "Niveau du pass récupéré",
+    "moreScreens": "Ajouter des captures",
+    "unread": "Illisible. Compare avec l’exemple et choisis une autre capture.",
+    "answerYes": "Oui",
+    "answerNo": "Non",
     "manualBudget": "Indique ce que tu veux encore dépenser. Tu peux laisser 0 €.",
     "manualStock": "Saisis tes lingots et vérifie ton pass et les offres de la boutique.",
     "manualTasks": "Coche les missions que tu comptes encore terminer.",
@@ -801,6 +898,15 @@ const locales = {
     "limits": "Pass de niveau 2 à 7, un cadeau par jour. Lots de 10, 15 et 25. Recharges en jeu répétables, chaque offre web compte une fois. Vérifie les prix. Bonus de puissance exclus."
   },
   "ja": {
+    "screenDiagram": "画面の見本",
+    "barsScreen": "ゲーム内の Gold Bar Mall を開き、右上の金塊残高を写してください。",
+    "passScreen": "Module Launch の右下にある Spin Pass を開き、画面上部と現在のレベルの報酬欄を写してください。",
+    "shopScreen": "ルーレット右側の Pack を開き、一覧の先頭に戻ってデイリーギフトと購入上限を写してください。",
+    "passLevel": "受け取り済みのパスレベル",
+    "moreScreens": "画像を追加",
+    "unread": "読み取れません。例を確認し、別の画像を選んでください。",
+    "answerYes": "はい",
+    "answerNo": "いいえ",
     "manualBudget": "これから使う予算を入力してください。0ユーロでも構いません。",
     "manualStock": "金塊の所持数を入力し、パスとショップの内容を確認してください。",
     "manualTasks": "これから達成する予定のミッションを選んでください。",
@@ -872,6 +978,15 @@ const locales = {
     "limits": "対象パスレベルは2～7。日次更新ごとにギフト1個。パックは10、15、25枚。ゲーム内チャージは繰り返し可、各ウェブ商品は1回まで。価格を確認してください。戦力ボーナスは含みません。"
   },
   "ko": {
+    "screenDiagram": "화면 안내도",
+    "barsScreen": "게임에서 Gold Bar Mall을 열고 오른쪽 위 금괴 잔액이 보이게 찍으세요.",
+    "passScreen": "Module Launch 오른쪽 아래의 Spin Pass를 누르고 화면 상단과 현재 레벨 보상 줄을 함께 찍으세요.",
+    "shopScreen": "룰렛 오른쪽 Pack을 누른 뒤 목록 맨 위에서 일일 선물과 구매 한도를 찍으세요.",
+    "passLevel": "수령한 패스 레벨",
+    "moreScreens": "스크린샷 추가",
+    "unread": "인식할 수 없습니다. 예시를 보고 다른 이미지를 선택하세요.",
+    "answerYes": "예",
+    "answerNo": "아니요",
     "manualBudget": "앞으로 쓸 금액을 입력하세요. 0유로도 괜찮습니다.",
     "manualStock": "보유한 금괴를 입력하고 패스와 상점 상품을 확인하세요.",
     "manualTasks": "앞으로 완료할 임무를 선택하세요.",
@@ -943,6 +1058,15 @@ const locales = {
     "limits": "패스 2~7레벨, 초기화마다 선물 1개. 팩은 10개, 15개, 25개입니다. 게임 내 충전은 반복 가능하며 웹 상품은 종류별로 한 번 계산합니다. 가격을 확인하세요. 전투력 보너스는 제외합니다."
   },
   "ca": {
+    "screenDiagram": "Esquema de la pantalla",
+    "barsScreen": "Obre Gold Bar Mall al joc i mostra el saldo de lingots de dalt a la dreta.",
+    "passScreen": "A Module Launch toca Spin Pass a baix a la dreta. Mostra la capçalera i els premis del nivell actual.",
+    "shopScreen": "A la roda toca Pack a la dreta. Puja fins al principi per mostrar el regal diari i els límits dels paquets.",
+    "passLevel": "Nivell del passi cobrat",
+    "moreScreens": "Afegeix captures",
+    "unread": "No s’ha pogut llegir. Mira l’exemple i tria una altra captura.",
+    "answerYes": "Sí",
+    "answerNo": "No",
     "manualBudget": "Indica quant més vols gastar. Pots deixar-hi 0 €.",
     "manualStock": "Introdueix els lingots i revisa el passi i les ofertes de la botiga.",
     "manualTasks": "Marca les tasques que encara vols completar.",
@@ -1014,6 +1138,15 @@ const locales = {
     "limits": "Passi de nivell 2–7 i un regal per reinici. Paquets de 10, 15 i 25. Les recàrregues del joc es poden repetir; cada oferta web compta un cop. Comprova els preus. S’exclouen els bons de potència."
   },
   "pt-BR": {
+    "screenDiagram": "Esquema da tela",
+    "barsScreen": "No jogo, abra Gold Bar Mall e mostre o saldo de lingotes no canto superior direito.",
+    "passScreen": "Em Module Launch, toque em Spin Pass no canto inferior direito. Mostre o topo e as recompensas do nível atual.",
+    "shopScreen": "Na roleta, toque em Pack à direita. Vá até o topo da lista para mostrar o presente diário e os limites dos pacotes.",
+    "passLevel": "Nível do passe resgatado",
+    "moreScreens": "Adicionar capturas",
+    "unread": "Não foi possível ler. Confira o exemplo e escolha outra captura.",
+    "answerYes": "Sim",
+    "answerNo": "Não",
     "manualBudget": "Informe quanto ainda pretende gastar. Pode deixar 0 €.",
     "manualStock": "Informe seus lingotes e confira o passe e as ofertas da loja.",
     "manualTasks": "Marque as tarefas que ainda pretende concluir.",
@@ -1085,6 +1218,15 @@ const locales = {
     "limits": "Passe de nível 2–7, um presente por reinício. Pacotes de 10, 15 e 25. Recargas no jogo podem se repetir; cada oferta online conta uma vez. Confira os preços. Bônus de poder excluídos."
   },
   "it": {
+    "screenDiagram": "Schema della schermata",
+    "barsScreen": "Apri Gold Bar Mall nel gioco e includi il saldo dei lingotti in alto a destra.",
+    "passScreen": "In Module Launch tocca Spin Pass in basso a destra. Mostra la parte alta e i premi del livello attuale.",
+    "shopScreen": "Sulla ruota tocca Pack a destra. Scorri fino in cima per mostrare il regalo giornaliero e i limiti dei pacchetti.",
+    "passLevel": "Livello del pass riscattato",
+    "moreScreens": "Aggiungi screenshot",
+    "unread": "Valore illeggibile. Guarda l’esempio e scegli un’altra immagine.",
+    "answerYes": "Sì",
+    "answerNo": "No",
     "manualBudget": "Indica quanto vuoi ancora spendere. Puoi lasciare 0 €.",
     "manualStock": "Inserisci i tuoi lingotti e controlla il pass e le offerte del negozio.",
     "manualTasks": "Seleziona le missioni che intendi ancora completare.",
@@ -1156,6 +1298,15 @@ const locales = {
     "limits": "Pass di livello 2–7, un regalo per reset. Pacchetti da 10, 15 e 25. Le ricariche in gioco sono ripetibili; ogni offerta web conta una volta. Verifica i prezzi. Bonus potenza esclusi."
   },
   "pl": {
+    "screenDiagram": "Schemat ekranu",
+    "barsScreen": "Otwórz Gold Bar Mall w grze. Pokaż saldo sztabek w prawym górnym rogu.",
+    "passScreen": "W Module Launch dotknij Spin Pass na dole po prawej. Pokaż górę ekranu i wiersz nagród obecnego poziomu.",
+    "shopScreen": "Na kole dotknij Pack po prawej. Przewiń na samą górę, aby pokazać dzienny prezent i limity pakietów.",
+    "passLevel": "Odebrany poziom przepustki",
+    "moreScreens": "Dodaj zrzuty ekranu",
+    "unread": "Nie udało się odczytać. Porównaj z przykładem i wybierz inny zrzut.",
+    "answerYes": "Tak",
+    "answerNo": "Nie",
     "manualBudget": "Wpisz, ile jeszcze chcesz wydać. Możesz zostawić 0 €.",
     "manualStock": "Wpisz liczbę sztabek i sprawdź przepustkę oraz oferty sklepu.",
     "manualTasks": "Zaznacz zadania, które jeszcze planujesz wykonać.",
@@ -1227,6 +1378,15 @@ const locales = {
     "limits": "Przepustka poziomu 2–7, prezent przy każdym resecie. Pakiety 10, 15 i 25. Doładowania w grze można powtarzać; każda oferta internetowa liczy się raz. Sprawdź ceny. Bez premii za moc."
   },
   "id": {
+    "screenDiagram": "Ilustrasi layar",
+    "barsScreen": "Di dalam game, buka Gold Bar Mall. Tampilkan saldo emas batangan di kanan atas.",
+    "passScreen": "Di Module Launch, ketuk Spin Pass di kanan bawah. Tampilkan bagian atas dan baris hadiah level saat ini.",
+    "shopScreen": "Pada roda, ketuk Pack di kanan. Gulir ke paling atas untuk menampilkan hadiah harian dan batas paket.",
+    "passLevel": "Level pass yang sudah diklaim",
+    "moreScreens": "Tambah tangkapan layar",
+    "unread": "Tidak terbaca. Lihat contoh lalu pilih gambar lain.",
+    "answerYes": "Ya",
+    "answerNo": "Tidak",
     "manualBudget": "Masukkan jumlah yang masih ingin kamu belanjakan. Boleh diisi €0.",
     "manualStock": "Masukkan saldo emas batangan dan periksa pass serta penawaran toko.",
     "manualTasks": "Pilih tugas yang masih ingin kamu selesaikan.",
@@ -1298,6 +1458,15 @@ const locales = {
     "limits": "Pass level 2–7, satu hadiah tiap reset. Paket 10, 15, dan 25. Isi ulang dalam game dapat diulang; tiap penawaran web dihitung sekali. Periksa harga. Bonus kekuatan tidak dihitung."
   },
   "vi": {
+    "screenDiagram": "Sơ đồ màn hình",
+    "barsScreen": "Mở Gold Bar Mall trong trò chơi. Chụp cả số thỏi vàng ở góc trên bên phải.",
+    "passScreen": "Trong Module Launch, nhấn Spin Pass ở góc dưới bên phải. Chụp phần đầu và hàng phần thưởng của cấp hiện tại.",
+    "shopScreen": "Trên vòng quay, nhấn Pack bên phải. Cuộn lên đầu để thấy quà hằng ngày và giới hạn các gói.",
+    "passLevel": "Cấp thẻ đã nhận thưởng",
+    "moreScreens": "Thêm ảnh chụp",
+    "unread": "Không đọc được. Xem ảnh mẫu và chọn ảnh khác.",
+    "answerYes": "Có",
+    "answerNo": "Không",
     "manualBudget": "Nhập số tiền bạn còn muốn chi. Có thể để 0 €.",
     "manualStock": "Nhập số thỏi vàng và kiểm tra thẻ sự kiện cùng ưu đãi cửa hàng.",
     "manualTasks": "Chọn các nhiệm vụ bạn còn định hoàn thành.",
@@ -1369,6 +1538,15 @@ const locales = {
     "limits": "Vé cấp 2–7, mỗi lần đặt lại có một quà. Gói 10, 15, 25 xu. Có thể nạp nhiều lần trong trò chơi; mỗi ưu đãi web chỉ tính một lần. Kiểm tra giá. Chưa tính thưởng sức mạnh."
   },
   "ar": {
+    "screenDiagram": "رسم توضيحي للشاشة",
+    "barsScreen": "افتح متجر السبائك Gold Bar Mall في اللعبة وأظهر الرصيد أعلى اليمين.",
+    "passScreen": "في حدث Module Launch اضغط Spin Pass أسفل اليمين وأظهر أعلى الشاشة وصف مكافآت مستواك الحالي.",
+    "shopScreen": "اضغط Pack يمين العجلة ومرّر إلى أعلى القائمة لإظهار الهدية اليومية وحدود الحزم.",
+    "passLevel": "مستوى التصريح المستلَم",
+    "moreScreens": "إضافة لقطات شاشة",
+    "unread": "تعذرت القراءة. راجع المثال واختر لقطة أخرى.",
+    "answerYes": "نعم",
+    "answerNo": "لا",
     "manualBudget": "أدخل المبلغ الإضافي الذي ترغب في إنفاقه. يمكنك تركه عند صفر يورو.",
     "manualStock": "أدخل رصيد السبائك وراجع التصريح وعروض المتجر.",
     "manualTasks": "حدّد المهام التي ما زلت تنوي إكمالها.",
@@ -1440,6 +1618,15 @@ const locales = {
     "limits": "مستويات التذكرة ٢–٧ وهدية مع كل تجديد. الحزم من ١٠ و١٥ و٢٥ رمزًا. يمكن تكرار الشحن داخل اللعبة ويُحسب كل عرض ويب مرة واحدة. تحقق من الأسعار. لا يشمل التقدير مكافآت القوة."
   },
   "th": {
+    "screenDiagram": "ภาพตัวอย่างหน้าจอ",
+    "barsScreen": "เปิด Gold Bar Mall ในเกม ให้เห็นยอดทองแท่งที่มุมขวาบน",
+    "passScreen": "ใน Module Launch แตะ Spin Pass ที่มุมขวาล่าง ถ่ายให้เห็นด้านบนและแถวรางวัลของระดับปัจจุบัน",
+    "shopScreen": "ที่วงล้อแตะ Pack ด้านขวา เลื่อนขึ้นบนสุดให้เห็นของขวัญรายวันและจำนวนแพ็กที่ซื้อได้",
+    "passLevel": "ระดับพาสที่รับรางวัลแล้ว",
+    "moreScreens": "เพิ่มภาพหน้าจอ",
+    "unread": "อ่านไม่ได้ ดูภาพตัวอย่างแล้วเลือกภาพใหม่",
+    "answerYes": "ใช่",
+    "answerNo": "ไม่ใช่",
     "manualBudget": "ใส่จำนวนเงินที่ยังต้องการใช้ จะใส่ 0 ยูโรก็ได้",
     "manualStock": "ใส่จำนวนทองแท่ง แล้วตรวจสอบพาสและข้อเสนอในร้านค้า",
     "manualTasks": "เลือกภารกิจที่ยังตั้งใจจะทำให้เสร็จ",
@@ -1511,6 +1698,15 @@ const locales = {
     "limits": "พาสระดับ 2–7 ได้ของขวัญหนึ่งชิ้นต่อการรีเซ็ต แพ็ก 10, 15 และ 25 เหรียญ เติมในเกมซ้ำได้ ข้อเสนอบนเว็บนับอย่างละหนึ่งครั้ง ตรวจสอบราคา ไม่รวมโบนัสพลัง"
   },
   "nl": {
+    "screenDiagram": "Schermvoorbeeld",
+    "barsScreen": "Open Gold Bar Mall in het spel. Zorg dat je goudstaven rechtsboven zichtbaar zijn.",
+    "passScreen": "Tik in Module Launch rechtsonder op Spin Pass. Toon de bovenkant en de beloningsrij van je huidige niveau.",
+    "shopScreen": "Tik bij het rad rechts op Pack. Scrol helemaal omhoog om het dagcadeau en de pakketlimieten te tonen.",
+    "passLevel": "Geclaimd pasniveau",
+    "moreScreens": "Screenshots toevoegen",
+    "unread": "Onleesbaar. Bekijk het voorbeeld en kies een andere screenshot.",
+    "answerYes": "Ja",
+    "answerNo": "Nee",
     "manualBudget": "Vul in hoeveel je nog wilt uitgeven. € 0 is ook goed.",
     "manualStock": "Vul je goudstaven in en controleer je pas en de winkelaanbiedingen.",
     "manualTasks": "Selecteer de taken die je nog wilt voltooien.",
@@ -1582,6 +1778,15 @@ const locales = {
     "limits": "Pasniveau 2–7, één geschenk per reset. Pakketten van 10, 15 en 25. Opwaarderen in het spel kan vaker; elke webaanbieding telt één keer. Controleer de prijzen. Krachtbonussen tellen niet mee."
   },
   "ms": {
+    "screenDiagram": "Panduan skrin",
+    "barsScreen": "Buka Gold Bar Mall dalam permainan. Paparkan baki jongkong di kanan atas.",
+    "passScreen": "Dalam Module Launch, ketik Spin Pass di kanan bawah. Paparkan bahagian atas dan baris ganjaran tahap semasa.",
+    "shopScreen": "Pada roda, ketik Pack di kanan. Tatal ke paling atas untuk menunjukkan hadiah harian dan had pek.",
+    "passLevel": "Tahap pas yang sudah dituntut",
+    "moreScreens": "Tambah tangkapan skrin",
+    "unread": "Tidak dapat dibaca. Lihat contoh dan pilih gambar lain.",
+    "answerYes": "Ya",
+    "answerNo": "Tidak",
     "manualBudget": "Masukkan jumlah yang masih ingin dibelanjakan. Anda boleh biarkan €0.",
     "manualStock": "Masukkan baki jongkong emas dan semak pas serta tawaran kedai.",
     "manualTasks": "Pilih tugas yang masih ingin diselesaikan.",
@@ -1653,6 +1858,15 @@ const locales = {
     "limits": "Pas tahap 2–7, satu hadiah setiap tetapan semula. Pek 10, 15 dan 25 token. Tambah nilai dalam permainan boleh diulang; setiap tawaran web dikira sekali. Semak harga. Bonus kuasa dikecualikan."
   },
   "hi": {
+    "screenDiagram": "स्क्रीन का नमूना",
+    "barsScreen": "गेम में Gold Bar Mall खोलें। ऊपर दाईं ओर सोने की छड़ों की संख्या दिखाएँ।",
+    "passScreen": "Module Launch में नीचे दाईं ओर Spin Pass खोलें। ऊपर का हिस्सा और मौजूदा स्तर के इनामों की पंक्ति दिखाएँ।",
+    "shopScreen": "पहिए पर दाईं ओर Pack दबाएँ। सूची के सबसे ऊपर जाकर दैनिक उपहार और पैक की सीमा दिखाएँ।",
+    "passLevel": "जिस पास स्तर का इनाम लिया है",
+    "moreScreens": "स्क्रीनशॉट जोड़ें",
+    "unread": "पढ़ा नहीं जा सका। उदाहरण देखें और दूसरा स्क्रीनशॉट चुनें।",
+    "answerYes": "हाँ",
+    "answerNo": "नहीं",
     "manualBudget": "बताएँ कि आप और कितना खर्च करना चाहते हैं। €0 भी रख सकते हैं।",
     "manualStock": "सोने की छड़ों की संख्या भरें और पास व दुकान के ऑफ़र जाँचें।",
     "manualTasks": "वे काम चुनें जिन्हें आप अभी पूरा करना चाहते हैं।",
@@ -1724,6 +1938,15 @@ const locales = {
     "limits": "पास स्तर 2–7। हर रीसेट पर एक उपहार। 10, 15 और 25 के पैक। गेम में रिचार्ज दोहरा सकते हैं; हर वेब ऑफ़र एक बार गिना जाता है। कीमतें जाँचें। शक्ति बोनस शामिल नहीं हैं।"
   },
   "ur": {
+    "screenDiagram": "اسکرین کا خاکہ",
+    "barsScreen": "گیم میں Gold Bar Mall کھولیں۔ اوپر دائیں جانب سونے کی سلاخوں کا بیلنس دکھائیں۔",
+    "passScreen": "Module Launch میں نیچے دائیں Spin Pass کھولیں۔ اوپر کا حصہ اور موجودہ درجے کے انعامات کی قطار دکھائیں۔",
+    "shopScreen": "پہیے کے دائیں Pack دبائیں۔ فہرست کے شروع میں روزانہ کا تحفہ اور پیک کی حدیں دکھائیں۔",
+    "passLevel": "پاس کا وصول شدہ درجہ",
+    "moreScreens": "اسکرین شاٹس شامل کریں",
+    "unread": "پڑھا نہیں جا سکا۔ مثال دیکھیں اور دوسرا اسکرین شاٹ منتخب کریں۔",
+    "answerYes": "ہاں",
+    "answerNo": "نہیں",
     "manualBudget": "وہ رقم درج کریں جو آپ مزید خرچ کرنا چاہتے ہیں۔ صفر یورو بھی رکھ سکتے ہیں۔",
     "manualStock": "سونے کی سلاخوں کی تعداد درج کریں اور پاس اور دکان کی پیشکشیں دیکھیں۔",
     "manualTasks": "وہ کام منتخب کریں جو آپ اب بھی مکمل کرنا چاہتے ہیں۔",
@@ -1827,7 +2050,8 @@ const out = key => root.querySelector('[data-out="'+key+'"]');
 const put = (key,text) => { out(key).textContent = text; };
 const euro = cents => (cents/100).toLocaleString(locale,{style:'currency',currency:'EUR'});
 const tiers = [10,50,100,200,300,500];
-const passTokens = [0,0,0,6,11,6,6,11];
+const passTokens = [0,0,6,6,11,6,6,11];
+const freePassTokens = [0,0,1,1,1,1,1,1];
 const game = [[100,109],[200,219],[500,599],[1000,1099],[2000,2299],[2500,2799],[5000,5499],[10000,10999]];
 const mall = [[1050,1099],[2100,2299],[2625,2799],[5250,5499]];
 // Minimum cost for at least a required balance. Each state points to a smaller shortfall.
@@ -1853,7 +2077,7 @@ function funding(need,web){
 function compute(s){
   const active=s.days>0, future=Math.max(0,s.days-1);
   const passCount=active?future+Number(s.passToday):0;
-  const pass=passTokens.slice(s.pass+1,s.pass+1+passCount).reduce((a,b)=>a+b,0);
+  const pass=(s.prime?passTokens:freePassTokens).slice(s.pass+1,s.pass+1+passCount).reduce((a,b)=>a+b,0);
   const gifts=active?future+Number(s.gift):0;
   const rally=active?(5*s.allRally+3*s.tier3+3*s.tier2):0;
   const base=s.draws+(active?s.tokens:0)+pass+gifts+rally;
@@ -1925,7 +2149,7 @@ function render() {
   if (!active) actions.push(t('end'));
   else {
     if (s.gift) actions.push(t('claim')+' · Daily Freebie (+1)');
-    if (s.passToday && s.pass<7) actions.push(t('claim')+' · Spin Pass '+n(s.pass+1)+' (+'+n(passTokens[s.pass+1])+')');
+    if (s.passToday && s.pass<7) actions.push(t('claim')+' · Spin Pass '+n(s.pass+1)+' (+'+n((s.prime?passTokens:freePassTokens)[s.pass+1])+')');
     if (s.tokens) actions.push(t('spend')+' ('+n(s.tokens)+')');
     for (const [key,bonus] of [['allRally',5],['tier3',3],['tier2',3]]) if(s[key]) actions.push(t(key)+' (+'+n(bonus)+')');
     if (p.a>future) actions.push(t('buy'));
@@ -1992,7 +2216,15 @@ exampleWrap.addEventListener('pointerenter',event=>{
 });
 exampleWrap.addEventListener('pointerleave',()=>{exampleHover.hidden=true;});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')exampleHover.hidden=true;});
-exampleTrigger.addEventListener('click',()=>{exampleHover.hidden=true;exampleDialog.showModal();});
+function openExample(src,title){
+  exampleHover.hidden=true;
+  const image=exampleDialog.querySelector('img');
+  image.src=src; image.alt=title; image.hidden=false;
+  document.getElementById('stock-diagram-large').hidden=true;
+  const heading=document.getElementById('example-title');heading.dataset.i18n='screenExample';heading.textContent=t('screenExample');
+  exampleDialog.showModal();
+}
+exampleTrigger.addEventListener('click',()=>openExample('module-spin-example.webp','Last Z · Module Spin'));
 exampleDialog.addEventListener('click',event=>{if(event.target===exampleDialog)exampleDialog.close();});
 const picker=document.getElementById('spin-file');
 const review=document.getElementById('spin-review');
@@ -2078,7 +2310,7 @@ review.addEventListener('submit',event=>{
 // Screenshot confirmation updates the wheel counters. Review the other inputs in page order.
 const manualGroups = [
   {hint:'manualBudget', names:['budget']},
-  {hint:'manualStock', names:['bars','pass','medium','large','passToday','gift','daily','web']},
+  {hint:'manualStock', names:['bars','prime','pass','medium','large','passToday','gift','daily']},
   {hint:'manualTasks', names:['allRally','tier3','tier2']}
 ].map(group=>({...group, inputs:group.names.map(name=>fields.find(field=>field.name===name))}));
 const manualKey=storageKey+':manual-review';
@@ -2091,12 +2323,14 @@ manualAction.type='button';
 let manualStep=-1;
 
 function showManualStep(step, moveFocus) {
+  const needsReview=input=>!stockConfirmed.has(input.name);
+  if(step===1 && !manualGroups[1].inputs.some(needsReview)) step=2;
   manualStep=step;
   const group=manualGroups[step];
   for (const [index,entry] of manualGroups.entries()) {
     for (const input of entry.inputs) {
-      input.closest('label').classList.toggle('manual-needed',Boolean(group) && index>=step);
-      if(index===step) input.setAttribute('aria-describedby',manualHint.id);
+      input.closest('label').classList.toggle('manual-needed',Boolean(group) && index>=step && (index!==1 || needsReview(input)));
+      if(index===step && (index!==1 || needsReview(input))) input.setAttribute('aria-describedby',manualHint.id);
       else input.removeAttribute('aria-describedby');
     }
   }
@@ -2106,14 +2340,14 @@ function showManualStep(step, moveFocus) {
     else sessionStorage.removeItem(manualKey);
   } catch {}
   if(!group) {
-    manualHint.remove(); manualAction.remove();
+    manualHint.remove(); manualAction.remove(); stockLink.remove();
     if(moveFocus) {
       const heading=out('today').previousElementSibling;
       heading.tabIndex=-1; heading.focus();
     }
     return;
   }
-  const first=group.inputs[0], last=group.inputs[group.inputs.length-1];
+  const first=(step===1?group.inputs.find(needsReview):group.inputs[0]), last=group.inputs[group.inputs.length-1];
   const container=first.closest('.viz-controls,.compact');
   const details=first.closest('details');
   if(details) details.open=true;
@@ -2121,9 +2355,15 @@ function showManualStep(step, moveFocus) {
   last.closest('.viz-controls,.compact').after(manualAction);
   manualHint.dataset.i18n=group.hint;
   manualHint.textContent=t(group.hint);
+  if(step===1) manualHint.after(stockLink);
+  else stockLink.remove();
   manualAction.dataset.i18n=step===manualGroups.length-1?'manualDone':'manualNext';
   manualAction.textContent=t(manualAction.dataset.i18n);
   if(moveFocus) {
+    if(step===1) {
+      const card=stockCards.find(card=>card.keys.some(key=>!stockConfirmed.has(key)));
+      if(card) {card.input.focus({preventScroll:true});card.input.closest('section').scrollIntoView({block:'center'});return;}
+    }
     first.focus({preventScroll:true});
     manualHint.scrollIntoView({block:'center'});
     if(first.type==='number') first.select();
@@ -2151,6 +2391,114 @@ root.addEventListener('keydown',event=>{
   }
 });
 
+const stockPanel=document.getElementById('stock-screens');
+const stockKey=storageKey+':stock:'+new Date().toLocaleDateString('en-CA');
+const stockConfirmed=new Set();
+try {
+  const keys=JSON.parse(sessionStorage.getItem(stockKey));
+  if(Array.isArray(keys)) keys.forEach(key=>stockConfirmed.add(key));
+} catch {}
+const stockLink=document.createElement('a');
+stockLink.href='#stock-screens'; stockLink.dataset.i18n='moreScreens';stockLink.textContent=t('moreScreens');
+const stockCards=[];
+function refreshStock(card) {
+  const {keys,readings,status,summary,action}=card;
+  const known=readings && keys.filter(key=>Object.hasOwn(readings,key));
+  status.textContent=card.busy?t('readingScreen'):card.error?t('badScreen'):
+    known && known.length<keys.length?t('unread'):card.applied?t('example'):'';
+  summary.replaceChildren();
+  if(!card.busy && readings) for(const key of keys) {
+    const input=fields.find(f=>f.name===key);
+    const label=input.closest('label').textContent.trim();
+    const value=readings[key];
+    const item=document.createElement('li');
+    const formatted=value===undefined?'—':typeof value==='boolean'?t(value?'answerYes':'answerNo'):n(value);
+    item.textContent=label+' · '+formatted;
+    summary.append(item);
+  }
+  action.hidden=card.busy || card.applied || !known?.length;
+  action.textContent=t('applyScreen');
+}
+// Original schematic examples. All numbers below illustrate where to look in the game.
+function stockDiagram(type) {
+  const art=document.createElement('div');
+  art.className='stock-diagram';art.setAttribute('aria-hidden','true');
+  const examples={
+    bars:'<div class="diagram-head">Gold Bar Mall <span class="diagram-balance">▰ 320</span></div><div class="diagram-hero">🪙</div><div class="diagram-tiles"><span class="diagram-tile">▰ +100</span><span class="diagram-tile">▰ +200</span><span class="diagram-tile">▰ +500</span><span class="diagram-tile">▰ +1000</span></div>',
+    pass:'<div class="diagram-head">Spin Pass</div><div class="diagram-hero">🪙</div><div class="diagram-row"><span>Free</span><b>④</b><span>Prime</span></div><div class="diagram-row current"><em>✓</em><b>4</b><em>✓　✓</em></div><div class="diagram-row"><span>▣</span><b>5</b><span>▣　▣</span></div>',
+    shop:'<div class="diagram-head">Module Spin · Pack</div><div class="diagram-row"><span>Daily Freebie</span><em>✓</em></div><div class="diagram-row offer"><b>🪙 10</b><small>Limit: 1</small></div><div class="diagram-row offer"><b>🪙 15</b><small>Limit: 2</small></div><div class="diagram-row offer"><b>🪙 25</b><small>Limit: 3</small></div>'
+  };
+  art.innerHTML=examples[type];return art;
+}
+function buildStockCard(type,title,keys) {
+  const el=document.createElement('section');
+  el.className='stock-card';
+  const guideKey=type+'Screen';
+  el.innerHTML='<h3></h3><div><button type="button" class="stock-example" aria-haspopup="dialog"><span data-i18n="screenDiagram"></span></button><p class="note"></p></div><input type="file" accept="image/png,image/jpeg,image/webp"><p class="note" role="status"></p><ul class="note"></ul><button type="button" hidden></button>';
+  el.querySelector('h3').textContent=title;
+  const fallback=document.createElement('a');
+  fallback.href='#parameters';fallback.className='note';fallback.dataset.i18n='inventory';fallback.textContent=t('inventory');
+  fallback.onclick=event=>{
+    event.preventDefault();
+    showManualStep(1,false);
+    const key=keys.find(k=>!stockConfirmed.has(k))||keys[0];
+    const field=fields.find(f=>f.name===key);
+    field.closest('details').open=true;field.focus();
+  };
+  const tip=el.querySelector('p');
+  tip.dataset.i18n=guideKey;tip.id='stock-tip-'+type;tip.textContent=t(guideKey);
+  const example=el.querySelector('.stock-example');
+  example.querySelector('span').textContent=t('screenDiagram');
+  example.prepend(stockDiagram(type));
+  example.onclick=()=>{
+    exampleHover.hidden=true;
+    exampleDialog.querySelector('img').hidden=true;
+    const heading=document.getElementById('example-title');
+    delete heading.dataset.i18n;heading.textContent=title;
+    const large=document.getElementById('stock-diagram-large');
+    large.replaceChildren(stockDiagram(type));large.hidden=false;
+    exampleDialog.showModal();
+  };
+  const input=el.querySelector('input');
+  input.id='stock-'+type;input.setAttribute('aria-label',title);input.setAttribute('aria-describedby',tip.id);
+  const card={type,keys,input,status:el.querySelector('[role=status]'),summary:el.querySelector('ul'),action:el.lastElementChild};
+  el.append(fallback);stockPanel.append(el);stockCards.push(card);
+  input.onchange=async()=>{
+    const file=input.files[0]; if(!file)return;
+    const language=gameLanguage.value;
+    for(const key of keys) stockConfirmed.delete(key);
+    try{sessionStorage.setItem(stockKey,JSON.stringify([...stockConfirmed]));}catch{}
+    input.value='';input.disabled=true;card.busy=true;card.applied=false;card.error=false;card.readings=null;refreshStock(card);
+    let url;
+    try{
+      if(file.size>32*1024*1024)throw Error();
+      url=URL.createObjectURL(file);
+      const image=new Image();image.src=url;await image.decode();
+      card.readings=await window.readSpinScreen(image,language,type);
+    } catch {card.error=true;}
+    finally{if(url)URL.revokeObjectURL(url);card.busy=false;input.disabled=false;refreshStock(card);}
+  };
+  card.action.onclick=()=>{
+    if(!card.readings || card.applied || card.busy)return;
+    for(const key of keys) {
+      stockConfirmed.delete(key);
+      if(!Object.hasOwn(card.readings,key))continue;
+      const f=fields.find(f=>f.name===key),value=card.readings[key];
+      if(f.type==='checkbox') f.checked=value; else f.value=value;
+      stockConfirmed.add(key);
+    }
+    try{sessionStorage.setItem(stockKey,JSON.stringify([...stockConfirmed]));}catch{}
+    card.applied=true;render();persist();refreshStock(card);
+    if(manualGroups[manualStep])showManualStep(manualStep,manualStep===1 && keys.every(key=>stockConfirmed.has(key)));
+  };
+  refreshStock(card);
+}
+if(location.protocol!=='file:') {
+  buildStockCard('bars','Gold Bar Mall',['bars']);
+  buildStockCard('pass','Spin Pass',['prime','pass','passToday']);
+  buildStockCard('shop','Module Spin · Pack',['gift','daily','medium','large']);
+} else stockLink.href='https://last-z-module-launch.framedrabbit4.chatgpt.site/#stock-screens';
+
 let saved;
 try{saved=JSON.parse(localStorage.getItem(storageKey));}catch{}
 restore(saved);
@@ -2162,7 +2510,7 @@ try {
 selector.addEventListener('change',()=>{
   locale=selector.value;
   try{localStorage.setItem('module-launch.locale',locale);}catch{}
-  labels();render();scanStatus(scanMessage);
+  labels();render();scanStatus(scanMessage); stockCards.forEach(refreshStock);
   if(importMessage)document.getElementById('import-status').textContent=t(importMessage);
 });
 })();

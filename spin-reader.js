@@ -331,7 +331,7 @@ window.readSpinScreen = (() => {
     }
     return result;
   }
-  return async function readSpinScreen(image, lang='en') {
+  return async function readSpinScreen(image, lang='en', type='wheel') {
     const h=Math.round(900*image.naturalHeight/image.naturalWidth);
     if(h<1150 || h>2600) return {};
     const frame=canvas(900,h);
@@ -349,7 +349,7 @@ window.readSpinScreen = (() => {
         errorHandler:rejectLoad
       });
       if(finished) {await worker.terminate();return {};}
-      return recognize(worker,frame,lang);
+      return type==='wheel' ? recognize(worker,frame,lang) : window.readStockFields(type,frame,worker,{lineImage,normalize,digits});
     }
     try {return await Promise.race([run(),failure]);}
     finally {

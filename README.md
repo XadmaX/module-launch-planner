@@ -13,6 +13,16 @@ The planner reads your screenshot directly in your browser. Choose a photo, chec
 
 The browser reader supports all 23 planner locales, including both Chinese scripts. Original English 9:16 screenshots and generated localized examples were used for validation. Localized layouts, fonts and other aspect ratios can require corrections. A screenshot reflects the moment it was taken.
 
+## Read gold, pass and shop screenshots
+
+Each card has an original schematic showing where to look. Next to the wheel picker, choose a screenshot for each card and check the detected values before applying.
+
+- **Gold Bar Mall** shows the gold balance at the top right.
+- **Spin Pass** is the bottom-right tab in Module Launch. Include the header and your current reward row. The reader checks the Prime purchase state, level and claim marks. For an unclaimed row, the preceding claimed row is needed to establish the last claimed level.
+- **Module Spin → Pack** shows the daily gift and token packs. Start at the top so the reader can distinguish a sold-out offer from an offer outside the screenshot. The reader uses the visible pack limits. Prices in the planner follow its documented shop model.
+
+The three screenshots can be applied in any order. With complete readings, the remaining guided steps cover additional budget and planned tasks. A dash indicates an unread field. Try another screenshot or use the inventory controls. Web top-ups are an optional spending preference.
+
 ## Use the manual planner offline
 
 1. [Download the planner ZIP](https://github.com/XadmaX/module-launch-planner/archive/refs/heads/main.zip) (or use **Code → Download ZIP** on GitHub).
@@ -85,12 +95,12 @@ After the command finishes successfully, open the [online planner](https://last-
 
 ## Planning assumptions
 
-The calculator models the paid Prime Pass from level 2, three token pack sizes, and prices recorded in November 2026. Set today's availability and remaining limits to match your own store. Budget is additional spend, in euros. Draw milestones and the Luck jackpot use separate counters. Prices, reset dates and rewards may change.
+The calculator models free or Prime rewards for levels 2 through 7, three token pack sizes, and prices recorded in November 2026. Set today's availability and remaining limits to match your own store. Budget is additional spend, in euros. Draw milestones and the Luck jackpot use separate counters. Prices, reset dates and rewards may change.
 
 ## License and attribution
 
-Original code and interface translations are licensed under MIT (see LICENSE). The example screenshot shows the Last Z game interface for identification. Game artwork belongs to its respective owners and is outside the project’s MIT license. This project is independent of OMNILOJO. The license applies to the project code. Consult the [publisher's terms](https://last-z.com/terms/es/tos.html) when using the game. Pillow and Tesseract are separately installed dependencies under their own licenses.
+Original code and interface translations are licensed under MIT (see LICENSE). The wheel example screenshot shows the Last Z game interface for identification. Game artwork belongs to its respective owners and is outside the project’s MIT license. This project is independent of OMNILOJO. The license applies to the project code. Consult the [publisher's terms](https://last-z.com/terms/es/tos.html) when using the game. Pillow and Tesseract are separately installed dependencies under their own licenses.
 
 ## Host the screenshot reader
 
-Place `index.html`, `spin-reader.js` and `module-spin-example.webp` together. Run `sh prepare-ocr.sh` from this directory with Node/npm and Python 3 to prepare the pinned browser runtime and language models in `ocr/`. Serve those files on one origin over HTTP or HTTPS. Opening the downloaded HTML directly supports manual planning and links to the hosted screenshot reader. The runtime is loaded only when an image is selected. Third-party OCR assets retain their own licenses.
+Place `index.html`, `spin-reader.js`, `stock-reader.js` and `module-spin-example.webp` together. Run `sh prepare-ocr.sh` from this directory with Node/npm and Python 3 to prepare the pinned browser runtime and language models in `ocr/`. Serve those files on one origin over HTTP or HTTPS. Opening the downloaded HTML directly supports manual planning and links to the hosted screenshot reader. The runtime is loaded only when an image is selected. Third-party OCR assets retain their own licenses.

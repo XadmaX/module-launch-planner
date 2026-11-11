@@ -97,10 +97,16 @@ After the command finishes successfully, open the [online planner](https://last-
 
 The calculator models free or Prime rewards for levels 2 through 7, three token pack sizes, and prices recorded in November 2026. Set today's availability and remaining limits to match your own store. Budget is additional spend, in euros. Draw milestones and the Luck jackpot use separate counters. Prices, reset dates and rewards may change.
 
+## Daily visitor counts
+
+The hosted planner records one opening per page load. A separate browser storage key contains only the last counted calendar day in Europe/Madrid. Concurrent tabs coordinate where Web Locks are available. The only event fields are the calendar date and a first-opening bit. Devices with unavailable storage contribute openings only. Clearing browser data can count a browser again.
+
+The counter database holds daily totals for openings and browsers. It has no visitor records. Existing planner storage uses its original key and format. The [private daily report](https://module-launch-visits.framedrabbit4.chatgpt.site/stats) is for the owner. The hosted forwarder sends only validated increments to that private Site using a server-side hosting secret.
+
 ## License and attribution
 
 Original code and interface translations are licensed under MIT (see LICENSE). The wheel example screenshot shows the Last Z game interface for identification. Game artwork belongs to its respective owners and is outside the project’s MIT license. This project is independent of OMNILOJO. The license applies to the project code. Consult the [publisher's terms](https://last-z.com/terms/es/tos.html) when using the game. Pillow and Tesseract are separately installed dependencies under their own licenses.
 
 ## Host the screenshot reader
 
-Place `index.html`, `spin-reader.js`, `stock-reader.js` and `module-spin-example.webp` together. Run `sh prepare-ocr.sh` from this directory with Node/npm and Python 3 to prepare the pinned browser runtime and language models in `ocr/`. Serve those files on one origin over HTTP or HTTPS. Opening the downloaded HTML directly supports manual planning and links to the hosted screenshot reader. The runtime is loaded only when an image is selected. Third-party OCR assets retain their own licenses.
+Place `index.html`, `daily-count.js`, `spin-reader.js`, `stock-reader.js` and `module-spin-example.webp` together. Run `sh prepare-ocr.sh` from this directory with Node/npm and Python 3 to prepare the pinned browser runtime and language models in `ocr/`. Serve those files on one origin over HTTP or HTTPS. Opening the downloaded HTML directly supports manual planning and links to the hosted screenshot reader. The runtime is loaded only when an image is selected. Third-party OCR assets retain their own licenses.

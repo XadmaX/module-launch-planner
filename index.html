@@ -120,10 +120,11 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <label class="form-label"><span data-i18n="draws">Уже сделано вращений (Draws)</span><input class="form-control" name="draws" type="number" min="0" max="99999" value="60" required></label>
 </div>
 <p class="note" style="margin-top:12px"><span data-i18n="sample">Демонстрационный сценарий. Введи свои значения. План сохраняется в этом браузере.</span></p>
+<template id="desktop-helper-ui">
 <details id="helper" class="optional-import"><summary data-i18n="optionalImport"></summary>
 <label class="form-label import"><span data-i18n="import"></span><input type="file" id="import-json" accept=".json,application/json"></label><p id="import-status" role="status"></p>
 <p class="note" style="margin-top:12px"><a data-i18n="helperGuide" href="https://github.com/XadmaX/module-launch-planner/blob/main/README.md#optional-read-the-numbers-from-a-screenshot">Как установить и запустить хелпер</a> <span dir="ltr">(Windows / macOS)</span></p>
-</details></section><details><summary><span data-i18n="inventory">Остатки, задания и условия магазина</span></summary>
+</details></template></section><details><summary><span data-i18n="inventory">Остатки, задания и условия магазина</span></summary>
 <div class="stack">
 <div class="viz-controls">
 <label class="form-label"><span data-i18n="bars">Слитки на руках</span><input class="form-control" name="bars" type="number" min="0" max="999999" value="0" required></label>
@@ -149,6 +150,11 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <script>
 (() => {
 const root = document.getElementById('module-launch');
+const features = Object.freeze({ desktopHelperImport: false });
+if (features.desktopHelperImport) {
+  const template = document.getElementById('desktop-helper-ui');
+  template.replaceWith(template.content.cloneNode(true));
+}
 
 const locales = {
   "ru": {
@@ -1815,22 +1821,26 @@ function applyReading(v){
     for(const [k,value] of Object.entries({tokens:v.tokens,draws:v.draws,luck:v.luck,days:Math.ceil(v.seconds/86400)}))root.querySelector('[name="'+k+'"]').value=value;
     render(); persist();
 }
-function openLinkedImport(){
-  if(location.hash==='#helper') document.getElementById('helper').open=true;
+function followHelperLink() {
+  if (location.hash !== '#helper') return;
+  if (features.desktopHelperImport) document.getElementById('helper').open = true;
+  else location.replace('#screenshot');
 }
-openLinkedImport();
-window.addEventListener('hashchange',openLinkedImport);
+followHelperLink();
+window.addEventListener('hashchange', followHelperLink);
 let importMessage='';
-document.getElementById('import-json').addEventListener('change',async e=>{
-  const file=e.target.files[0]; if(!file)return;
-  try{
-    if(file.size>16384)throw Error();
-    const v=JSON.parse(await file.text());
-    applyReading(v); importMessage='example';
-  }catch{importMessage='failed';}
-  document.getElementById('import-status').textContent=t(importMessage);
-  e.target.value='';
-});
+if (features.desktopHelperImport) {
+  document.getElementById('import-json').addEventListener('change',async e=>{
+    const file=e.target.files[0]; if(!file)return;
+    try{
+      if(file.size>16384)throw Error();
+      const v=JSON.parse(await file.text());
+      applyReading(v); importMessage='example';
+    }catch{importMessage='failed';}
+    document.getElementById('import-status').textContent=t(importMessage);
+    e.target.value='';
+  });
+}
 const exampleTrigger=document.getElementById('example-trigger');
 const exampleDialog=document.getElementById('example-dialog');
 const exampleHover=document.getElementById('example-hover');

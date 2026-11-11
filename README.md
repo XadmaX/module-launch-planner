@@ -4,7 +4,7 @@ An unofficial event planner for Last Z players. [Open the planner](https://last-
 
 ## Read a screenshot on your phone
 
-The planner reads your screenshot directly in your browser. The desktop helper and JSON import are optional.
+The planner reads your screenshot directly in your browser. Choose a photo, check the four readings and apply them to the plan.
 
 1. On your phone, open **Last Z** and go to the **Module Launch** event. Tap the wheel at the bottom, close any pop-ups and take a screenshot. Tap the example beside the file picker for a larger view.
 2. [Choose the screenshot in the planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#screenshot). Set **Game language in the screenshot** to the language shown in the game. It initially follows the planner language and remembers a separate choice. Changing it while reviewing a screenshot reads the image again. The first reading downloads the OCR engine and the required language data. The browser processes the image on your device.
@@ -21,7 +21,12 @@ The browser reader supports all 23 planner locales, including both Chinese scrip
 
 **That's all you need for manual entry.** No account, BlueStacks, Python or terminal is required. Settings stay in the current browser.
 
+<details>
+<summary>Maintainers: retained desktop helper and JSON import</summary>
+
 ## Optional: read the numbers from a screenshot
+
+The public planner ships with `features.desktopHelperImport` set to `false` in `index.html`. The flag controls both the helper link and the JSON file handler. For a build that uses them, set it to `true` before publishing. The Python reader and its setup instructions are kept here for that build.
 
 [Download the helper ZIP](https://github.com/XadmaX/module-launch-planner/archive/refs/heads/main.zip) and extract it on your Windows PC or Mac. This optional desktop helper expects the English game screen. It reads a **saved image** on your computer. It does not connect to BlueStacks. If you already have a suitable screenshot from your phone or emulator, skip straight to the reader setup.
 
@@ -75,6 +80,8 @@ With **wheel.png** in the extracted planner folder, run the command for your sys
 | macOS (Terminal) | `./.venv/bin/python read_snapshot.py wheel.png -o snapshot.json` |
 
 After the command finishes successfully, open the [online planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#helper) or your local **index.html**, expand **Optional file import**, click **Import helper JSON** (the wording follows your planner language) and choose **snapshot.json**. Compare the four readings with the image. Budget and store availability are still yours to enter. For the next reading, replace **wheel.png** and repeat just this step. If recognition fails, take a fresh screenshot or type the values manually; do not import an older JSON by mistake. No image is uploaded.
+
+</details>
 
 ## Planning assumptions
 

@@ -66,6 +66,13 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 #scan-preview{max-width:100%;max-height:360px;object-fit:contain;border-radius:8px}.scan-edit button{margin-top:16px}
 @media(max-width:540px){.scan-review-grid{grid-template-columns:1fr}#scan-preview{max-height:250px;justify-self:center}}
 .game-lang{margin-bottom:12px;max-width:22rem}.game-lang select{font:inherit;padding:8px;border:1px solid var(--edge);border-radius:10px;background:var(--paper);color:var(--ink)}
+.scan-guide{display:grid;grid-template-columns:minmax(0,1fr) minmax(75px,112px);align-items:start;gap:16px;max-width:54rem}
+#scan-help{margin:2px 0 12px;max-width:64ch}.example-wrap{position:relative}
+#example-trigger{width:100%;display:grid;justify-items:center;gap:5px;padding:6px;color:var(--ink);background:#edf3e9;border:1px solid var(--edge);border-radius:12px;font-size:12px;line-height:1.25;overflow-wrap:anywhere}
+#example-trigger img{border-radius:5px}#example-hover{pointer-events:auto;position:absolute;z-index:5;inset-inline-end:0;top:100%;width:auto;height:min(400px,50vh);border-radius:10px;box-shadow:0 5px 18px #132a2e60}
+#example-dialog{max-width:94vw;max-height:94vh;max-height:94dvh;border:0;border-radius:16px;background:var(--paper);color:var(--ink);padding:14px;text-align:center}
+#example-dialog::backdrop{background:#102720b8}#example-dialog h2{margin:0 0 8px}#example-dialog img{display:block;width:auto;height:auto;max-width:100%;max-height:68vh;max-height:68dvh;margin:auto;border-radius:8px}#example-dialog form{margin:10px 0 0}
+@media(max-width:420px){.scan-guide{grid-template-columns:minmax(0,1fr) 82px;gap:10px}}
 </style></head>
 <body><div id="module-launch">
 <nav aria-label="Last Z Planner"><div class="wordmark"><span class="orbit" aria-hidden="true"></span>Last Z Planner</div><a href="#parameters"><span data-i18n="settings" data-suffix=" ↓">Параметры плана ↓</span></a><select id="language" aria-label="Language / Язык" dir="ltr"><option value="en" lang="en">English</option><option value="ru" lang="ru">Русский</option><option value="uk" lang="uk">Українська</option><option value="de" lang="de">Deutsch</option><option value="tr" lang="tr">Türkçe</option><option value="es" lang="es">Español</option><option value="ar" lang="ar">العربية</option><option value="zh-Hans" lang="zh-Hans">简体中文</option><option value="zh-Hant" lang="zh-Hant">繁體中文</option><option value="ja" lang="ja">日本語</option><option value="ko" lang="ko">한국어</option><option value="fr" lang="fr">Français</option><option value="ca" lang="ca">Català</option><option value="pt-BR" lang="pt-BR">Português (Brasil)</option><option value="it" lang="it">Italiano</option><option value="pl" lang="pl">Polski</option><option value="id" lang="id">Bahasa Indonesia</option><option value="vi" lang="vi">Tiếng Việt</option><option value="th" lang="th">ไทย</option><option value="nl" lang="nl">Nederlands</option><option value="ms" lang="ms">Bahasa Melayu</option><option value="hi" lang="hi">हिन्दी</option><option value="ur" lang="ur">اردو</option></select></nav>
@@ -73,8 +80,20 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <div class="gauge"><canvas id="gauge" aria-hidden="true"></canvas><div class="reading"><strong data-out="current">—</strong><small><span data-i18n="progress">вращений из 200</span></small></div></div></header>
 <section class="panel scan" id="screenshot">
 <label class="form-label game-lang"><span data-i18n="gameLanguage"></span><select id="game-language" dir="ltr"></select></label>
-<label class="form-label"><strong data-i18n="screen"></strong><input id="spin-file" type="file" accept="image/png,image/jpeg,image/webp"></label>
-<p class="note" data-i18n="open"></p>
+<div class="scan-guide">
+<div>
+<p class="note" id="scan-help" data-i18n="open"></p>
+<label class="form-label"><strong data-i18n="screen"></strong><input id="spin-file" type="file" aria-describedby="scan-help" accept="image/png,image/jpeg,image/webp"></label>
+</div>
+<div class="example-wrap">
+<button type="button" id="example-trigger" aria-haspopup="dialog" aria-controls="example-dialog"><img src="module-spin-example.webp" alt="" width="54" height="96"><span data-i18n="screenExample"></span></button>
+<img id="example-hover" src="module-spin-example.webp" alt="" aria-hidden="true" hidden width="225" height="400">
+</div></div>
+<dialog id="example-dialog" aria-labelledby="example-title">
+<h2 id="example-title" data-i18n="screenExample"></h2>
+<img src="module-spin-example.webp" alt="Last Z · Module Spin" width="540" height="960">
+<form method="dialog"><button type="submit" autofocus data-i18n="closeExample"></button></form>
+</dialog>
 <p class="note" id="scan-status" role="status"></p>
 <form id="spin-review" hidden>
 <h2 data-i18n="reviewScreen"></h2>
@@ -181,7 +200,9 @@ const locales = {
     "extra": "Доплата",
     "guarantee": "До гарантии VII при текущем Luck, вращений",
     "gameLanguage": "Язык игры на скриншоте",
-    "open": "Открой колесо Module Spin и закрой окна наград.",
+    "open": "На телефоне открой Last Z и зайди в событие Module Launch. Нажми на колесо внизу, закрой всплывающие окна и сделай скриншот. Затем выбери его здесь.",
+    "screenExample": "Пример скриншота",
+    "closeExample": "Закрыть",
     "read": "Считать из BlueStacks",
     "failed": "Не удалось считать колесо. Проверь хелпер и английский экран Module Spin.",
     "import": "Импорт JSON хелпера",
@@ -242,7 +263,9 @@ const locales = {
     "extra": "Extra cost",
     "guarantee": "Draws until a guaranteed VII at current Luck",
     "gameLanguage": "Game language in the screenshot",
-    "open": "Open Module Spin and close any reward windows.",
+    "open": "On your phone, open Last Z and go to the Module Launch event. Tap the wheel at the bottom, close any pop-ups and take a screenshot. Then choose it here.",
+    "screenExample": "Example screenshot",
+    "closeExample": "Close",
     "read": "Read from BlueStacks",
     "failed": "Could not read the wheel. Check the helper and the English wheel screen.",
     "import": "Import helper JSON",
@@ -303,7 +326,9 @@ const locales = {
     "extra": "Coste adicional",
     "guarantee": "Giros hasta el VII garantizado con la suerte actual",
     "gameLanguage": "Idioma del juego en la captura",
-    "open": "Abre la ruleta de módulos y cierra las ventanas de recompensas.",
+    "open": "En tu teléfono, abre Last Z y entra en el evento Module Launch. Toca la rueda de abajo, cierra las ventanas emergentes y haz una captura. Luego selecciónala aquí.",
+    "screenExample": "Captura de ejemplo",
+    "closeExample": "Cerrar",
     "read": "Leer desde BlueStacks",
     "failed": "No se pudo leer la rueda. Comprueba el lector y la pantalla en inglés.",
     "import": "Importar JSON del lector",
@@ -364,7 +389,9 @@ const locales = {
     "extra": "Доплата",
     "guarantee": "Обертань до гарантованого VII за поточної удачі",
     "gameLanguage": "Мова гри на знімку",
-    "open": "Відкрий колесо Module Spin і закрий вікна нагород.",
+    "open": "На телефоні відкрий Last Z і перейди до події Module Launch. Натисни на колесо внизу, закрий спливні вікна й зроби знімок екрана. Потім вибери його тут.",
+    "screenExample": "Приклад знімка екрана",
+    "closeExample": "Закрити",
     "read": "Зчитати з BlueStacks",
     "failed": "Не вдалося зчитати колесо. Перевір помічник та англомовний екран.",
     "import": "Імпортувати JSON помічника",
@@ -425,7 +452,9 @@ const locales = {
     "extra": "Zusatzkosten",
     "guarantee": "Drehungen bis zum garantierten VII bei aktuellem Glück",
     "gameLanguage": "Spielsprache im Screenshot",
-    "open": "Öffne das Modulrad und schließe alle Belohnungsfenster.",
+    "open": "Öffne Last Z auf deinem Handy und gehe zum Event „Module Launch“. Tippe unten auf das Rad, schließe alle Pop-ups und mach einen Screenshot. Wähle ihn dann hier aus.",
+    "screenExample": "Beispielbild",
+    "closeExample": "Schließen",
     "read": "Aus BlueStacks einlesen",
     "failed": "Das Rad konnte nicht gelesen werden. Prüfe den Helfer und die englische Spielansicht.",
     "import": "JSON des Helfers importieren",
@@ -486,7 +515,9 @@ const locales = {
     "extra": "Ek maliyet",
     "guarantee": "Mevcut şansla VII garantisine kalan çevirme",
     "gameLanguage": "Ekran görüntüsündeki oyun dili",
-    "open": "Modül çarkını açıp ödül pencerelerini kapat.",
+    "open": "Telefonunda Last Z’yi aç ve Module Launch etkinliğine gir. Alttaki çarka dokun, açılır pencereleri kapat ve ekran görüntüsü al. Sonra görüntüyü burada seç.",
+    "screenExample": "Örnek ekran görüntüsü",
+    "closeExample": "Kapat",
     "read": "BlueStacks’ten oku",
     "failed": "Çark okunamadı. Yardımcıyı ve İngilizce oyun ekranını kontrol et.",
     "import": "Yardımcı JSON dosyasını içe aktar",
@@ -547,7 +578,9 @@ const locales = {
     "extra": "额外费用",
     "guarantee": "按当前幸运值，距离保底 VII 还需的次数",
     "gameLanguage": "截图中的游戏语言",
-    "open": "打开模块转盘，关闭奖励弹窗。",
+    "open": "在手机上打开 Last Z，进入 Module Launch 活动。点底部的转盘，关闭弹窗后截屏，再回到这里选择这张截图。",
+    "screenExample": "截图示例",
+    "closeExample": "关闭",
     "read": "从 BlueStacks 读取",
     "failed": "无法读取转盘。请检查助手和英文游戏界面。",
     "import": "导入助手 JSON 文件",
@@ -608,7 +641,9 @@ const locales = {
     "extra": "額外費用",
     "guarantee": "依目前幸運值，距離保底 VII 還需的次數",
     "gameLanguage": "截圖中的遊戲語言",
-    "open": "打開模組轉盤，關閉獎勵視窗。",
+    "open": "在手機上開啟 Last Z，進入 Module Launch 活動。點選底部的轉盤，關閉彈出視窗後截圖，再回到這裡選取圖片。",
+    "screenExample": "截圖範例",
+    "closeExample": "關閉",
     "read": "從 BlueStacks 讀取",
     "failed": "無法讀取轉盤。請檢查助手和英文遊戲畫面。",
     "import": "匯入助手 JSON 檔",
@@ -669,7 +704,9 @@ const locales = {
     "extra": "Coût supplémentaire",
     "guarantee": "Tours avant le VII garanti avec la chance actuelle",
     "gameLanguage": "Langue du jeu sur la capture",
-    "open": "Ouvrez la roue des modules et fermez les fenêtres de récompense.",
+    "open": "Sur ton téléphone, ouvre Last Z et accède à l’événement Module Launch. Touche la roue en bas, ferme les fenêtres qui la recouvrent et fais une capture d’écran. Sélectionne-la ensuite ici.",
+    "screenExample": "Exemple de capture",
+    "closeExample": "Fermer",
     "read": "Lire depuis BlueStacks",
     "failed": "Lecture impossible. Vérifie l’assistant et l’écran de jeu en anglais.",
     "import": "Importer le JSON de l’assistant",
@@ -730,7 +767,9 @@ const locales = {
     "extra": "追加費用",
     "guarantee": "現在の幸運値でVII確定までの抽選回数",
     "gameLanguage": "スクリーンショットのゲーム言語",
-    "open": "モジュールのルーレットを開き、報酬画面を閉じてください。",
+    "open": "スマホで Last Z を開き、イベント「Module Launch」に入ります。画面下のルーレットをタップし、ポップアップを閉じてスクリーンショットを撮ります。その画像をここで選んでください。",
+    "screenExample": "スクリーンショットの例",
+    "closeExample": "閉じる",
     "read": "BlueStacksから読み取る",
     "failed": "読み取れません。ヘルパーと英語のゲーム画面を確認してください。",
     "import": "ヘルパーのJSONを読み込む",
@@ -791,7 +830,9 @@ const locales = {
     "extra": "추가 비용",
     "guarantee": "현재 행운 기준 VII 확정까지 남은 회전 수",
     "gameLanguage": "스크린샷의 게임 언어",
-    "open": "모듈 룰렛을 열고 보상 창을 닫으세요.",
+    "open": "휴대폰에서 Last Z를 열고 Module Launch 이벤트로 들어가세요. 화면 아래 룰렛을 누르고 팝업을 닫은 뒤 스크린샷을 찍으세요. 여기로 돌아와 그 사진을 선택하세요.",
+    "screenExample": "스크린샷 예시",
+    "closeExample": "닫기",
     "read": "BlueStacks에서 읽기",
     "failed": "읽을 수 없습니다. 도우미와 영어 게임 화면을 확인하세요.",
     "import": "도우미 JSON 가져오기",
@@ -852,7 +893,9 @@ const locales = {
     "extra": "Cost addicional",
     "guarantee": "Girs fins al VII garantit amb la sort actual",
     "gameLanguage": "Idioma del joc a la captura",
-    "open": "Obre la ruleta de mòduls i tanca les finestres de recompenses.",
+    "open": "Al mòbil, obre Last Z i entra a l’esdeveniment Module Launch. Toca la roda de baix, tanca les finestres emergents i fes una captura de pantalla. Després tria-la aquí.",
+    "screenExample": "Captura d’exemple",
+    "closeExample": "Tanca",
     "read": "Llegeix des de BlueStacks",
     "failed": "No s’ha pogut llegir la roda. Comprova l’assistent i la pantalla en anglès.",
     "import": "Importa el JSON de l’assistent",
@@ -913,7 +956,9 @@ const locales = {
     "extra": "Custo adicional",
     "guarantee": "Giros até o VII garantido com a sorte atual",
     "gameLanguage": "Idioma do jogo na captura",
-    "open": "Abra a roleta de módulos e feche as janelas de recompensas.",
+    "open": "No celular, abra Last Z e entre no evento Module Launch. Toque na roleta na parte de baixo, feche os avisos e tire uma captura de tela. Depois, selecione a imagem aqui.",
+    "screenExample": "Exemplo de captura",
+    "closeExample": "Fechar",
     "read": "Ler do BlueStacks",
     "failed": "Não foi possível ler a roda. Confira o assistente e a tela em inglês.",
     "import": "Importar JSON do assistente",
@@ -974,7 +1019,9 @@ const locales = {
     "extra": "Costo aggiuntivo",
     "guarantee": "Giri fino al VII garantito con la fortuna attuale",
     "gameLanguage": "Lingua del gioco nello screenshot",
-    "open": "Apri la ruota dei moduli e chiudi le finestre delle ricompense.",
+    "open": "Sul telefono, apri Last Z ed entra nell’evento Module Launch. Tocca la ruota in basso, chiudi le finestre a comparsa e fai uno screenshot. Poi selezionalo qui.",
+    "screenExample": "Screenshot di esempio",
+    "closeExample": "Chiudi",
     "read": "Leggi da BlueStacks",
     "failed": "Lettura non riuscita. Controlla l’assistente e la schermata in inglese.",
     "import": "Importa JSON dell’assistente",
@@ -1035,7 +1082,9 @@ const locales = {
     "extra": "Dopłata",
     "guarantee": "Obroty do gwarantowanego VII przy obecnym szczęściu",
     "gameLanguage": "Język gry na zrzucie ekranu",
-    "open": "Otwórz koło modułów i zamknij okna nagród.",
+    "open": "Na telefonie otwórz Last Z i przejdź do wydarzenia Module Launch. Dotknij koła na dole, zamknij wyskakujące okna i zrób zrzut ekranu. Następnie wybierz go tutaj.",
+    "screenExample": "Przykładowy zrzut ekranu",
+    "closeExample": "Zamknij",
     "read": "Odczytaj z BlueStacks",
     "failed": "Odczyt nie powiódł się. Sprawdź pomocnika i angielski ekran gry.",
     "import": "Importuj JSON pomocnika",
@@ -1096,7 +1145,9 @@ const locales = {
     "extra": "Biaya tambahan",
     "guarantee": "Putaran hingga jaminan VII dengan keberuntungan saat ini",
     "gameLanguage": "Bahasa game pada tangkapan layar",
-    "open": "Buka roda modul dan tutup jendela hadiah.",
+    "open": "Di ponsel, buka Last Z lalu masuk ke event Module Launch. Ketuk roda di bagian bawah, tutup pop-up, lalu ambil tangkapan layar. Pilih gambarnya di sini.",
+    "screenExample": "Contoh tangkapan layar",
+    "closeExample": "Tutup",
     "read": "Baca dari BlueStacks",
     "failed": "Roda tidak terbaca. Periksa alat bantu dan layar permainan berbahasa Inggris.",
     "import": "Impor JSON dari alat bantu",
@@ -1157,7 +1208,9 @@ const locales = {
     "extra": "Chi phí thêm",
     "guarantee": "Số lượt để chắc chắn nhận VII với điểm may mắn hiện tại",
     "gameLanguage": "Ngôn ngữ trò chơi trong ảnh",
-    "open": "Mở vòng quay mô-đun và đóng các cửa sổ phần thưởng.",
+    "open": "Trên điện thoại, mở Last Z và vào sự kiện Module Launch. Chạm vào vòng quay ở phía dưới, đóng các cửa sổ bật lên rồi chụp màn hình. Sau đó chọn ảnh ở đây.",
+    "screenExample": "Ảnh chụp mẫu",
+    "closeExample": "Đóng",
     "read": "Đọc từ BlueStacks",
     "failed": "Không đọc được vòng quay. Kiểm tra trợ lý và màn hình trò chơi tiếng Anh.",
     "import": "Nhập tệp JSON của trợ lý",
@@ -1218,7 +1271,9 @@ const locales = {
     "extra": "التكلفة الإضافية",
     "guarantee": "الدورات اللازمة لضمان المستوى السابع وفق الحظ الحالي",
     "gameLanguage": "لغة اللعبة في لقطة الشاشة",
-    "open": "افتح عجلة الوحدات وأغلق نوافذ المكافآت.",
+    "open": "افتح Last Z على هاتفك وادخل فعالية Module Launch. اضغط على العجلة أسفل الشاشة وأغلق النوافذ المنبثقة ثم التقط لقطة شاشة واخترها هنا.",
+    "screenExample": "مثال على لقطة الشاشة",
+    "closeExample": "إغلاق",
     "read": "قراءة من BlueStacks",
     "failed": "تعذرت قراءة العجلة. تحقق من الأداة وشاشة اللعبة بالإنجليزية.",
     "import": "استيراد ملف JSON من الأداة",
@@ -1279,7 +1334,9 @@ const locales = {
     "extra": "ค่าใช้จ่ายเพิ่มเติม",
     "guarantee": "จำนวนครั้งจนถึงการันตีระดับ VII ตามค่าโชคปัจจุบัน",
     "gameLanguage": "ภาษาของเกมในภาพหน้าจอ",
-    "open": "เปิดวงล้อโมดูลแล้วปิดหน้าต่างรางวัล",
+    "open": "เปิด Last Z บนมือถือแล้วเข้าอีเวนต์ Module Launch แตะวงล้อด้านล่าง ปิดหน้าต่างป๊อปอัปแล้วจับภาพหน้าจอ จากนั้นกลับมาเลือกภาพที่นี่",
+    "screenExample": "ตัวอย่างภาพหน้าจอ",
+    "closeExample": "ปิด",
     "read": "อ่านจาก BlueStacks",
     "failed": "อ่านวงล้อไม่ได้ ตรวจสอบตัวช่วยและหน้าจอเกมภาษาอังกฤษ",
     "import": "นำเข้า JSON จากตัวช่วย",
@@ -1340,7 +1397,9 @@ const locales = {
     "extra": "Extra kosten",
     "guarantee": "Draaien tot gegarandeerd niveau VII bij huidig geluk",
     "gameLanguage": "Speltaal op de screenshot",
-    "open": "Open het modulewiel en sluit de beloningsvensters.",
+    "open": "Open Last Z op je telefoon en ga naar het evenement Module Launch. Tik onderaan op het rad, sluit de pop-ups en maak een screenshot. Kies die hier.",
+    "screenExample": "Voorbeeldscreenshot",
+    "closeExample": "Sluiten",
     "read": "Uitlezen uit BlueStacks",
     "failed": "Het rad kon niet worden gelezen. Controleer de helper en het Engelse spelscherm.",
     "import": "JSON van de helper importeren",
@@ -1401,7 +1460,9 @@ const locales = {
     "extra": "Kos tambahan",
     "guarantee": "Putaran sehingga jaminan VII mengikut tuah semasa",
     "gameLanguage": "Bahasa permainan dalam tangkapan skrin",
-    "open": "Buka roda modul dan tutup tetingkap ganjaran.",
+    "open": "Buka Last Z pada telefon dan masuk ke acara Module Launch. Ketik roda di bawah, tutup tetingkap timbul dan ambil tangkapan skrin. Kemudian pilih gambar itu di sini.",
+    "screenExample": "Contoh tangkapan skrin",
+    "closeExample": "Tutup",
     "read": "Baca daripada BlueStacks",
     "failed": "Roda tidak dapat dibaca. Semak pembantu dan skrin permainan bahasa Inggeris.",
     "import": "Import JSON pembantu",
@@ -1462,7 +1523,9 @@ const locales = {
     "extra": "अतिरिक्त लागत",
     "guarantee": "वर्तमान भाग्य पर VII की गारंटी तक स्पिन",
     "gameLanguage": "स्क्रीनशॉट में गेम की भाषा",
-    "open": "मॉड्यूल का पहिया खोलें और इनाम वाली विंडो बंद करें।",
+    "open": "फ़ोन पर Last Z खोलें और Module Launch इवेंट में जाएँ। नीचे दिए पहिए पर टैप करें, पॉप-अप बंद करें और स्क्रीनशॉट लें। फिर उसे यहाँ चुनें।",
+    "screenExample": "स्क्रीनशॉट का उदाहरण",
+    "closeExample": "बंद करें",
     "read": "BlueStacks से पढ़ें",
     "failed": "रीडर और अंग्रेज़ी गेम स्क्रीन जाँचें।",
     "import": "हेल्पर का JSON आयात करें",
@@ -1523,7 +1586,9 @@ const locales = {
     "extra": "اضافی لاگت",
     "guarantee": "موجودہ قسمت پر درجہ ہفتم کی ضمانت تک اسپن",
     "gameLanguage": "اسکرین شاٹ میں گیم کی زبان",
-    "open": "ماڈیول کا پہیہ کھولیں اور انعامات کی ونڈوز بند کریں۔",
+    "open": "فون پر Last Z کھولیں اور Module Launch ایونٹ میں جائیں۔ نیچے موجود پہیے پر ٹیپ کریں، پاپ اپ بند کریں اور اسکرین شاٹ لیں۔ پھر اسے یہاں منتخب کریں۔",
+    "screenExample": "اسکرین شاٹ کی مثال",
+    "closeExample": "بند کریں",
     "read": "BlueStacks سے پڑھیں",
     "failed": "ریڈر اور کھیل کی انگریزی اسکرین چیک کریں۔",
     "import": "ہیلپر کی JSON فائل درآمد کریں",
@@ -1710,6 +1775,17 @@ document.getElementById('import-json').addEventListener('change',async e=>{
   document.getElementById('import-status').textContent=t(importMessage);
   e.target.value='';
 });
+const exampleTrigger=document.getElementById('example-trigger');
+const exampleDialog=document.getElementById('example-dialog');
+const exampleHover=document.getElementById('example-hover');
+const exampleWrap=exampleTrigger.parentElement;
+exampleWrap.addEventListener('pointerenter',event=>{
+  if(event.pointerType==='mouse' && matchMedia('(hover:hover)').matches && !exampleDialog.open) exampleHover.hidden=false;
+});
+exampleWrap.addEventListener('pointerleave',()=>{exampleHover.hidden=true;});
+document.addEventListener('keydown',event=>{if(event.key==='Escape')exampleHover.hidden=true;});
+exampleTrigger.addEventListener('click',()=>{exampleHover.hidden=true;exampleDialog.showModal();});
+exampleDialog.addEventListener('click',event=>{if(event.target===exampleDialog)exampleDialog.close();});
 const picker=document.getElementById('spin-file');
 const review=document.getElementById('spin-review');
 const preview=document.getElementById('scan-preview');

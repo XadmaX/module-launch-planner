@@ -4,7 +4,7 @@ An unofficial event planner for Last Z players. [Open the planner](https://last-
 
 ## Read a screenshot on your phone
 
-1. Take a portrait screenshot of **Module Spin** with the wheel unobstructed.
+1. On your phone, open **Last Z** and go to the **Module Launch** event. Tap the wheel at the bottom, close any pop-ups and take a screenshot. Tap the example beside the file picker for a larger view.
 2. [Choose the screenshot in the planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#screenshot). Set **Game language in the screenshot** to the language shown in the game. It initially follows the planner language and remembers a separate choice. Changing it while reviewing a screenshot reads the image again. The first reading downloads the OCR engine and the required language data. The browser processes the image on your device.
 3. Compare tokens, Luck, draws and the countdown with the preview. Correct any value or fill in a blank. The timer format is **days:hours:minutes:seconds** (for example, **4:09:04:07**).
 4. Select **Apply and recalculate**. The planner rounds the countdown up to remaining event days and keeps your budget and store settings.
@@ -80,8 +80,8 @@ The calculator models the paid Prime Pass from level 2, three token pack sizes, 
 
 ## License and attribution
 
-Original code and interface translations are licensed under MIT (see LICENSE). Last Z and its game content belong to their respective owners. This project is independent of OMNILOJO. The license applies to the project code. Consult the [publisher's terms](https://last-z.com/terms/es/tos.html) when using the game. Pillow and Tesseract are separately installed dependencies under their own licenses.
+Original code and interface translations are licensed under MIT (see LICENSE). The example screenshot shows the Last Z game interface for identification. Game artwork belongs to its respective owners and is outside the project’s MIT license. This project is independent of OMNILOJO. The license applies to the project code. Consult the [publisher's terms](https://last-z.com/terms/es/tos.html) when using the game. Pillow and Tesseract are separately installed dependencies under their own licenses.
 
 ## Host the screenshot reader
 
-Place `index.html` and `spin-reader.js` together. Run `sh prepare-ocr.sh` from this directory with Node/npm and Python 3 to prepare the pinned browser runtime and language models in `ocr/`. Serve those files on one origin over HTTP or HTTPS. Opening the downloaded HTML directly supports manual planning and links to the hosted screenshot reader. The runtime is loaded only when an image is selected. Third-party OCR assets retain their own licenses.
+Place `index.html`, `spin-reader.js` and `module-spin-example.webp` together. Run `sh prepare-ocr.sh` from this directory with Node/npm and Python 3 to prepare the pinned browser runtime and language models in `ocr/`. Serve those files on one origin over HTTP or HTTPS. Opening the downloaded HTML directly supports manual planning and links to the hosted screenshot reader. The runtime is loaded only when an image is selected. Third-party OCR assets retain their own licenses.

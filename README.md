@@ -4,6 +4,8 @@ An unofficial event planner for Last Z players. [Open the planner](https://last-
 
 ## Read a screenshot on your phone
 
+The planner reads your screenshot directly in your browser. The desktop helper and JSON import are optional.
+
 1. On your phone, open **Last Z** and go to the **Module Launch** event. Tap the wheel at the bottom, close any pop-ups and take a screenshot. Tap the example beside the file picker for a larger view.
 2. [Choose the screenshot in the planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#screenshot). Set **Game language in the screenshot** to the language shown in the game. It initially follows the planner language and remembers a separate choice. Changing it while reviewing a screenshot reads the image again. The first reading downloads the OCR engine and the required language data. The browser processes the image on your device.
 3. Compare tokens, Luck, draws and the countdown with the preview. Correct any value or fill in a blank. The timer format is **days:hours:minutes:seconds** (for example, **4:09:04:07**).
@@ -72,7 +74,7 @@ With **wheel.png** in the extracted planner folder, run the command for your sys
 | Windows (PowerShell) | `.\.venv\Scripts\python.exe read_snapshot.py wheel.png -o snapshot.json` |
 | macOS (Terminal) | `./.venv/bin/python read_snapshot.py wheel.png -o snapshot.json` |
 
-After the command finishes successfully, open the [online planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#helper) or your local **index.html**, click **Import helper JSON** (the wording follows your planner language) and choose **snapshot.json**. Compare the four readings with the image. Budget and store availability are still yours to enter. For the next reading, replace **wheel.png** and repeat just this step. If recognition fails, take a fresh screenshot or type the values manually; do not import an older JSON by mistake. No image is uploaded.
+After the command finishes successfully, open the [online planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#helper) or your local **index.html**, expand **Optional file import**, click **Import helper JSON** (the wording follows your planner language) and choose **snapshot.json**. Compare the four readings with the image. Budget and store availability are still yours to enter. For the next reading, replace **wheel.png** and repeat just this step. If recognition fails, take a fresh screenshot or type the values manually; do not import an older JSON by mistake. No image is uploaded.
 
 ## Planning assumptions
 

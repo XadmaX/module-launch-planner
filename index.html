@@ -73,6 +73,8 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 #example-dialog{max-width:94vw;max-height:94vh;max-height:94dvh;border:0;border-radius:16px;background:var(--paper);color:var(--ink);padding:14px;text-align:center}
 #example-dialog::backdrop{background:#102720b8}#example-dialog h2{margin:0 0 8px}#example-dialog img{display:block;width:auto;height:auto;max-width:100%;max-height:68vh;max-height:68dvh;margin:auto;border-radius:8px}#example-dialog form{margin:10px 0 0}
 @media(max-width:420px){.scan-guide{grid-template-columns:minmax(0,1fr) 82px;gap:10px}}
+.optional-import{margin-top:14px;padding:0;border:0;border-top:1px solid var(--edge);border-radius:0;box-shadow:none;background:transparent}
+.optional-import summary{padding-top:12px;font-size:14px}.optional-import[open] summary{margin-bottom:8px}.optional-import .import{border:0;margin:0;padding:0}
 </style></head>
 <body><div id="module-launch">
 <nav aria-label="Last Z Planner"><div class="wordmark"><span class="orbit" aria-hidden="true"></span>Last Z Planner</div><a href="#parameters"><span data-i18n="settings" data-suffix=" ↓">Параметры плана ↓</span></a><select id="language" aria-label="Language / Язык" dir="ltr"><option value="en" lang="en">English</option><option value="ru" lang="ru">Русский</option><option value="uk" lang="uk">Українська</option><option value="de" lang="de">Deutsch</option><option value="tr" lang="tr">Türkçe</option><option value="es" lang="es">Español</option><option value="ar" lang="ar">العربية</option><option value="zh-Hans" lang="zh-Hans">简体中文</option><option value="zh-Hant" lang="zh-Hant">繁體中文</option><option value="ja" lang="ja">日本語</option><option value="ko" lang="ko">한국어</option><option value="fr" lang="fr">Français</option><option value="ca" lang="ca">Català</option><option value="pt-BR" lang="pt-BR">Português (Brasil)</option><option value="it" lang="it">Italiano</option><option value="pl" lang="pl">Polski</option><option value="id" lang="id">Bahasa Indonesia</option><option value="vi" lang="vi">Tiếng Việt</option><option value="th" lang="th">ไทย</option><option value="nl" lang="nl">Nederlands</option><option value="ms" lang="ms">Bahasa Melayu</option><option value="hi" lang="hi">हिन्दी</option><option value="ur" lang="ur">اردو</option></select></nav>
@@ -83,7 +85,8 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <div class="scan-guide">
 <div>
 <p class="note" id="scan-help" data-i18n="open"></p>
-<label class="form-label"><strong data-i18n="screen"></strong><input id="spin-file" type="file" aria-describedby="scan-help" accept="image/png,image/jpeg,image/webp"></label>
+<label class="form-label"><strong data-i18n="screen"></strong><input id="spin-file" type="file" aria-describedby="scan-help direct-scan-info" accept="image/png,image/jpeg,image/webp"></label>
+<p id="direct-scan-info" class="note" data-i18n="directScan"></p>
 </div>
 <div class="example-wrap">
 <button type="button" id="example-trigger" aria-haspopup="dialog" aria-controls="example-dialog"><img src="module-spin-example.webp" alt="" width="54" height="96"><span data-i18n="screenExample"></span></button>
@@ -117,8 +120,10 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <label class="form-label"><span data-i18n="draws">Уже сделано вращений (Draws)</span><input class="form-control" name="draws" type="number" min="0" max="99999" value="60" required></label>
 </div>
 <p class="note" style="margin-top:12px"><span data-i18n="sample">Демонстрационный сценарий. Введи свои значения. План сохраняется в этом браузере.</span></p>
-<p id="helper" class="note" style="margin-top:12px"><a data-i18n="helperGuide" href="https://github.com/XadmaX/module-launch-planner/blob/main/README.md#optional-read-the-numbers-from-a-screenshot">Как установить и запустить хелпер</a> <span dir="ltr">(Windows / macOS)</span></p>
-<label class="form-label import"><span data-i18n="import"></span><input type="file" id="import-json" accept=".json,application/json"></label><p id="import-status" role="status"></p></section><details><summary><span data-i18n="inventory">Остатки, задания и условия магазина</span></summary>
+<details id="helper" class="optional-import"><summary data-i18n="optionalImport"></summary>
+<label class="form-label import"><span data-i18n="import"></span><input type="file" id="import-json" accept=".json,application/json"></label><p id="import-status" role="status"></p>
+<p class="note" style="margin-top:12px"><a data-i18n="helperGuide" href="https://github.com/XadmaX/module-launch-planner/blob/main/README.md#optional-read-the-numbers-from-a-screenshot">Как установить и запустить хелпер</a> <span dir="ltr">(Windows / macOS)</span></p>
+</details></section><details><summary><span data-i18n="inventory">Остатки, задания и условия магазина</span></summary>
 <div class="stack">
 <div class="viz-controls">
 <label class="form-label"><span data-i18n="bars">Слитки на руках</span><input class="form-control" name="bars" type="number" min="0" max="999999" value="0" required></label>
@@ -147,6 +152,8 @@ const root = document.getElementById('module-launch');
 
 const locales = {
   "ru": {
+    "directScan": "Планер сам считывает цифры со скриншота. Ничего устанавливать не нужно.",
+    "optionalImport": "Импорт из файла (необязательно)",
     "screen": "Выбрать скриншот Module Spin",
     "readingScreen": "Распознаю на устройстве…",
     "reviewScreen": "Сверь значения со скриншотом",
@@ -210,6 +217,8 @@ const locales = {
     "limits": "Пропуск уровней 2–7, подарок за каждый сброс. Наборы по 10, 15 и 25. Игровые пополнения повторяемые, каждый веб-набор учитывается один раз. Сверь цены. Бонусы за мощность не включены."
   },
   "en": {
+    "directScan": "The planner reads the numbers directly from your screenshot. No installation needed.",
+    "optionalImport": "Optional file import",
     "screen": "Choose Module Spin screenshot",
     "readingScreen": "Reading on this device…",
     "reviewScreen": "Check the values against the screenshot",
@@ -273,6 +282,8 @@ const locales = {
     "limits": "Pass levels 2–7. One gift per reset. Packs: 10, 15, 25. In-game top-ups repeat; each web offer counts once. Check prices. Power bonuses excluded."
   },
   "es": {
+    "directScan": "El planificador lee los números directamente de tu captura. No necesitas instalar nada.",
+    "optionalImport": "Importar desde un archivo (opcional)",
     "screen": "Elegir captura de Module Spin",
     "readingScreen": "Leyendo en este dispositivo…",
     "reviewScreen": "Compara los valores con la captura",
@@ -336,6 +347,8 @@ const locales = {
     "limits": "Pase de nivel 2–7 y un regalo por reinicio. Paquetes de 10, 15 y 25. Las recargas del juego se repiten; cada oferta web cuenta una vez. Comprueba los precios. Se excluyen los bonos de potencia."
   },
   "uk": {
+    "directScan": "Планер сам зчитує числа зі знімка екрана. Нічого встановлювати не потрібно.",
+    "optionalImport": "Імпорт із файлу (необов’язково)",
     "screen": "Вибрати знімок Module Spin",
     "readingScreen": "Розпізнавання на пристрої…",
     "reviewScreen": "Звір значення зі знімком",
@@ -399,6 +412,8 @@ const locales = {
     "limits": "Перепустка рівнів 2–7, подарунок за скидання. Набори по 10, 15 і 25. Ігрові поповнення повторювані, кожну вебпропозицію враховано раз. Перевір ціни. Бонуси за потужність виключено."
   },
   "de": {
+    "directScan": "Der Planer liest die Zahlen direkt aus deinem Screenshot. Du musst nichts installieren.",
+    "optionalImport": "Datei importieren (optional)",
     "screen": "Module-Spin-Screenshot auswählen",
     "readingScreen": "Wird auf diesem Gerät gelesen…",
     "reviewScreen": "Werte mit dem Screenshot vergleichen",
@@ -462,6 +477,8 @@ const locales = {
     "limits": "Passstufen 2–7, ein Geschenk pro Tageswechsel. Pakete mit 10, 15 oder 25 Marken. Aufladungen im Spiel sind wiederholbar, Webangebote zählen je einmal. Preise prüfen. Stärkeboni sind ausgeschlossen."
   },
   "tr": {
+    "directScan": "Planlayıcı sayıları doğrudan ekran görüntüsünden okur. Kurulum gerekmez.",
+    "optionalImport": "Dosyadan içe aktar (isteğe bağlı)",
     "screen": "Module Spin ekran görüntüsü seç",
     "readingScreen": "Bu cihazda okunuyor…",
     "reviewScreen": "Değerleri ekran görüntüsüyle karşılaştır",
@@ -525,6 +542,8 @@ const locales = {
     "limits": "Bilet seviyeleri 2–7, her sıfırlamada bir hediye. Paketler 10, 15, 25 jeton. Oyun içi yüklemeler tekrarlanabilir; her web teklifi bir kez sayılır. Fiyatları kontrol et. Güç bonusları hariçtir."
   },
   "zh-Hans": {
+    "directScan": "规划器会直接读取截图中的数字，无需安装任何软件。",
+    "optionalImport": "从文件导入（可选）",
     "screen": "选择 Module Spin 截图",
     "readingScreen": "正在设备上识别…",
     "reviewScreen": "对照截图核对数值",
@@ -588,6 +607,8 @@ const locales = {
     "limits": "通行证等级 2–7，每次重置赠送一份礼物。礼包含 10、15 或 25 枚代币。游戏内充值可重复，每种网页优惠只计一次。请核对价格。不含战力奖励。"
   },
   "zh-Hant": {
+    "directScan": "規劃器會直接讀取截圖中的數字，不必安裝任何軟體。",
+    "optionalImport": "從檔案匯入（選用）",
     "screen": "選擇 Module Spin 截圖",
     "readingScreen": "正在裝置上辨識…",
     "reviewScreen": "對照截圖確認數值",
@@ -651,6 +672,8 @@ const locales = {
     "limits": "通行證等級 2–7，每次重設贈送一份禮物。禮包含 10、15 或 25 枚代幣。遊戲內儲值可重複，每種網頁優惠只計一次。請核對價格。不含戰力獎勵。"
   },
   "fr": {
+    "directScan": "Le planificateur lit les chiffres directement sur ta capture. Tu n’as rien à installer.",
+    "optionalImport": "Importer un fichier (facultatif)",
     "screen": "Choisir une capture de Module Spin",
     "readingScreen": "Lecture sur cet appareil…",
     "reviewScreen": "Vérifiez les valeurs sur la capture",
@@ -714,6 +737,8 @@ const locales = {
     "limits": "Pass de niveau 2 à 7, un cadeau par jour. Lots de 10, 15 et 25. Recharges en jeu répétables, chaque offre web compte une fois. Vérifie les prix. Bonus de puissance exclus."
   },
   "ja": {
+    "directScan": "プランナーがスクリーンショットから数値を読み取ります。インストールは不要です。",
+    "optionalImport": "ファイルから読み込む（任意）",
     "screen": "Module Spin のスクリーンショットを選ぶ",
     "readingScreen": "端末で読み取り中…",
     "reviewScreen": "画像と数値を照合してください",
@@ -777,6 +802,8 @@ const locales = {
     "limits": "対象パスレベルは2～7。日次更新ごとにギフト1個。パックは10、15、25枚。ゲーム内チャージは繰り返し可、各ウェブ商品は1回まで。価格を確認してください。戦力ボーナスは含みません。"
   },
   "ko": {
+    "directScan": "플래너가 스크린샷에서 숫자를 바로 읽어옵니다. 따로 설치할 필요가 없습니다.",
+    "optionalImport": "파일에서 가져오기(선택)",
     "screen": "Module Spin 스크린샷 선택",
     "readingScreen": "기기에서 읽는 중…",
     "reviewScreen": "스크린샷과 수치를 비교하세요",
@@ -840,6 +867,8 @@ const locales = {
     "limits": "패스 2~7레벨, 초기화마다 선물 1개. 팩은 10개, 15개, 25개입니다. 게임 내 충전은 반복 가능하며 웹 상품은 종류별로 한 번 계산합니다. 가격을 확인하세요. 전투력 보너스는 제외합니다."
   },
   "ca": {
+    "directScan": "El planificador llegeix els números directament de la captura. No cal instal·lar res.",
+    "optionalImport": "Importa des d’un fitxer (opcional)",
     "screen": "Tria una captura de Module Spin",
     "readingScreen": "Llegint en aquest dispositiu…",
     "reviewScreen": "Comprova els valors amb la captura",
@@ -903,6 +932,8 @@ const locales = {
     "limits": "Passi de nivell 2–7 i un regal per reinici. Paquets de 10, 15 i 25. Les recàrregues del joc es poden repetir; cada oferta web compta un cop. Comprova els preus. S’exclouen els bons de potència."
   },
   "pt-BR": {
+    "directScan": "O planejador lê os números direto da captura de tela. Você não precisa instalar nada.",
+    "optionalImport": "Importar de um arquivo (opcional)",
     "screen": "Escolher captura do Module Spin",
     "readingScreen": "Lendo neste dispositivo…",
     "reviewScreen": "Confira os valores na captura",
@@ -966,6 +997,8 @@ const locales = {
     "limits": "Passe de nível 2–7, um presente por reinício. Pacotes de 10, 15 e 25. Recargas no jogo podem se repetir; cada oferta online conta uma vez. Confira os preços. Bônus de poder excluídos."
   },
   "it": {
+    "directScan": "Il planner legge i numeri direttamente dallo screenshot. Non devi installare nulla.",
+    "optionalImport": "Importa da un file (facoltativo)",
     "screen": "Scegli uno screenshot di Module Spin",
     "readingScreen": "Lettura sul dispositivo…",
     "reviewScreen": "Confronta i valori con lo screenshot",
@@ -1029,6 +1062,8 @@ const locales = {
     "limits": "Pass di livello 2–7, un regalo per reset. Pacchetti da 10, 15 e 25. Le ricariche in gioco sono ripetibili; ogni offerta web conta una volta. Verifica i prezzi. Bonus potenza esclusi."
   },
   "pl": {
+    "directScan": "Planer odczytuje liczby bezpośrednio ze zrzutu ekranu. Nie musisz niczego instalować.",
+    "optionalImport": "Import z pliku (opcjonalnie)",
     "screen": "Wybierz zrzut ekranu Module Spin",
     "readingScreen": "Odczytywanie na urządzeniu…",
     "reviewScreen": "Porównaj wartości ze zrzutem ekranu",
@@ -1092,6 +1127,8 @@ const locales = {
     "limits": "Przepustka poziomu 2–7, prezent przy każdym resecie. Pakiety 10, 15 i 25. Doładowania w grze można powtarzać; każda oferta internetowa liczy się raz. Sprawdź ceny. Bez premii za moc."
   },
   "id": {
+    "directScan": "Perencana membaca angka langsung dari tangkapan layar. Tidak perlu memasang apa pun.",
+    "optionalImport": "Impor dari berkas (opsional)",
     "screen": "Pilih tangkapan layar Module Spin",
     "readingScreen": "Membaca di perangkat ini…",
     "reviewScreen": "Cocokkan nilai dengan gambar",
@@ -1155,6 +1192,8 @@ const locales = {
     "limits": "Pass level 2–7, satu hadiah tiap reset. Paket 10, 15, dan 25. Isi ulang dalam game dapat diulang; tiap penawaran web dihitung sekali. Periksa harga. Bonus kekuatan tidak dihitung."
   },
   "vi": {
+    "directScan": "Công cụ đọc các con số trực tiếp từ ảnh chụp màn hình. Bạn không cần cài đặt gì thêm.",
+    "optionalImport": "Nhập từ tệp (không bắt buộc)",
     "screen": "Chọn ảnh chụp Module Spin",
     "readingScreen": "Đang đọc trên thiết bị…",
     "reviewScreen": "Đối chiếu các số với ảnh",
@@ -1218,6 +1257,8 @@ const locales = {
     "limits": "Vé cấp 2–7, mỗi lần đặt lại có một quà. Gói 10, 15, 25 xu. Có thể nạp nhiều lần trong trò chơi; mỗi ưu đãi web chỉ tính một lần. Kiểm tra giá. Chưa tính thưởng sức mạnh."
   },
   "ar": {
+    "directScan": "يقرأ المخطّط الأرقام مباشرة من لقطة الشاشة. لا تحتاج إلى تثبيت أي شيء.",
+    "optionalImport": "استيراد من ملف (اختياري)",
     "screen": "اختر لقطة شاشة Module Spin",
     "readingScreen": "جارٍ التعرّف على الجهاز…",
     "reviewScreen": "راجع القيم مع لقطة الشاشة",
@@ -1281,6 +1322,8 @@ const locales = {
     "limits": "مستويات التذكرة ٢–٧ وهدية مع كل تجديد. الحزم من ١٠ و١٥ و٢٥ رمزًا. يمكن تكرار الشحن داخل اللعبة ويُحسب كل عرض ويب مرة واحدة. تحقق من الأسعار. لا يشمل التقدير مكافآت القوة."
   },
   "th": {
+    "directScan": "เครื่องมือจะอ่านตัวเลขจากภาพหน้าจอโดยตรง ไม่ต้องติดตั้งอะไรเพิ่ม",
+    "optionalImport": "นำเข้าจากไฟล์ (ไม่บังคับ)",
     "screen": "เลือกภาพหน้าจอ Module Spin",
     "readingScreen": "กำลังอ่านบนอุปกรณ์…",
     "reviewScreen": "ตรวจสอบค่ากับภาพหน้าจอ",
@@ -1344,6 +1387,8 @@ const locales = {
     "limits": "พาสระดับ 2–7 ได้ของขวัญหนึ่งชิ้นต่อการรีเซ็ต แพ็ก 10, 15 และ 25 เหรียญ เติมในเกมซ้ำได้ ข้อเสนอบนเว็บนับอย่างละหนึ่งครั้ง ตรวจสอบราคา ไม่รวมโบนัสพลัง"
   },
   "nl": {
+    "directScan": "De planner leest de getallen direct uit je screenshot. Je hoeft niets te installeren.",
+    "optionalImport": "Importeren uit bestand (optioneel)",
     "screen": "Module Spin-screenshot kiezen",
     "readingScreen": "Lezen op dit apparaat…",
     "reviewScreen": "Vergelijk de waarden met de screenshot",
@@ -1407,6 +1452,8 @@ const locales = {
     "limits": "Pasniveau 2–7, één geschenk per reset. Pakketten van 10, 15 en 25. Opwaarderen in het spel kan vaker; elke webaanbieding telt één keer. Controleer de prijzen. Krachtbonussen tellen niet mee."
   },
   "ms": {
+    "directScan": "Perancang membaca nombor terus daripada tangkapan skrin. Anda tidak perlu memasang apa-apa.",
+    "optionalImport": "Import daripada fail (pilihan)",
     "screen": "Pilih tangkapan skrin Module Spin",
     "readingScreen": "Sedang membaca pada peranti…",
     "reviewScreen": "Semak nilai pada tangkapan skrin",
@@ -1470,6 +1517,8 @@ const locales = {
     "limits": "Pas tahap 2–7, satu hadiah setiap tetapan semula. Pek 10, 15 dan 25 token. Tambah nilai dalam permainan boleh diulang; setiap tawaran web dikira sekali. Semak harga. Bonus kuasa dikecualikan."
   },
   "hi": {
+    "directScan": "प्लानर सीधे स्क्रीनशॉट से आँकड़े पढ़ता है। कुछ भी इंस्टॉल करने की ज़रूरत नहीं है।",
+    "optionalImport": "फ़ाइल से आयात करें (वैकल्पिक)",
     "screen": "Module Spin का स्क्रीनशॉट चुनें",
     "readingScreen": "डिवाइस पर पढ़ा जा रहा है…",
     "reviewScreen": "स्क्रीनशॉट से मान मिलाएँ",
@@ -1533,6 +1582,8 @@ const locales = {
     "limits": "पास स्तर 2–7। हर रीसेट पर एक उपहार। 10, 15 और 25 के पैक। गेम में रिचार्ज दोहरा सकते हैं; हर वेब ऑफ़र एक बार गिना जाता है। कीमतें जाँचें। शक्ति बोनस शामिल नहीं हैं।"
   },
   "ur": {
+    "directScan": "پلانر اسکرین شاٹ سے اعداد خود پڑھ لیتا ہے۔ کچھ بھی انسٹال کرنے کی ضرورت نہیں۔",
+    "optionalImport": "فائل سے درآمد کریں (اختیاری)",
     "screen": "Module Spin کا اسکرین شاٹ منتخب کریں",
     "readingScreen": "ڈیوائس پر پڑھا جا رہا ہے…",
     "reviewScreen": "اسکرین شاٹ سے اعداد ملائیں",
@@ -1764,6 +1815,11 @@ function applyReading(v){
     for(const [k,value] of Object.entries({tokens:v.tokens,draws:v.draws,luck:v.luck,days:Math.ceil(v.seconds/86400)}))root.querySelector('[name="'+k+'"]').value=value;
     render(); persist();
 }
+function openLinkedImport(){
+  if(location.hash==='#helper') document.getElementById('helper').open=true;
+}
+openLinkedImport();
+window.addEventListener('hashchange',openLinkedImport);
 let importMessage='';
 document.getElementById('import-json').addEventListener('change',async e=>{
   const file=e.target.files[0]; if(!file)return;

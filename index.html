@@ -92,6 +92,13 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 .diagram-tiles{display:grid;grid-template-columns:1fr 1fr;gap:.4em}.diagram-tile{background:#e8b156;color:#49371d;padding:.8em .2em;text-align:center;border-radius:.25em}
 .diagram-row{background:#586160}.diagram-row b{color:#ffdf8c}.diagram-row.current{background:#7b622f;outline:1px solid #ffce59}.diagram-row em{font-style:normal;color:#b8f2a8}
 .diagram-row.offer{background:#41626a}.diagram-row small{font:inherit;font-size:.75em}
+
+.purchase-row{display:flex;align-items:center;gap:10px;margin-block:8px}
+.pack-thumb{box-sizing:border-box;display:grid;place-items:center;align-content:center;gap:1px;flex:0 0 62px;height:50px;background:linear-gradient(135deg,#48592d,#26784a);color:#fff9e7;border:2px solid #d0b878;border-radius:5px;font:bold 14px/1.1 system-ui;direction:ltr}
+.pack-thumb.event-pack{background:linear-gradient(135deg,#42617a,#246986)}
+.pack-thumb small{background:#ffcf67;color:#453418;border-radius:2px;padding:1px 4px;font-size:11px}
+.pack-details{display:grid;gap:2px;font-size:.92em;line-height:1.35}
+.pack-details small{color:#3e584d;font-size:.88em}
 </style><script defer src="daily-count.js"></script></head>
 <body><div id="module-launch">
 <nav aria-label="Last Z Planner"><div class="wordmark"><span class="orbit" aria-hidden="true"></span>Last Z Planner</div><a href="#parameters"><span data-i18n="settings" data-suffix=" ↓">Параметры плана ↓</span></a><select id="language" aria-label="Language / Язык" dir="ltr"><option value="en" lang="en">English</option><option value="ru" lang="ru">Русский</option><option value="uk" lang="uk">Українська</option><option value="de" lang="de">Deutsch</option><option value="tr" lang="tr">Türkçe</option><option value="es" lang="es">Español</option><option value="ar" lang="ar">العربية</option><option value="zh-Hans" lang="zh-Hans">简体中文</option><option value="zh-Hant" lang="zh-Hant">繁體中文</option><option value="ja" lang="ja">日本語</option><option value="ko" lang="ko">한국어</option><option value="fr" lang="fr">Français</option><option value="ca" lang="ca">Català</option><option value="pt-BR" lang="pt-BR">Português (Brasil)</option><option value="it" lang="it">Italiano</option><option value="pl" lang="pl">Polski</option><option value="id" lang="id">Bahasa Indonesia</option><option value="vi" lang="vi">Tiếng Việt</option><option value="th" lang="th">ไทย</option><option value="nl" lang="nl">Nederlands</option><option value="ms" lang="ms">Bahasa Melayu</option><option value="hi" lang="hi">हिन्दी</option><option value="ur" lang="ur">اردو</option></select></nav>
@@ -178,6 +185,14 @@ if (features.desktopHelperImport) {
 
 const locales = {
   "ru": {
+    "noBuy": "Сегодня покупать ничего не нужно.",
+    "buyNow": "Купи до ближайшего сброса",
+    "buyDaily": "Со следующего сброса бери по одному в день. Дней: {n}",
+    "buyEvent": "Купи до конца события",
+    "afterReset": "После каждого сброса забирай",
+    "tokenUnit": "жетоны",
+    "barUnit": "слитки",
+    "packCost": "Стоимость наборов",
     "screenDiagram": "Схема экрана",
     "barsScreen": "В игре открой Gold Bar Mall (магазин слитков). На снимке должен быть виден баланс вверху справа.",
     "passScreen": "В событии Module Launch нажми Spin Pass внизу справа. Покажи верх экрана и строку текущего уровня с наградами.",
@@ -258,6 +273,14 @@ const locales = {
     "limits": "Пропуск уровней 2–7, подарок за каждый сброс. Наборы по 10, 15 и 25. Игровые пополнения повторяемые, каждый веб-набор учитывается один раз. Сверь цены. Бонусы за мощность не включены."
   },
   "en": {
+    "noBuy": "No purchase needed today.",
+    "buyNow": "Buy before today’s reset",
+    "buyDaily": "From the next reset, buy one per day for {n} days",
+    "buyEvent": "Buy before the event ends",
+    "afterReset": "After each reset, claim",
+    "tokenUnit": "tokens",
+    "barUnit": "gold bars",
+    "packCost": "Total pack cost",
     "screenDiagram": "Screen guide",
     "barsScreen": "Open Gold Bar Mall in the game. Include your balance at the top right.",
     "passScreen": "In Module Launch, tap Spin Pass at the bottom right. Include the header and the reward row for your current level.",
@@ -338,6 +361,14 @@ const locales = {
     "limits": "Pass levels 2–7. One gift per reset. Packs: 10, 15, 25. In-game top-ups repeat; each web offer counts once. Check prices. Power bonuses excluded."
   },
   "es": {
+    "noBuy": "Hoy no necesitas comprar nada.",
+    "buyNow": "Compra antes del reinicio de hoy",
+    "buyDaily": "Desde el próximo reinicio, compra uno al día durante {n} días",
+    "buyEvent": "Compra antes de que termine el evento",
+    "afterReset": "Tras cada reinicio, recoge",
+    "tokenUnit": "fichas",
+    "barUnit": "lingotes de oro",
+    "packCost": "Coste total de los paquetes",
     "screenDiagram": "Esquema de pantalla",
     "barsScreen": "Abre Gold Bar Mall en el juego. Incluye el saldo de lingotes de arriba a la derecha.",
     "passScreen": "En Module Launch toca Spin Pass abajo a la derecha. Muestra la cabecera y las recompensas del nivel actual.",
@@ -418,6 +449,14 @@ const locales = {
     "limits": "Pase de nivel 2–7 y un regalo por reinicio. Paquetes de 10, 15 y 25. Las recargas del juego se repiten; cada oferta web cuenta una vez. Comprueba los precios. Se excluyen los bonos de potencia."
   },
   "uk": {
+    "noBuy": "Сьогодні купувати нічого не потрібно.",
+    "buyNow": "Купи до найближчого скидання",
+    "buyDaily": "З наступного скидання купуй по одному на день. Днів: {n}",
+    "buyEvent": "Купи до кінця події",
+    "afterReset": "Після кожного скидання забирай",
+    "tokenUnit": "жетони",
+    "barUnit": "злитки",
+    "packCost": "Вартість наборів",
     "screenDiagram": "Схема екрана",
     "barsScreen": "У грі відкрий Gold Bar Mall (магазин зливків). Покажи баланс угорі праворуч.",
     "passScreen": "У події Module Launch натисни Spin Pass унизу праворуч. Покажи верх екрана й рядок нагород поточного рівня.",
@@ -498,6 +537,14 @@ const locales = {
     "limits": "Перепустка рівнів 2–7, подарунок за скидання. Набори по 10, 15 і 25. Ігрові поповнення повторювані, кожну вебпропозицію враховано раз. Перевір ціни. Бонуси за потужність виключено."
   },
   "de": {
+    "noBuy": "Heute ist kein Kauf nötig.",
+    "buyNow": "Vor der heutigen Zurücksetzung kaufen",
+    "buyDaily": "Ab der nächsten Zurücksetzung {n} Tage lang täglich einmal kaufen",
+    "buyEvent": "Vor Eventende kaufen",
+    "afterReset": "Nach jeder Zurücksetzung abholen",
+    "tokenUnit": "Marken",
+    "barUnit": "Goldbarren",
+    "packCost": "Paketkosten insgesamt",
     "screenDiagram": "Bildschirmansicht",
     "barsScreen": "Öffne im Spiel die Gold Bar Mall. Zeige den Goldbarrenbestand oben rechts.",
     "passScreen": "Tippe in Module Launch unten rechts auf Spin Pass. Zeige die Kopfzeile und die Belohnungen deiner aktuellen Stufe.",
@@ -578,6 +625,14 @@ const locales = {
     "limits": "Passstufen 2–7, ein Geschenk pro Tageswechsel. Pakete mit 10, 15 oder 25 Marken. Aufladungen im Spiel sind wiederholbar, Webangebote zählen je einmal. Preise prüfen. Stärkeboni sind ausgeschlossen."
   },
   "tr": {
+    "noBuy": "Bugün satın alman gerekmiyor.",
+    "buyNow": "Bugünkü sıfırlamadan önce al",
+    "buyDaily": "Bir sonraki sıfırlamadan başlayarak {n} gün boyunca günde bir tane al",
+    "buyEvent": "Etkinlik bitmeden al",
+    "afterReset": "Her sıfırlamadan sonra topla",
+    "tokenUnit": "jeton",
+    "barUnit": "altın külçesi",
+    "packCost": "Paketlerin toplam bedeli",
     "screenDiagram": "Ekran şeması",
     "barsScreen": "Oyunda Gold Bar Mall mağazasını aç. Sağ üstteki külçe bakiyen görünsün.",
     "passScreen": "Module Launch içinde sağ alttaki Spin Pass sekmesine dokun. Üst bölüm ve mevcut seviyenin ödül satırı görünsün.",
@@ -658,6 +713,14 @@ const locales = {
     "limits": "Bilet seviyeleri 2–7, her sıfırlamada bir hediye. Paketler 10, 15, 25 jeton. Oyun içi yüklemeler tekrarlanabilir; her web teklifi bir kez sayılır. Fiyatları kontrol et. Güç bonusları hariçtir."
   },
   "zh-Hans": {
+    "noBuy": "今天无需购买。",
+    "buyNow": "在今天重置前购买",
+    "buyDaily": "从下次重置起，每天买一份，共 {n} 天",
+    "buyEvent": "活动结束前购买",
+    "afterReset": "每次重置后领取",
+    "tokenUnit": "代币",
+    "barUnit": "金条",
+    "packCost": "礼包总价",
     "screenDiagram": "界面示意图",
     "barsScreen": "在游戏中打开金条商城 Gold Bar Mall，截入右上角的金条余额。",
     "passScreen": "在 Module Launch 活动中点右下角的 Spin Pass。截入顶部和当前等级的奖励行。",
@@ -738,6 +801,14 @@ const locales = {
     "limits": "通行证等级 2–7，每次重置赠送一份礼物。礼包含 10、15 或 25 枚代币。游戏内充值可重复，每种网页优惠只计一次。请核对价格。不含战力奖励。"
   },
   "zh-Hant": {
+    "noBuy": "今天無需購買。",
+    "buyNow": "在今天重置前購買",
+    "buyDaily": "從下次重置起，每天買一份，共 {n} 天",
+    "buyEvent": "活動結束前購買",
+    "afterReset": "每次重置後領取",
+    "tokenUnit": "代幣",
+    "barUnit": "金條",
+    "packCost": "禮包總價",
     "screenDiagram": "畫面示意圖",
     "barsScreen": "在遊戲中打開金條商城 Gold Bar Mall，截入右上角的金條餘額。",
     "passScreen": "在 Module Launch 活動中點右下角的 Spin Pass，截入頂部和目前等級的獎勵列。",
@@ -818,6 +889,14 @@ const locales = {
     "limits": "通行證等級 2–7，每次重設贈送一份禮物。禮包含 10、15 或 25 枚代幣。遊戲內儲值可重複，每種網頁優惠只計一次。請核對價格。不含戰力獎勵。"
   },
   "fr": {
+    "noBuy": "Aucun achat nécessaire aujourd’hui.",
+    "buyNow": "Acheter avant la réinitialisation du jour",
+    "buyDaily": "Dès la prochaine réinitialisation, en acheter un par jour pendant {n} jours",
+    "buyEvent": "Acheter avant la fin de l’événement",
+    "afterReset": "Après chaque réinitialisation, récupérer",
+    "tokenUnit": "jetons",
+    "barUnit": "lingots d’or",
+    "packCost": "Coût total des packs",
     "screenDiagram": "Schéma de l’écran",
     "barsScreen": "Ouvre Gold Bar Mall dans le jeu. Inclus le solde de lingots en haut à droite.",
     "passScreen": "Dans Module Launch, touche Spin Pass en bas à droite. Montre le haut de l’écran et les récompenses du niveau actuel.",
@@ -898,6 +977,14 @@ const locales = {
     "limits": "Pass de niveau 2 à 7, un cadeau par jour. Lots de 10, 15 et 25. Recharges en jeu répétables, chaque offre web compte une fois. Vérifie les prix. Bonus de puissance exclus."
   },
   "ja": {
+    "noBuy": "今日は購入する必要はありません。",
+    "buyNow": "本日のリセット前に購入",
+    "buyDaily": "次のリセットから{n}日間、毎日1個購入",
+    "buyEvent": "イベント終了までに購入",
+    "afterReset": "リセット後に毎回受け取る",
+    "tokenUnit": "トークン",
+    "barUnit": "金の延べ棒",
+    "packCost": "パックの合計価格",
     "screenDiagram": "画面の見本",
     "barsScreen": "ゲーム内の Gold Bar Mall を開き、右上の金塊残高を写してください。",
     "passScreen": "Module Launch の右下にある Spin Pass を開き、画面上部と現在のレベルの報酬欄を写してください。",
@@ -978,6 +1065,14 @@ const locales = {
     "limits": "対象パスレベルは2～7。日次更新ごとにギフト1個。パックは10、15、25枚。ゲーム内チャージは繰り返し可、各ウェブ商品は1回まで。価格を確認してください。戦力ボーナスは含みません。"
   },
   "ko": {
+    "noBuy": "오늘은 구매할 필요가 없어요.",
+    "buyNow": "오늘 초기화 전에 구매",
+    "buyDaily": "다음 초기화부터 {n}일 동안 하루에 하나씩 구매",
+    "buyEvent": "이벤트 종료 전 구매",
+    "afterReset": "초기화 후 매번 수령",
+    "tokenUnit": "토큰",
+    "barUnit": "금괴",
+    "packCost": "패키지 총비용",
     "screenDiagram": "화면 안내도",
     "barsScreen": "게임에서 Gold Bar Mall을 열고 오른쪽 위 금괴 잔액이 보이게 찍으세요.",
     "passScreen": "Module Launch 오른쪽 아래의 Spin Pass를 누르고 화면 상단과 현재 레벨 보상 줄을 함께 찍으세요.",
@@ -1058,6 +1153,14 @@ const locales = {
     "limits": "패스 2~7레벨, 초기화마다 선물 1개. 팩은 10개, 15개, 25개입니다. 게임 내 충전은 반복 가능하며 웹 상품은 종류별로 한 번 계산합니다. 가격을 확인하세요. 전투력 보너스는 제외합니다."
   },
   "ca": {
+    "noBuy": "Avui no cal comprar res.",
+    "buyNow": "Compra abans del reinici d’avui",
+    "buyDaily": "Des del pròxim reinici, compra’n un al dia durant {n} dies",
+    "buyEvent": "Compra abans que acabi l’esdeveniment",
+    "afterReset": "Després de cada reinici, recull",
+    "tokenUnit": "fitxes",
+    "barUnit": "lingots d’or",
+    "packCost": "Cost total dels paquets",
     "screenDiagram": "Esquema de la pantalla",
     "barsScreen": "Obre Gold Bar Mall al joc i mostra el saldo de lingots de dalt a la dreta.",
     "passScreen": "A Module Launch toca Spin Pass a baix a la dreta. Mostra la capçalera i els premis del nivell actual.",
@@ -1138,6 +1241,14 @@ const locales = {
     "limits": "Passi de nivell 2–7 i un regal per reinici. Paquets de 10, 15 i 25. Les recàrregues del joc es poden repetir; cada oferta web compta un cop. Comprova els preus. S’exclouen els bons de potència."
   },
   "pt-BR": {
+    "noBuy": "Hoje você não precisa comprar nada.",
+    "buyNow": "Compre antes da reinicialização de hoje",
+    "buyDaily": "A partir da próxima reinicialização, compre um por dia durante {n} dias",
+    "buyEvent": "Compre antes do fim do evento",
+    "afterReset": "Após cada reinicialização, resgate",
+    "tokenUnit": "fichas",
+    "barUnit": "barras de ouro",
+    "packCost": "Custo total dos pacotes",
     "screenDiagram": "Esquema da tela",
     "barsScreen": "No jogo, abra Gold Bar Mall e mostre o saldo de lingotes no canto superior direito.",
     "passScreen": "Em Module Launch, toque em Spin Pass no canto inferior direito. Mostre o topo e as recompensas do nível atual.",
@@ -1218,6 +1329,14 @@ const locales = {
     "limits": "Passe de nível 2–7, um presente por reinício. Pacotes de 10, 15 e 25. Recargas no jogo podem se repetir; cada oferta online conta uma vez. Confira os preços. Bônus de poder excluídos."
   },
   "it": {
+    "noBuy": "Oggi non serve acquistare nulla.",
+    "buyNow": "Acquista prima del reset di oggi",
+    "buyDaily": "Dal prossimo reset, acquistane uno al giorno per {n} giorni",
+    "buyEvent": "Acquista prima della fine dell’evento",
+    "afterReset": "Dopo ogni reset, ritira",
+    "tokenUnit": "gettoni",
+    "barUnit": "lingotti d’oro",
+    "packCost": "Costo totale dei pacchetti",
     "screenDiagram": "Schema della schermata",
     "barsScreen": "Apri Gold Bar Mall nel gioco e includi il saldo dei lingotti in alto a destra.",
     "passScreen": "In Module Launch tocca Spin Pass in basso a destra. Mostra la parte alta e i premi del livello attuale.",
@@ -1298,6 +1417,14 @@ const locales = {
     "limits": "Pass di livello 2–7, un regalo per reset. Pacchetti da 10, 15 e 25. Le ricariche in gioco sono ripetibili; ogni offerta web conta una volta. Verifica i prezzi. Bonus potenza esclusi."
   },
   "pl": {
+    "noBuy": "Dzisiaj nie musisz nic kupować.",
+    "buyNow": "Kup przed dzisiejszym resetem",
+    "buyDaily": "Od następnego resetu kupuj po jednym dziennie przez {n} dni",
+    "buyEvent": "Kup przed końcem wydarzenia",
+    "afterReset": "Po każdym resecie odbierz",
+    "tokenUnit": "żetony",
+    "barUnit": "sztabki złota",
+    "packCost": "Łączny koszt pakietów",
     "screenDiagram": "Schemat ekranu",
     "barsScreen": "Otwórz Gold Bar Mall w grze. Pokaż saldo sztabek w prawym górnym rogu.",
     "passScreen": "W Module Launch dotknij Spin Pass na dole po prawej. Pokaż górę ekranu i wiersz nagród obecnego poziomu.",
@@ -1378,6 +1505,14 @@ const locales = {
     "limits": "Przepustka poziomu 2–7, prezent przy każdym resecie. Pakiety 10, 15 i 25. Doładowania w grze można powtarzać; każda oferta internetowa liczy się raz. Sprawdź ceny. Bez premii za moc."
   },
   "id": {
+    "noBuy": "Hari ini tidak perlu membeli apa pun.",
+    "buyNow": "Beli sebelum reset hari ini",
+    "buyDaily": "Mulai reset berikutnya, beli satu per hari selama {n} hari",
+    "buyEvent": "Beli sebelum acara berakhir",
+    "afterReset": "Setelah setiap reset, klaim",
+    "tokenUnit": "token",
+    "barUnit": "batang emas",
+    "packCost": "Total harga paket",
     "screenDiagram": "Ilustrasi layar",
     "barsScreen": "Di dalam game, buka Gold Bar Mall. Tampilkan saldo emas batangan di kanan atas.",
     "passScreen": "Di Module Launch, ketuk Spin Pass di kanan bawah. Tampilkan bagian atas dan baris hadiah level saat ini.",
@@ -1458,6 +1593,14 @@ const locales = {
     "limits": "Pass level 2–7, satu hadiah tiap reset. Paket 10, 15, dan 25. Isi ulang dalam game dapat diulang; tiap penawaran web dihitung sekali. Periksa harga. Bonus kekuatan tidak dihitung."
   },
   "vi": {
+    "noBuy": "Hôm nay không cần mua gì.",
+    "buyNow": "Mua trước khi đặt lại hôm nay",
+    "buyDaily": "Từ lần đặt lại tiếp theo, mua mỗi ngày một gói trong {n} ngày",
+    "buyEvent": "Mua trước khi sự kiện kết thúc",
+    "afterReset": "Sau mỗi lần đặt lại, hãy nhận",
+    "tokenUnit": "xu",
+    "barUnit": "thỏi vàng",
+    "packCost": "Tổng giá các gói",
     "screenDiagram": "Sơ đồ màn hình",
     "barsScreen": "Mở Gold Bar Mall trong trò chơi. Chụp cả số thỏi vàng ở góc trên bên phải.",
     "passScreen": "Trong Module Launch, nhấn Spin Pass ở góc dưới bên phải. Chụp phần đầu và hàng phần thưởng của cấp hiện tại.",
@@ -1538,6 +1681,14 @@ const locales = {
     "limits": "Vé cấp 2–7, mỗi lần đặt lại có một quà. Gói 10, 15, 25 xu. Có thể nạp nhiều lần trong trò chơi; mỗi ưu đãi web chỉ tính một lần. Kiểm tra giá. Chưa tính thưởng sức mạnh."
   },
   "ar": {
+    "noBuy": "لا يلزمك شراء شيء اليوم.",
+    "buyNow": "اشترِ قبل إعادة الضبط اليوم",
+    "buyDaily": "بدءًا من إعادة الضبط التالية، اشترِ حزمة واحدة يوميًا لمدة {n} أيام",
+    "buyEvent": "اشترِ قبل انتهاء الحدث",
+    "afterReset": "بعد كل إعادة ضبط استلم",
+    "tokenUnit": "رموز",
+    "barUnit": "سبائك ذهب",
+    "packCost": "التكلفة الإجمالية للحزم",
     "screenDiagram": "رسم توضيحي للشاشة",
     "barsScreen": "افتح متجر السبائك Gold Bar Mall في اللعبة وأظهر الرصيد أعلى اليمين.",
     "passScreen": "في حدث Module Launch اضغط Spin Pass أسفل اليمين وأظهر أعلى الشاشة وصف مكافآت مستواك الحالي.",
@@ -1618,6 +1769,14 @@ const locales = {
     "limits": "مستويات التذكرة ٢–٧ وهدية مع كل تجديد. الحزم من ١٠ و١٥ و٢٥ رمزًا. يمكن تكرار الشحن داخل اللعبة ويُحسب كل عرض ويب مرة واحدة. تحقق من الأسعار. لا يشمل التقدير مكافآت القوة."
   },
   "th": {
+    "noBuy": "วันนี้ยังไม่ต้องซื้ออะไร",
+    "buyNow": "ซื้อก่อนรีเซ็ตวันนี้",
+    "buyDaily": "ตั้งแต่รีเซ็ตครั้งถัดไป ซื้อวันละหนึ่งแพ็กเป็นเวลา {n} วัน",
+    "buyEvent": "ซื้อก่อนกิจกรรมสิ้นสุด",
+    "afterReset": "รับหลังรีเซ็ตแต่ละครั้ง",
+    "tokenUnit": "โทเคน",
+    "barUnit": "ทองแท่ง",
+    "packCost": "ราคารวมของแพ็ก",
     "screenDiagram": "ภาพตัวอย่างหน้าจอ",
     "barsScreen": "เปิด Gold Bar Mall ในเกม ให้เห็นยอดทองแท่งที่มุมขวาบน",
     "passScreen": "ใน Module Launch แตะ Spin Pass ที่มุมขวาล่าง ถ่ายให้เห็นด้านบนและแถวรางวัลของระดับปัจจุบัน",
@@ -1698,6 +1857,14 @@ const locales = {
     "limits": "พาสระดับ 2–7 ได้ของขวัญหนึ่งชิ้นต่อการรีเซ็ต แพ็ก 10, 15 และ 25 เหรียญ เติมในเกมซ้ำได้ ข้อเสนอบนเว็บนับอย่างละหนึ่งครั้ง ตรวจสอบราคา ไม่รวมโบนัสพลัง"
   },
   "nl": {
+    "noBuy": "Vandaag hoef je niets te kopen.",
+    "buyNow": "Koop vóór de reset van vandaag",
+    "buyDaily": "Koop vanaf de volgende reset {n} dagen lang één per dag",
+    "buyEvent": "Koop vóór het einde van het evenement",
+    "afterReset": "Haal na elke reset op",
+    "tokenUnit": "fiches",
+    "barUnit": "goudstaven",
+    "packCost": "Totale pakketprijs",
     "screenDiagram": "Schermvoorbeeld",
     "barsScreen": "Open Gold Bar Mall in het spel. Zorg dat je goudstaven rechtsboven zichtbaar zijn.",
     "passScreen": "Tik in Module Launch rechtsonder op Spin Pass. Toon de bovenkant en de beloningsrij van je huidige niveau.",
@@ -1778,6 +1945,14 @@ const locales = {
     "limits": "Pasniveau 2–7, één geschenk per reset. Pakketten van 10, 15 en 25. Opwaarderen in het spel kan vaker; elke webaanbieding telt één keer. Controleer de prijzen. Krachtbonussen tellen niet mee."
   },
   "ms": {
+    "noBuy": "Hari ini tidak perlu membeli apa-apa.",
+    "buyNow": "Beli sebelum tetapan semula hari ini",
+    "buyDaily": "Mulai tetapan semula seterusnya, beli satu sehari selama {n} hari",
+    "buyEvent": "Beli sebelum acara tamat",
+    "afterReset": "Selepas setiap tetapan semula, tuntut",
+    "tokenUnit": "token",
+    "barUnit": "jongkong emas",
+    "packCost": "Jumlah harga pek",
     "screenDiagram": "Panduan skrin",
     "barsScreen": "Buka Gold Bar Mall dalam permainan. Paparkan baki jongkong di kanan atas.",
     "passScreen": "Dalam Module Launch, ketik Spin Pass di kanan bawah. Paparkan bahagian atas dan baris ganjaran tahap semasa.",
@@ -1858,6 +2033,14 @@ const locales = {
     "limits": "Pas tahap 2–7, satu hadiah setiap tetapan semula. Pek 10, 15 dan 25 token. Tambah nilai dalam permainan boleh diulang; setiap tawaran web dikira sekali. Semak harga. Bonus kuasa dikecualikan."
   },
   "hi": {
+    "noBuy": "आज कुछ खरीदने की ज़रूरत नहीं है।",
+    "buyNow": "आज के रीसेट से पहले खरीदें",
+    "buyDaily": "अगले रीसेट से {n} दिन तक रोज़ एक पैक खरीदें",
+    "buyEvent": "इवेंट खत्म होने से पहले खरीदें",
+    "afterReset": "हर रीसेट के बाद लें",
+    "tokenUnit": "टोकन",
+    "barUnit": "सोने की छड़ें",
+    "packCost": "पैक की कुल कीमत",
     "screenDiagram": "स्क्रीन का नमूना",
     "barsScreen": "गेम में Gold Bar Mall खोलें। ऊपर दाईं ओर सोने की छड़ों की संख्या दिखाएँ।",
     "passScreen": "Module Launch में नीचे दाईं ओर Spin Pass खोलें। ऊपर का हिस्सा और मौजूदा स्तर के इनामों की पंक्ति दिखाएँ।",
@@ -1938,6 +2121,14 @@ const locales = {
     "limits": "पास स्तर 2–7। हर रीसेट पर एक उपहार। 10, 15 और 25 के पैक। गेम में रिचार्ज दोहरा सकते हैं; हर वेब ऑफ़र एक बार गिना जाता है। कीमतें जाँचें। शक्ति बोनस शामिल नहीं हैं।"
   },
   "ur": {
+    "noBuy": "آج کچھ خریدنے کی ضرورت نہیں۔",
+    "buyNow": "آج کے ری سیٹ سے پہلے خریدیں",
+    "buyDaily": "اگلے ری سیٹ سے {n} دن تک روز ایک پیک خریدیں",
+    "buyEvent": "ایونٹ ختم ہونے سے پہلے خریدیں",
+    "afterReset": "ہر ری سیٹ کے بعد وصول کریں",
+    "tokenUnit": "ٹوکن",
+    "barUnit": "سونے کی سلاخیں",
+    "packCost": "پیک کی کل قیمت",
     "screenDiagram": "اسکرین کا خاکہ",
     "barsScreen": "گیم میں Gold Bar Mall کھولیں۔ اوپر دائیں جانب سونے کی سلاخوں کا بیلنس دکھائیں۔",
     "passScreen": "Module Launch میں نیچے دائیں Spin Pass کھولیں۔ اوپر کا حصہ اور موجودہ درجے کے انعامات کی قطار دکھائیں۔",
@@ -2145,21 +2336,57 @@ function render() {
   put('prize',(items[tier]||[]).map(([key,value])=>t(key)+' · '+value).join(' / '));
   const next = tiers.find(v=>v>max);
   put('gap',next ? t('gap',{n:n(next)})+' · '+n(next-max) : '');
-  const actions=[];
-  if (!active) actions.push(t('end'));
-  else {
-    if (s.gift) actions.push(t('claim')+' · Daily Freebie (+1)');
-    if (s.passToday && s.pass<7) actions.push(t('claim')+' · Spin Pass '+n(s.pass+1)+' (+'+n((s.prime?passTokens:freePassTokens)[s.pass+1])+')');
-    if (s.tokens) actions.push(t('spend')+' ('+n(s.tokens)+')');
-    for (const [key,bonus] of [['allRally',5],['tier3',3],['tier2',3]]) if(s[key]) actions.push(t(key)+' (+'+n(bonus)+')');
-    if (p.a>future) actions.push(t('buy'));
-    if (future) actions.push(t('reset',{n:n(future)}));
-    else if(p.b||p.c) actions.push(t('last'));
-    if (!actions.length) actions.push(t('next'));
+  const actions=out('today');
+  actions.replaceChildren();
+  function step(text) {
+    const item=document.createElement('li');
+    item.textContent=text;
+    actions.append(item);
+    return item;
   }
-  out('today').replaceChildren(...actions.map(action=>{const li=document.createElement('li');li.textContent=action;return li;}));
-  const packs=[[p.a,10],[p.b,15],[p.c,25]].filter(([count])=>count).map(([count,size])=>n(count)+' × '+n(size));
-  put('cost',active?[t('milestone')+' '+n(target),...packs,t('bars')+' −'+n(p.gold),t('extra')+' '+euro(p.funds.cost)].join(' · '):t('end'));
+  function packRow(item,size,price,count) {
+    const row=document.createElement('div');
+    row.className='purchase-row';
+    const thumb=document.createElement('span');
+    thumb.className='pack-thumb'+(size===10?'':' event-pack');
+    thumb.setAttribute('aria-hidden','true');
+    const tag=document.createElement('small');
+    tag.textContent='▰ '+n(price);
+    thumb.append('🪙 '+n(size),tag);
+    const details=document.createElement('span');
+    details.className='pack-details';
+    const name=document.createElement('strong');
+    name.textContent='Module Token'+(count>1?' × '+n(count):'');
+    const amounts=document.createElement('span');
+    amounts.textContent=t('tokenUnit')+': '+n(size)+' · '+t('barUnit')+': '+n(price);
+    const path=document.createElement('small');
+    path.textContent='Module Spin › Pack';
+    details.append(name,amounts,path);
+    row.append(thumb,details);
+    item.append(row);
+  }
+  if (!active) step(t('end'));
+  else {
+    const dailyNow=p.a>future;
+    if (!dailyNow && (future || !(p.b||p.c))) step(t('noBuy'));
+    if (s.gift) step('🎁 '+t('claim')+' · Module Spin › Pack › Daily Freebies (+1)');
+    if (s.passToday && s.pass<7) step('🎟️ '+t('claim')+' · Module Launch › Spin Pass · '+n(s.pass+1)+' (+'+n((s.prime?passTokens:freePassTokens)[s.pass+1])+')');
+    if (dailyNow) packRow(step(t('buyNow')),10,499,1);
+    if (s.tokens) step(t('spend')+' ('+n(s.tokens)+')');
+    for (const [key,bonus] of [['allRally',5],['tier3',3],['tier2',3]]) if(s[key]) step(t(key)+' (+'+n(bonus)+')');
+    const dailyLater=p.a-Number(dailyNow);
+    if (dailyLater) packRow(step(t('buyDaily',{n:n(dailyLater)})),10,499,1);
+    if (p.b || p.c) {
+      const beforeEnd=step(t('buyEvent'));
+      if (p.b) packRow(beforeEnd,15,999,p.b);
+      if (p.c) packRow(beforeEnd,25,1999,p.c);
+    }
+    if (future) {
+      const remainingPassLevels=s.pass+Number(s.passToday)<7;
+      step(t('afterReset')+' · 🎁 Pack › Daily Freebies (+1)'+(remainingPassLevels?' · 🎟️ Spin Pass':''));
+    }
+  }
+  put('cost',active?[t('milestone')+' '+n(target),t('packCost')+' · '+n(p.gold)+' ('+t('barUnit')+')',t('extra')+' '+euro(p.funds.cost)].join(' · '):t('end'));
   const counts=new Map();
   for(let left=p.funds.left;left>0;){const size=gamePick[left];counts.set(size,(counts.get(size)||0)+1);left-=size;}
   const pay=[...counts].map(([size,count])=>n(count)+' × '+n(size)).concat(p.funds.online.map(([size])=>'Web × '+n(size)));

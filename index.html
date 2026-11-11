@@ -1,0 +1,1461 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer">
+
+<title>Module Launch · Last Z Planner</title><style>
+:root{
+  color-scheme:light;
+  --ink:#173a35; --muted:#4e6b61; --edge:#d4dfd4; --paper:#fdfcf6;
+  --display:"Avenir Next", "Segoe UI", sans-serif;
+  font-family:var(--display); color:var(--ink); background:#f2f3e9;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 5% 0%,#e4eee5 0,transparent 42%),radial-gradient(ellipse at 95% 55%,#f7efd9 0,transparent 45%)}
+#module-launch{width:min(1160px,100%);margin:auto;padding:22px clamp(15px,3.4vw,48px) 64px}
+[hidden]{display:none!important}
+h1,h2,h3,p,ol{margin:0}
+a{color:inherit;text-underline-offset:3px}
+nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.wordmark{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;letter-spacing:-.03em}
+.orbit{width:26px;height:26px;border:2px solid #407968;border-radius:50%;position:relative}
+.orbit:after{content:"";position:absolute;inset:6px -5px;border-radius:50%;border:2px solid #407968;transform:rotate(-38deg)}
+nav a{font-size:14px;white-space:nowrap}
+.hero{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:1.3fr 1fr;align-items:center;min-height:260px;padding:32px clamp(22px,4vw,52px);border-radius:32px;background:radial-gradient(ellipse at 75% 80%,#34685a,transparent 55%),linear-gradient(115deg,#143a36,#204d43);color:#f6f5e5;box-shadow:0 12px 38px -24px #153d34}
+.hero:before{content:"";position:absolute;z-index:-1;right:-120px;top:-65%;width:73%;height:240%;transform:rotate(28deg);background:repeating-radial-gradient(ellipse at 95% 40%,transparent 0 22px,#afc6a914 23px,transparent 24px 37px);pointer-events:none}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:650;color:#cbdeb7}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.055em;line-height:.98;font-size:clamp(45px,6.1vw,78px);margin:10px 0}
+.hero p{color:#deeadc;font-size:16px}
+.gauge{position:relative;justify-self:center;width:min(100%,258px);aspect-ratio:2/1.28;display:grid;align-content:end;justify-items:center;margin:3px 0}
+.gauge canvas{position:absolute;inset:0;width:100%;height:100%}
+.reading{position:relative;text-align:center;padding-bottom:12px}
+.reading strong{font-size:clamp(42px,5vw,67px);line-height:1;font-weight:550;letter-spacing:-.07em;font-variant-numeric:tabular-nums;display:block}
+.reading small{display:block;color:#d7e6d2;font-size:13px;margin-top:7px}
+main{display:grid;grid-template-columns:minmax(0,1.24fr) minmax(0,1fr);gap:20px;margin-top:20px;align-items:start}
+.stack,.column{display:grid;gap:16px;min-width:0}
+.panel,details{border:1px solid var(--edge);border-radius:24px;background:var(--paper);padding:clamp(18px,2.3vw,28px);box-shadow:0 8px 27px -25px #567367}
+.panel h2,details h3{font-size:clamp(18px,2.4vw,24px);font-weight:600;letter-spacing:-.045em;line-height:1.19;margin:0 0 16px}
+.panel h3{font-size:19px;letter-spacing:-.035em}
+.task{background:linear-gradient(125deg,#e3eedc,#f1f3e3);border-color:#cbdcc7}
+ol{padding:0;list-style:none;counter-reset:steps}
+li{counter-increment:steps;position:relative;padding:0 0 0 33px;line-height:1.5}
+li+li{margin-top:12px}
+li:before{content:counter(steps);display:grid;place-items:center;position:absolute;left:0;top:1px;width:23px;height:23px;background:#d0e2c9;color:#234b38;border-radius:50%;font-size:12px;font-weight:700}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:4px 0 12px}
+.metrics>div{display:grid;gap:3px}.metrics>div+div{border-left:1px solid var(--edge);padding-left:20px}
+.metrics strong{font-size:clamp(34px,4.7vw,53px);font-weight:550;letter-spacing:-.065em;line-height:1.1;font-variant-numeric:tabular-nums}
+.metrics span,.text-small,.note,.text-muted{font-size:13px;color:var(--muted);line-height:1.5}
+.compact{display:grid;gap:8px}
+.award{border-top:1px solid var(--edge);padding-top:16px;margin-top:15px}
+p{line-height:1.5}
+button{font:inherit;font-weight:650;border:0;border-radius:24px;background:#19594e;color:white;padding:11px 18px;cursor:pointer}
+button:hover{background:#10483e}button:disabled{opacity:.65;cursor:wait}
+:focus-visible{outline:3px solid #ad7629;outline-offset:3px}
+.viz-controls{display:grid;grid-template-columns:1fr 1fr;gap:16px 12px}
+.form-label{display:flex;flex-direction:column;justify-content:space-between;gap:6px;color:var(--muted);font-size:13px;line-height:1.35}
+.form-control{width:100%;min-width:0;border:1px solid #becfbf;border-radius:12px;background:#fffef8;padding:9px 10px;color:var(--ink);font:600 18px var(--display);font-variant-numeric:tabular-nums}
+.form-check{display:flex;align-items:baseline;gap:9px;font-size:14px;line-height:1.5}
+input[type=checkbox]{accent-color:#286550}
+summary{cursor:pointer;font-weight:600;line-height:1.4}details[open] summary{margin-bottom:20px}
+details h3{font-size:16px;margin:4px 0 0}
+.import{border-top:1px solid var(--edge);margin-top:20px;padding-top:16px}
+.text-destructive{color:#932f1b}
+@media(max-width:740px){main{grid-template-columns:1fr}.hero{min-height:205px;grid-template-columns:1.2fr 1fr}.gauge{max-width:180px}.reading{padding-bottom:4px}.hero p{font-size:14px}}
+@media(max-width:490px){#module-launch{padding-top:16px}nav{margin-bottom:15px}.hero{padding:23px 16px;border-radius:22px;gap:5px;min-height:163px}h1{font-size:clamp(30px,7.5vw,38px)}.kicker{font-size:10px;letter-spacing:.08em}.hero p{font-size:12px}.reading strong{font-size:32px}.reading small{font-size:10px;margin-top:1px}.reading{padding:0}.panel,details{border-radius:19px}main{gap:12px}.column{gap:12px}}
+nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-radius:12px;padding:8px;background:var(--paper);color:var(--ink);font:inherit} [dir=rtl] li{padding:0 33px 0 0}[dir=rtl] li:before{left:auto;right:0}.panel,.metrics>div{min-width:0;overflow-wrap:anywhere} </style></head>
+<body><div id="module-launch">
+<nav aria-label="Last Z Planner"><div class="wordmark"><span class="orbit" aria-hidden="true"></span>Last Z Planner</div><a href="#parameters"><span data-i18n="settings" data-suffix=" ↓">Параметры плана ↓</span></a><select id="language" aria-label="Language / Язык" dir="ltr"><option value="en" lang="en">English</option><option value="ru" lang="ru">Русский</option><option value="uk" lang="uk">Українська</option><option value="de" lang="de">Deutsch</option><option value="tr" lang="tr">Türkçe</option><option value="es" lang="es">Español</option><option value="ar" lang="ar">العربية</option><option value="zh-Hans" lang="zh-Hans">简体中文</option><option value="zh-Hant" lang="zh-Hant">繁體中文</option><option value="ja" lang="ja">日本語</option><option value="ko" lang="ko">한국어</option><option value="fr" lang="fr">Français</option><option value="ca" lang="ca">Català</option><option value="pt-BR" lang="pt-BR">Português (Brasil)</option><option value="it" lang="it">Italiano</option><option value="pl" lang="pl">Polski</option><option value="id" lang="id">Bahasa Indonesia</option><option value="vi" lang="vi">Tiếng Việt</option><option value="th" lang="th">ไทย</option><option value="nl" lang="nl">Nederlands</option><option value="ms" lang="ms">Bahasa Melayu</option><option value="hi" lang="hi">हिन्दी</option><option value="ur" lang="ur">اردو</option></select></nav>
+<header class="hero"><div><div class="kicker"><span data-i18n="event" data-suffix=" · Last Z">Событие · Last Z</span></div><h1>Module Launch</h1><p><span data-i18n="goal">Цель — модуль VI за 200 вращений</span></p></div>
+<div class="gauge"><canvas id="gauge" aria-hidden="true"></canvas><div class="reading"><strong data-out="current">—</strong><small><span data-i18n="progress">вращений из 200</span></small></div></div></header><main><div><p data-out="error" role="alert" class="text-destructive" hidden></p><div class="column" data-out="result" aria-live="polite">
+<div class="panel task"><h2><span data-i18n="today">Что делать сегодня</span></h2><ol data-out="today"></ol></div>
+<section class="panel"><h2><span data-i18n="forecast">Прогноз к концу события</span></h2><div class="metrics"><div><span><span data-i18n="free">Без расхода слитков</span></span><strong data-out="free"></strong></div><div><span><span data-i18n="ceiling">Максимум с бюджетом</span></span><strong data-out="ceiling"></strong></div></div><p data-out="breakdown" class="note"></p>
+<div class="award compact"><h3 data-out="reward"></h3><p data-out="prize"></p><p data-out="gap" class="note"></p></div></section>
+<section class="panel compact"><h2><span data-i18n="cost">Стоимость маршрута</span></h2><p data-out="cost"></p><p data-out="wallet" class="note"></p><p data-out="luck" class="note"></p></section></div></div><aside class="column" id="parameters"><section class="panel"><h2><span data-i18n="settings">Параметры плана</span></h2><div class="viz-controls">
+<label class="form-label"><span data-i18n="tokens">Жетоны на руках</span><input class="form-control" name="tokens" type="number" min="0" max="99999" value="0" required></label>
+<label class="form-label"><span data-i18n="budget" data-suffix=", €">Оставшийся бюджет, €</span><input class="form-control" name="budget" type="number" min="0" max="100000" step=".01" value="0" required></label>
+<label class="form-label"><span data-i18n="days">Игровых дней, включая сегодня</span><input class="form-control" name="days" type="number" min="0" max="7" value="5" required></label>
+<label class="form-label"><span data-i18n="draws">Уже сделано вращений (Draws)</span><input class="form-control" name="draws" type="number" min="0" max="99999" value="60" required></label>
+</div>
+<p class="note" style="margin-top:12px"><span data-i18n="sample">Демонстрационный сценарий. Введи свои значения. План сохраняется в этом браузере.</span></p><label class="form-label import"><span data-i18n="import"></span><input type="file" id="import-json" accept=".json,application/json"></label><p id="import-status" role="status"></p></section><details><summary><span data-i18n="inventory">Остатки, задания и условия магазина</span></summary>
+<div class="stack">
+<div class="viz-controls">
+<label class="form-label"><span data-i18n="bars">Слитки на руках</span><input class="form-control" name="bars" type="number" min="0" max="999999" value="0" required></label>
+<label class="form-label"><span data-i18n="luck">Luck сейчас</span><input class="form-control" name="luck" type="number" min="0" max="200" value="60" required></label>
+<label class="form-label"><span data-i18n="pass">Уже получен уровень Spin Pass (Prime)</span><input class="form-control" name="pass" type="number" min="2" max="7" value="3" required></label>
+<label class="form-label"><span data-i18n="pack" data-count="15">Осталось наборов по 15</span><input class="form-control" name="medium" type="number" min="0" max="2" value="2" required></label>
+<label class="form-label"><span data-i18n="pack" data-count="25">Осталось наборов по 25</span><input class="form-control" name="large" type="number" min="0" max="3" value="3" required></label>
+</div>
+<div class="compact">
+<label class="form-check"><input class="form-check-input" name="passToday" type="checkbox"> <span data-i18n="passToday">Следующий уровень пропуска уже доступен сегодня</span></label>
+<label class="form-check"><input class="form-check-input" name="gift" type="checkbox"> <span data-i18n="gift">Сегодняшний Daily Freebie ещё доступен</span></label>
+<label class="form-check"><input class="form-check-input" name="daily" type="checkbox"> <span data-i18n="daily">Дневной набор за 499 слитков сегодня ещё доступен</span></label>
+<label class="form-check"><input class="form-check-input" name="web" type="checkbox"> <span data-i18n="web">Учесть личные веб-наборы с бонусом 5%</span></label>
+</div>
+<div class="compact"><h3><span data-i18n="tasks">Задания, которые ещё планируешь закрыть</span></h3>
+<p class="text-small"><span data-i18n="skip">Сними отметку, если награда уже вошла в баланс или задание пропустишь.</span></p>
+<label class="form-check"><input class="form-check-input" name="allRally" type="checkbox"> <span data-i18n="allRally" data-suffix=" · +5">100 участий в ралли · +5 жетонов</span></label>
+<label class="form-check"><input class="form-check-input" name="tier3" type="checkbox"> <span data-i18n="tier3" data-suffix=" · +3">20 участий в ралли Tier 3 · +3</span></label>
+<label class="form-check"><input class="form-check-input" name="tier2" type="checkbox" checked> <span data-i18n="tier2" data-suffix=" · +3">3 своих запуска Tier 2 · +3</span></label>
+</div>
+<p class="text-small text-muted"><span data-i18n="limits">Расчёт от уровня 2 купленного пропуска. Каждый следующий вход даёт новый уровень (до 7) и один Daily Freebie. Учтены только наборы на 10 / 15 / 25 жетонов. Цены пополнения — со среза 10 ноября, игровые номиналы считаются повторяемыми, веб-наборы — по одному каждого номинала. Бонусы за будущий рост мощности в прогноз не входят.</span></p>
+</div></details></aside></main></div><script>
+(() => {
+const root = document.getElementById('module-launch');
+
+const locales = {
+  "ru": {
+    "settings": "Параметры плана",
+    "event": "Событие",
+    "goal": "Модуль VI за 200 вращений",
+    "progress": "из 200 вращений",
+    "today": "Что делать сегодня",
+    "forecast": "Прогноз к концу события",
+    "free": "Без расхода слитков",
+    "ceiling": "Максимум с бюджетом",
+    "cost": "Стоимость маршрута",
+    "tokens": "Жетоны на руках",
+    "budget": "Оставшийся бюджет",
+    "days": "Дней, включая сегодня",
+    "draws": "Сделано вращений",
+    "inventory": "Остатки, задания и магазин",
+    "bars": "Слитки на руках",
+    "luck": "Текущий Luck",
+    "pass": "Полученный уровень Prime Pass",
+    "pack": "Осталось наборов по {n}",
+    "passToday": "Следующий уровень пропуска доступен сегодня",
+    "gift": "Сегодняшний подарок ещё доступен",
+    "daily": "Сегодня доступен набор за 499 слитков",
+    "web": "Учесть веб-наборы с бонусом 5%",
+    "tasks": "Планируемые задания",
+    "skip": "Сними отметки с полученных или пропущенных наград.",
+    "allRally": "Участвовать в 100 ралли",
+    "tier3": "Участвовать в 20 ралли Tier 3",
+    "tier2": "Запустить три своих ралли Tier 2",
+    "sample": "Пример. План сохраняется в этом браузере.",
+    "invalid": "Введи число от {min} до {max}.",
+    "milestone": "Ступень",
+    "gap": "Не хватает жетонов до {n}",
+    "end": "Событие завершено",
+    "claim": "Забери",
+    "spend": "Используй жетоны до конца события.",
+    "reset": "Осталось сбросов: {n}. Забирай пропуск и ежедневные подарки.",
+    "buy": "Возьми дневную десятку до сброса.",
+    "last": "Возьми запланированные наборы до конца таймера.",
+    "next": "Проверь следующий сундук и таймер события.",
+    "random": "Случайные сундуки",
+    "choose": "Модуль на выбор",
+    "blueprints": "Чертежи",
+    "extra": "Доплата",
+    "guarantee": "До гарантии VII при текущем Luck, вращений",
+    "open": "Открой Module Spin на английском.",
+    "read": "Считать из BlueStacks",
+    "failed": "Не удалось считать колесо. Проверь хелпер и английский экран Module Spin.",
+    "import": "Импорт JSON хелпера",
+    "example": "Значения импортированы",
+    "limits": "Пропуск уровней 2–7, подарок за каждый сброс. Наборы по 10, 15 и 25. Игровые пополнения повторяемые, каждый веб-набор учитывается один раз. Сверь цены. Бонусы за мощность не включены."
+  },
+  "en": {
+    "settings": "Plan settings",
+    "event": "Event",
+    "goal": "Level VI module at 200 draws",
+    "progress": "of 200 draws",
+    "today": "Today's actions",
+    "forecast": "Event forecast",
+    "free": "Without spending bars",
+    "ceiling": "Maximum within budget",
+    "cost": "Cost of the plan",
+    "tokens": "Tokens on hand",
+    "budget": "Remaining budget",
+    "days": "Days including today",
+    "draws": "Completed draws",
+    "inventory": "Inventory, tasks and shop",
+    "bars": "Gold bars on hand",
+    "luck": "Current Luck",
+    "pass": "Prime Pass level claimed",
+    "pack": "Remaining {n}-token packs",
+    "passToday": "Next pass level available today",
+    "gift": "Today's free gift is available",
+    "daily": "Today's 499-bar pack is available",
+    "web": "Include web offers with a 5% bonus",
+    "tasks": "Planned tasks",
+    "skip": "Clear rewards already claimed or skipped.",
+    "allRally": "Join 100 rallies",
+    "tier3": "Join 20 Tier 3 rallies",
+    "tier2": "Launch three Tier 2 rallies",
+    "sample": "Sample values. Your plan is saved in this browser.",
+    "invalid": "Enter a value between {min} and {max}.",
+    "milestone": "Milestone",
+    "gap": "Tokens missing for {n}",
+    "end": "Event over",
+    "claim": "Claim",
+    "spend": "Use your tokens before the event ends.",
+    "reset": "Remaining daily resets: {n}. Claim the pass and daily gifts.",
+    "buy": "Get today's 10-token pack before reset.",
+    "last": "Get the planned packs before the timer ends.",
+    "next": "Check the next chest and the event timer.",
+    "random": "Random chests",
+    "choose": "Module of your choice",
+    "blueprints": "Blueprints",
+    "extra": "Extra cost",
+    "guarantee": "Draws until a guaranteed VII at current Luck",
+    "open": "Open Module Spin in English.",
+    "read": "Read from BlueStacks",
+    "failed": "Could not read the wheel. Check the helper and the English wheel screen.",
+    "import": "Import helper JSON",
+    "example": "Imported values",
+    "limits": "Pass levels 2–7. One gift per reset. Packs: 10, 15, 25. In-game top-ups repeat; each web offer counts once. Check prices. Power bonuses excluded."
+  },
+  "es": {
+    "settings": "Ajustes del plan",
+    "event": "Evento",
+    "goal": "Módulo de nivel VI a los 200 giros",
+    "progress": "de 200 giros",
+    "today": "Qué hacer hoy",
+    "forecast": "Previsión del evento",
+    "free": "Sin gastar lingotes",
+    "ceiling": "Máximo con el presupuesto",
+    "cost": "Coste del plan",
+    "tokens": "Fichas disponibles",
+    "budget": "Presupuesto restante",
+    "days": "Días, incluido hoy",
+    "draws": "Giros realizados",
+    "inventory": "Inventario, tareas y tienda",
+    "bars": "Lingotes disponibles",
+    "luck": "Suerte actual",
+    "pass": "Nivel cobrado del pase Prime",
+    "pack": "Paquetes de {n} fichas restantes",
+    "passToday": "Siguiente nivel del pase disponible hoy",
+    "gift": "El regalo diario sigue disponible",
+    "daily": "El paquete de 499 lingotes sigue disponible hoy",
+    "web": "Incluir ofertas web con un 5 % extra",
+    "tasks": "Tareas previstas",
+    "skip": "Desmarca las recompensas cobradas u omitidas.",
+    "allRally": "Participa en 100 ataques conjuntos",
+    "tier3": "Participa en 20 ataques de nivel 3",
+    "tier2": "Inicia tres ataques conjuntos de nivel 2",
+    "sample": "Ejemplo. El plan se guarda en este navegador.",
+    "invalid": "Introduce un valor entre {min} y {max}.",
+    "milestone": "Hito",
+    "gap": "Fichas que faltan para {n}",
+    "end": "Evento terminado",
+    "claim": "Recoge",
+    "spend": "Usa las fichas antes del fin del evento.",
+    "reset": "Quedan {n} reinicios. Recoge las recompensas del pase y los regalos diarios.",
+    "buy": "Compra el paquete de 10 de hoy antes del reinicio.",
+    "last": "Consigue los paquetes previstos antes de que termine el contador.",
+    "next": "Revisa el próximo cofre y el tiempo restante.",
+    "random": "Cofres aleatorios",
+    "choose": "Módulo a elegir",
+    "blueprints": "Planos",
+    "extra": "Coste adicional",
+    "guarantee": "Giros hasta el VII garantizado con la suerte actual",
+    "open": "Abre Module Spin en inglés.",
+    "read": "Leer desde BlueStacks",
+    "failed": "No se pudo leer la rueda. Comprueba el lector y la pantalla en inglés.",
+    "import": "Importar JSON del lector",
+    "example": "Valores importados",
+    "limits": "Pase de nivel 2–7 y un regalo por reinicio. Paquetes de 10, 15 y 25. Las recargas del juego se repiten; cada oferta web cuenta una vez. Comprueba los precios. Se excluyen los bonos de potencia."
+  },
+  "uk": {
+    "settings": "Параметри плану",
+    "event": "Подія",
+    "goal": "Модуль VI за 200 обертань",
+    "progress": "із 200 обертань",
+    "today": "Що зробити сьогодні",
+    "forecast": "Прогноз до кінця події",
+    "free": "Без витрат злитків",
+    "ceiling": "Максимум у межах бюджету",
+    "cost": "Вартість плану",
+    "tokens": "Жетони в запасі",
+    "budget": "Залишок бюджету",
+    "days": "Днів разом із сьогоднішнім",
+    "draws": "Виконано обертань",
+    "inventory": "Запаси, завдання й магазин",
+    "bars": "Злитки в запасі",
+    "luck": "Поточна удача",
+    "pass": "Отриманий рівень Prime Pass",
+    "pack": "Залишилося наборів по {n}",
+    "passToday": "Наступний рівень перепустки доступний сьогодні",
+    "gift": "Сьогоднішній подарунок ще доступний",
+    "daily": "Сьогодні доступний набір за 499 злитків",
+    "web": "Врахувати вебнабори з бонусом 5%",
+    "tasks": "Заплановані завдання",
+    "skip": "Зніми позначки з отриманих або пропущених нагород.",
+    "allRally": "Узяти участь у 100 зборах",
+    "tier3": "Узяти участь у 20 зборах рівня 3",
+    "tier2": "Розпочати три збори рівня 2",
+    "sample": "Приклад. План зберігається в цьому браузері.",
+    "invalid": "Введи число від {min} до {max}.",
+    "milestone": "Етап",
+    "gap": "Бракує жетонів до {n}",
+    "end": "Подію завершено",
+    "claim": "Забери",
+    "spend": "Використай жетони до кінця події.",
+    "reset": "Залишилося скидань: {n}. Забирай нагороди перепустки й щоденні подарунки.",
+    "buy": "Візьми сьогоднішній набір із 10 жетонів до скидання.",
+    "last": "Візьми заплановані набори до завершення відліку.",
+    "next": "Перевір наступну скриню й таймер події.",
+    "random": "Випадкові скрині",
+    "choose": "Модуль на вибір",
+    "blueprints": "Креслення",
+    "extra": "Доплата",
+    "guarantee": "Обертань до гарантованого VII за поточної удачі",
+    "open": "Відкрий Module Spin англійською.",
+    "read": "Зчитати з BlueStacks",
+    "failed": "Не вдалося зчитати колесо. Перевір помічник та англомовний екран.",
+    "import": "Імпортувати JSON помічника",
+    "example": "Значення імпортовано",
+    "limits": "Перепустка рівнів 2–7, подарунок за скидання. Набори по 10, 15 і 25. Ігрові поповнення повторювані, кожну вебпропозицію враховано раз. Перевір ціни. Бонуси за потужність виключено."
+  },
+  "de": {
+    "settings": "Planeinstellungen",
+    "event": "Event",
+    "goal": "Modul der Stufe VI bei 200 Drehungen",
+    "progress": "von 200 Drehungen",
+    "today": "Heute erledigen",
+    "forecast": "Prognose zum Eventende",
+    "free": "Ohne Goldbarren",
+    "ceiling": "Maximum im Budget",
+    "cost": "Kosten des Plans",
+    "tokens": "Vorhandene Marken",
+    "budget": "Restbudget",
+    "days": "Tage einschließlich heute",
+    "draws": "Bisherige Drehungen",
+    "inventory": "Bestand, Aufgaben und Shop",
+    "bars": "Vorhandene Goldbarren",
+    "luck": "Aktueller Glückswert",
+    "pass": "Abgeholte Prime-Pass-Stufe",
+    "pack": "Übrige Pakete mit {n} Marken",
+    "passToday": "Nächste Pass-Stufe heute verfügbar",
+    "gift": "Heutiges Geschenk noch verfügbar",
+    "daily": "Paket für 499 Barren heute verfügbar",
+    "web": "Webangebote mit 5 % Bonus einrechnen",
+    "tasks": "Geplante Aufgaben",
+    "skip": "Bereits abgeholte oder ausgelassene Belohnungen abwählen.",
+    "allRally": "An 100 Sammelangriffen teilnehmen",
+    "tier3": "An 20 Sammelangriffen der Stufe 3 teilnehmen",
+    "tier2": "Drei Sammelangriffe der Stufe 2 starten",
+    "sample": "Beispieldaten. Der Plan wird in diesem Browser gespeichert.",
+    "invalid": "Gib einen Wert zwischen {min} und {max} ein.",
+    "milestone": "Meilenstein",
+    "gap": "Fehlende Marken bis {n}",
+    "end": "Event beendet",
+    "claim": "Abholen",
+    "spend": "Verbrauche deine Marken vor Eventende.",
+    "reset": "Verbleibende Tageswechsel: {n}. Hole Passbelohnungen und Tagesgeschenke ab.",
+    "buy": "Hole das heutige 10er-Paket vor dem Tageswechsel.",
+    "last": "Hole die geplanten Pakete vor Ablauf des Timers.",
+    "next": "Prüfe die nächste Truhe und den Eventtimer.",
+    "random": "Zufallstruhen",
+    "choose": "Modul nach Wahl",
+    "blueprints": "Baupläne",
+    "extra": "Zusatzkosten",
+    "guarantee": "Drehungen bis zum garantierten VII bei aktuellem Glück",
+    "open": "Öffne Module Spin auf Englisch.",
+    "read": "Aus BlueStacks einlesen",
+    "failed": "Das Rad konnte nicht gelesen werden. Prüfe den Helfer und die englische Spielansicht.",
+    "import": "JSON des Helfers importieren",
+    "example": "Werte importiert",
+    "limits": "Passstufen 2–7, ein Geschenk pro Tageswechsel. Pakete mit 10, 15 oder 25 Marken. Aufladungen im Spiel sind wiederholbar, Webangebote zählen je einmal. Preise prüfen. Stärkeboni sind ausgeschlossen."
+  },
+  "tr": {
+    "settings": "Plan ayarları",
+    "event": "Etkinlik",
+    "goal": "200 çevirmede VI. seviye modül",
+    "progress": "/ 200 çevirme",
+    "today": "Bugün yapılacaklar",
+    "forecast": "Etkinlik sonu tahmini",
+    "free": "Külçe harcamadan",
+    "ceiling": "Bütçeyle ulaşılabilecek üst sınır",
+    "cost": "Plan maliyeti",
+    "tokens": "Eldeki jeton",
+    "budget": "Kalan bütçe",
+    "days": "Bugün dahil kalan gün",
+    "draws": "Yapılan çevirme",
+    "inventory": "Envanter, görevler ve mağaza",
+    "bars": "Eldeki külçe",
+    "luck": "Mevcut şans",
+    "pass": "Ödülü alınan Prime Pass seviyesi",
+    "pack": "Kalan {n} jetonluk paket",
+    "passToday": "Sonraki bilet seviyesi bugün alınabilir",
+    "gift": "Bugünün hediyesi alınabilir",
+    "daily": "499 külçelik günlük paket alınabilir",
+    "web": "%5 bonuslu web tekliflerini dahil et",
+    "tasks": "Planlanan görevler",
+    "skip": "Alınmış veya atlanacak ödüllerin işaretini kaldır.",
+    "allRally": "100 toplu saldırıya katıl",
+    "tier3": "20 adet 3. seviye toplu saldırıya katıl",
+    "tier2": "Üç adet 2. seviye toplu saldırı başlat",
+    "sample": "Örnek değerler. Plan bu tarayıcıda saklanır.",
+    "invalid": "{min} ile {max} arasında bir değer gir.",
+    "milestone": "Ödül eşiği",
+    "gap": "{n} için eksik jeton",
+    "end": "Etkinlik sona erdi",
+    "claim": "Ödülü al",
+    "spend": "Etkinlik bitmeden jetonlarını kullan.",
+    "reset": "Kalan günlük sıfırlama: {n}. Bilet ödüllerini ve günlük hediyeleri al.",
+    "buy": "Günlük sıfırlamadan önce bugünkü 10'lu paketi al.",
+    "last": "Süre dolmadan planlanan paketleri al.",
+    "next": "Sonraki sandığı ve etkinlik süresini kontrol et.",
+    "random": "Rastgele sandıklar",
+    "choose": "Seçilebilir modül",
+    "blueprints": "Planlar",
+    "extra": "Ek maliyet",
+    "guarantee": "Mevcut şansla VII garantisine kalan çevirme",
+    "open": "Module Spin ekranını İngilizce aç.",
+    "read": "BlueStacks’ten oku",
+    "failed": "Çark okunamadı. Yardımcıyı ve İngilizce oyun ekranını kontrol et.",
+    "import": "Yardımcı JSON dosyasını içe aktar",
+    "example": "Değerler aktarıldı",
+    "limits": "Bilet seviyeleri 2–7, her sıfırlamada bir hediye. Paketler 10, 15, 25 jeton. Oyun içi yüklemeler tekrarlanabilir; her web teklifi bir kez sayılır. Fiyatları kontrol et. Güç bonusları hariçtir."
+  },
+  "zh-Hans": {
+    "settings": "计划设置",
+    "event": "活动",
+    "goal": "转动 200 次可获得 VI 级模组",
+    "progress": "/ 200 次",
+    "today": "今天要做什么",
+    "forecast": "活动结束时的预计进度",
+    "free": "不花费金条",
+    "ceiling": "预算内的最高次数",
+    "cost": "计划费用",
+    "tokens": "持有代币",
+    "budget": "剩余预算",
+    "days": "剩余天数（含今天）",
+    "draws": "已转次数",
+    "inventory": "库存、任务和商店",
+    "bars": "持有金条",
+    "luck": "当前幸运值",
+    "pass": "已领奖的高级通行证等级",
+    "pack": "剩余 {n} 枚代币礼包",
+    "passToday": "今天可以领取下一等级奖励",
+    "gift": "今天的免费礼物仍可领取",
+    "daily": "今天可购买 499 金条礼包",
+    "web": "计入额外赠送 5% 的网页礼包",
+    "tasks": "计划完成的任务",
+    "skip": "已领取或打算跳过的奖励请取消勾选。",
+    "allRally": "参加 100 次集结",
+    "tier3": "参加 20 次三级集结",
+    "tier2": "发起三次二级集结",
+    "sample": "示例数据。计划保存在此浏览器中。",
+    "invalid": "请输入 {min} 到 {max} 之间的数值。",
+    "milestone": "里程碑",
+    "gap": "达到 {n} 还差的代币",
+    "end": "活动已结束",
+    "claim": "领取",
+    "spend": "请在活动结束前用完代币。",
+    "reset": "剩余 {n} 次每日重置。记得领取通行证奖励和每日礼物。",
+    "buy": "重置前购买今天的 10 枚代币礼包。",
+    "last": "倒计时结束前购买计划中的礼包。",
+    "next": "查看下一个宝箱和活动倒计时。",
+    "random": "随机宝箱",
+    "choose": "自选模组",
+    "blueprints": "蓝图",
+    "extra": "额外费用",
+    "guarantee": "按当前幸运值，距离保底 VII 还需的次数",
+    "open": "请打开英文版 Module Spin 界面。",
+    "read": "从 BlueStacks 读取",
+    "failed": "无法读取转盘。请检查助手和英文游戏界面。",
+    "import": "导入助手 JSON 文件",
+    "example": "已导入数据",
+    "limits": "通行证等级 2–7，每次重置赠送一份礼物。礼包含 10、15 或 25 枚代币。游戏内充值可重复，每种网页优惠只计一次。请核对价格。不含战力奖励。"
+  },
+  "zh-Hant": {
+    "settings": "計畫設定",
+    "event": "活動",
+    "goal": "轉動 200 次可獲得 VI 級模組",
+    "progress": "/ 200 次",
+    "today": "今天的任務",
+    "forecast": "活動結束時的預估進度",
+    "free": "不花費金條",
+    "ceiling": "預算內的最高次數",
+    "cost": "計畫費用",
+    "tokens": "持有代幣",
+    "budget": "剩餘預算",
+    "days": "剩餘天數（含今天）",
+    "draws": "已轉次數",
+    "inventory": "庫存、任務和商店",
+    "bars": "持有金條",
+    "luck": "目前幸運值",
+    "pass": "已領獎的高級通行證等級",
+    "pack": "剩餘 {n} 枚代幣禮包",
+    "passToday": "今天可領取下一等級獎勵",
+    "gift": "今天的免費禮物仍可領取",
+    "daily": "今天可購買 499 金條禮包",
+    "web": "計入額外贈送 5% 的網頁禮包",
+    "tasks": "預計完成的任務",
+    "skip": "已領取或打算略過的獎勵請取消勾選。",
+    "allRally": "參加 100 次集結",
+    "tier3": "參加 20 次三級集結",
+    "tier2": "發起三次二級集結",
+    "sample": "範例資料。計畫儲存在此瀏覽器中。",
+    "invalid": "請輸入 {min} 到 {max} 之間的數值。",
+    "milestone": "里程碑",
+    "gap": "達到 {n} 還缺的代幣",
+    "end": "活動已結束",
+    "claim": "領取",
+    "spend": "請在活動結束前用完代幣。",
+    "reset": "剩餘 {n} 次每日重設。記得領取通行證獎勵和每日禮物。",
+    "buy": "重設前購買今天的 10 枚代幣禮包。",
+    "last": "倒數結束前購買計畫中的禮包。",
+    "next": "查看下一個寶箱和活動倒數。",
+    "random": "隨機寶箱",
+    "choose": "自選模組",
+    "blueprints": "藍圖",
+    "extra": "額外費用",
+    "guarantee": "依目前幸運值，距離保底 VII 還需的次數",
+    "open": "請開啟英文版 Module Spin 畫面。",
+    "read": "從 BlueStacks 讀取",
+    "failed": "無法讀取轉盤。請檢查助手和英文遊戲畫面。",
+    "import": "匯入助手 JSON 檔",
+    "example": "已匯入資料",
+    "limits": "通行證等級 2–7，每次重設贈送一份禮物。禮包含 10、15 或 25 枚代幣。遊戲內儲值可重複，每種網頁優惠只計一次。請核對價格。不含戰力獎勵。"
+  },
+  "fr": {
+    "settings": "Paramètres du plan",
+    "event": "Événement",
+    "goal": "Module de niveau VI à 200 tours",
+    "progress": "sur 200 tours",
+    "today": "À faire aujourd’hui",
+    "forecast": "Prévision en fin d’événement",
+    "free": "Sans dépenser de lingots",
+    "ceiling": "Maximum selon le budget",
+    "cost": "Coût du plan",
+    "tokens": "Jetons disponibles",
+    "budget": "Budget restant",
+    "days": "Jours restants, aujourd’hui inclus",
+    "draws": "Tours effectués",
+    "inventory": "Stocks, tâches et boutique",
+    "bars": "Lingots disponibles",
+    "luck": "Chance actuelle",
+    "pass": "Niveau du pass Prime déjà récupéré",
+    "pack": "Lots de {n} jetons restants",
+    "passToday": "Prochain niveau du pass disponible aujourd’hui",
+    "gift": "Cadeau du jour disponible",
+    "daily": "Lot du jour à 499 lingots disponible",
+    "web": "Inclure les offres web avec bonus de 5 %",
+    "tasks": "Tâches prévues",
+    "skip": "Décoche les récompenses déjà reçues ou ignorées.",
+    "allRally": "Participer à 100 ralliements",
+    "tier3": "Participer à 20 ralliements de niveau 3",
+    "tier2": "Lancer trois ralliements de niveau 2",
+    "sample": "Exemple. Le plan est enregistré dans ce navigateur.",
+    "invalid": "Saisis une valeur entre {min} et {max}.",
+    "milestone": "Palier",
+    "gap": "Jetons manquants pour {n}",
+    "end": "Événement terminé",
+    "claim": "Récupérer",
+    "spend": "Utilise tes jetons avant la fin de l’événement.",
+    "reset": "Réinitialisations restantes : {n}. Récupère les récompenses du pass et les cadeaux du jour.",
+    "buy": "Prends le lot de 10 du jour avant la réinitialisation.",
+    "last": "Prends les lots prévus avant la fin du compte à rebours.",
+    "next": "Vérifie le prochain coffre et le temps restant.",
+    "random": "Coffres aléatoires",
+    "choose": "Module au choix",
+    "blueprints": "Plans",
+    "extra": "Coût supplémentaire",
+    "guarantee": "Tours avant le VII garanti avec la chance actuelle",
+    "open": "Ouvre Module Spin en anglais.",
+    "read": "Lire depuis BlueStacks",
+    "failed": "Lecture impossible. Vérifie l’assistant et l’écran de jeu en anglais.",
+    "import": "Importer le JSON de l’assistant",
+    "example": "Valeurs importées",
+    "limits": "Pass de niveau 2 à 7, un cadeau par jour. Lots de 10, 15 et 25. Recharges en jeu répétables, chaque offre web compte une fois. Vérifie les prix. Bonus de puissance exclus."
+  },
+  "ja": {
+    "settings": "プラン設定",
+    "event": "イベント",
+    "goal": "200回でレベルVIモジュールを獲得",
+    "progress": "/ 200回",
+    "today": "今日やること",
+    "forecast": "イベント終了時の予測",
+    "free": "金塊を使わない場合",
+    "ceiling": "予算内の最大回数",
+    "cost": "プランの費用",
+    "tokens": "所持トークン",
+    "budget": "残り予算",
+    "days": "今日を含む残り日数",
+    "draws": "抽選済みの回数",
+    "inventory": "所持品・任務・ショップ",
+    "bars": "所持金塊",
+    "luck": "現在の幸運値",
+    "pass": "報酬受取済みのPrimeパスレベル",
+    "pack": "残りの{n}トークンパック",
+    "passToday": "今日、次のパス報酬を受け取れる",
+    "gift": "今日の無料ギフトを受け取れる",
+    "daily": "今日の金塊499個のパックを買える",
+    "web": "5%ボーナス付きのウェブ商品を含める",
+    "tasks": "達成予定の任務",
+    "skip": "受取済み、または見送る報酬のチェックを外してください。",
+    "allRally": "集結に100回参加する",
+    "tier3": "レベル3の集結に20回参加する",
+    "tier2": "レベル2の集結を3回開始する",
+    "sample": "サンプル値です。プランはこのブラウザに保存されます。",
+    "invalid": "{min}～{max}の値を入力してください。",
+    "milestone": "到達報酬",
+    "gap": "{n}回までの不足トークン",
+    "end": "イベント終了",
+    "claim": "受け取る",
+    "spend": "イベント終了前にトークンを使いましょう。",
+    "reset": "残りの日次更新は{n}回。パス報酬と毎日のギフトを受け取りましょう。",
+    "buy": "更新前に今日の10枚パックを入手しましょう。",
+    "last": "時間切れ前に予定のパックを入手しましょう。",
+    "next": "次の宝箱と残り時間を確認しましょう。",
+    "random": "ランダム宝箱",
+    "choose": "選択式モジュール",
+    "blueprints": "設計図",
+    "extra": "追加費用",
+    "guarantee": "現在の幸運値でVII確定までの抽選回数",
+    "open": "英語版のModule Spinを開いてください。",
+    "read": "BlueStacksから読み取る",
+    "failed": "読み取れません。ヘルパーと英語のゲーム画面を確認してください。",
+    "import": "ヘルパーのJSONを読み込む",
+    "example": "読み込み完了",
+    "limits": "対象パスレベルは2～7。日次更新ごとにギフト1個。パックは10、15、25枚。ゲーム内チャージは繰り返し可、各ウェブ商品は1回まで。価格を確認してください。戦力ボーナスは含みません。"
+  },
+  "ko": {
+    "settings": "계획 설정",
+    "event": "이벤트",
+    "goal": "200회 회전 시 VI등급 모듈 획득",
+    "progress": "/ 200회",
+    "today": "오늘 할 일",
+    "forecast": "이벤트 종료 시 예상 결과",
+    "free": "금괴를 쓰지 않을 때",
+    "ceiling": "예산 내 최대 회전 수",
+    "cost": "계획 비용",
+    "tokens": "보유 토큰",
+    "budget": "남은 예산",
+    "days": "오늘을 포함한 남은 일수",
+    "draws": "누적 회전 수",
+    "inventory": "보유량, 임무 및 상점",
+    "bars": "보유 금괴",
+    "luck": "현재 행운",
+    "pass": "수령한 프라임 패스 레벨",
+    "pack": "남은 토큰 {n}개 팩",
+    "passToday": "오늘 다음 패스 보상 수령 가능",
+    "gift": "오늘의 무료 선물 수령 가능",
+    "daily": "오늘 금괴 499개 팩 구매 가능",
+    "web": "5% 보너스 웹 상품 포함",
+    "tasks": "완료 예정 임무",
+    "skip": "이미 받았거나 건너뛸 보상은 선택을 해제하세요.",
+    "allRally": "집결에 100회 참여",
+    "tier3": "3단계 집결에 20회 참여",
+    "tier2": "2단계 집결을 3회 시작",
+    "sample": "예시입니다. 계획은 이 브라우저에 저장됩니다.",
+    "invalid": "{min}에서 {max} 사이의 값을 입력하세요.",
+    "milestone": "단계 보상",
+    "gap": "{n}회까지 부족한 토큰",
+    "end": "이벤트 종료",
+    "claim": "받기",
+    "spend": "이벤트가 끝나기 전에 토큰을 사용하세요.",
+    "reset": "남은 일일 초기화: {n}회. 패스 보상과 일일 선물을 받으세요.",
+    "buy": "초기화 전에 오늘의 토큰 10개 팩을 구매하세요.",
+    "last": "시간이 끝나기 전에 계획한 팩을 구매하세요.",
+    "next": "다음 상자와 남은 시간을 확인하세요.",
+    "random": "무작위 상자",
+    "choose": "선택 모듈",
+    "blueprints": "설계도",
+    "extra": "추가 비용",
+    "guarantee": "현재 행운 기준 VII 확정까지 남은 회전 수",
+    "open": "영어로 Module Spin 화면을 여세요.",
+    "read": "BlueStacks에서 읽기",
+    "failed": "읽을 수 없습니다. 도우미와 영어 게임 화면을 확인하세요.",
+    "import": "도우미 JSON 가져오기",
+    "example": "가져오기 완료",
+    "limits": "패스 2~7레벨, 초기화마다 선물 1개. 팩은 10개, 15개, 25개입니다. 게임 내 충전은 반복 가능하며 웹 상품은 종류별로 한 번 계산합니다. 가격을 확인하세요. 전투력 보너스는 제외합니다."
+  },
+  "ca": {
+    "settings": "Ajustos del pla",
+    "event": "Esdeveniment",
+    "goal": "Mòdul de nivell VI amb 200 girs",
+    "progress": "de 200 girs",
+    "today": "Què cal fer avui",
+    "forecast": "Previsió al final de l’esdeveniment",
+    "free": "Sense gastar lingots",
+    "ceiling": "Màxim amb el pressupost",
+    "cost": "Cost del pla",
+    "tokens": "Fitxes disponibles",
+    "budget": "Pressupost restant",
+    "days": "Dies, inclòs avui",
+    "draws": "Girs fets",
+    "inventory": "Inventari, tasques i botiga",
+    "bars": "Lingots disponibles",
+    "luck": "Sort actual",
+    "pass": "Nivell cobrat del passi Prime",
+    "pack": "Paquets de {n} fitxes restants",
+    "passToday": "Avui pots cobrar el nivell següent del passi",
+    "gift": "El regal diari encara està disponible",
+    "daily": "Avui pots comprar el paquet de 499 lingots",
+    "web": "Inclou les ofertes web amb un 5% extra",
+    "tasks": "Tasques previstes",
+    "skip": "Desmarca les recompenses cobrades o descartades.",
+    "allRally": "Participa en 100 atacs conjunts",
+    "tier3": "Participa en 20 atacs conjunts de nivell 3",
+    "tier2": "Inicia tres atacs conjunts de nivell 2",
+    "sample": "Exemple. El pla es desa en aquest navegador.",
+    "invalid": "Introdueix un valor entre {min} i {max}.",
+    "milestone": "Fita",
+    "gap": "Fitxes que falten per arribar a {n}",
+    "end": "Esdeveniment acabat",
+    "claim": "Recull",
+    "spend": "Gasta les fitxes abans que acabi l’esdeveniment.",
+    "reset": "Queden {n} reinicis. Recull els premis del passi i els regals diaris.",
+    "buy": "Agafa el paquet de 10 d’avui abans del reinici.",
+    "last": "Agafa els paquets previstos abans que s’acabi el temps.",
+    "next": "Comprova el cofre següent i el temps restant.",
+    "random": "Cofres aleatoris",
+    "choose": "Mòdul a triar",
+    "blueprints": "Plànols",
+    "extra": "Cost addicional",
+    "guarantee": "Girs fins al VII garantit amb la sort actual",
+    "open": "Obre Module Spin en anglès.",
+    "read": "Llegeix des de BlueStacks",
+    "failed": "No s’ha pogut llegir la roda. Comprova l’assistent i la pantalla en anglès.",
+    "import": "Importa el JSON de l’assistent",
+    "example": "Valors importats",
+    "limits": "Passi de nivell 2–7 i un regal per reinici. Paquets de 10, 15 i 25. Les recàrregues del joc es poden repetir; cada oferta web compta un cop. Comprova els preus. S’exclouen els bons de potència."
+  },
+  "pt-BR": {
+    "settings": "Configurações do plano",
+    "event": "Evento",
+    "goal": "Módulo de nível VI com 200 giros",
+    "progress": "de 200 giros",
+    "today": "O que fazer hoje",
+    "forecast": "Previsão ao fim do evento",
+    "free": "Sem gastar barras",
+    "ceiling": "Máximo dentro do orçamento",
+    "cost": "Custo do plano",
+    "tokens": "Fichas disponíveis",
+    "budget": "Orçamento restante",
+    "days": "Dias incluindo hoje",
+    "draws": "Giros realizados",
+    "inventory": "Inventário, tarefas e loja",
+    "bars": "Barras de ouro disponíveis",
+    "luck": "Sorte atual",
+    "pass": "Nível resgatado do passe Prime",
+    "pack": "Pacotes de {n} fichas restantes",
+    "passToday": "O próximo nível do passe está disponível hoje",
+    "gift": "O presente de hoje está disponível",
+    "daily": "O pacote de 499 barras está disponível hoje",
+    "web": "Incluir ofertas da loja online com bônus de 5%",
+    "tasks": "Tarefas planejadas",
+    "skip": "Desmarque as recompensas já resgatadas ou que pretende pular.",
+    "allRally": "Participe de 100 ataques conjuntos",
+    "tier3": "Participe de 20 ataques conjuntos de nível 3",
+    "tier2": "Inicie três ataques conjuntos de nível 2",
+    "sample": "Exemplo. O plano fica salvo neste navegador.",
+    "invalid": "Insira um valor entre {min} e {max}.",
+    "milestone": "Marco",
+    "gap": "Fichas que faltam para {n}",
+    "end": "Evento encerrado",
+    "claim": "Resgate",
+    "spend": "Use suas fichas antes do fim do evento.",
+    "reset": "Restam {n} reinícios diários. Resgate as recompensas do passe e os presentes diários.",
+    "buy": "Pegue o pacote de 10 de hoje antes do reinício.",
+    "last": "Pegue os pacotes planejados antes de acabar o tempo.",
+    "next": "Confira o próximo baú e o tempo restante.",
+    "random": "Baús aleatórios",
+    "choose": "Módulo à escolha",
+    "blueprints": "Projetos",
+    "extra": "Custo adicional",
+    "guarantee": "Giros até o VII garantido com a sorte atual",
+    "open": "Abra Module Spin em inglês.",
+    "read": "Ler do BlueStacks",
+    "failed": "Não foi possível ler a roda. Confira o assistente e a tela em inglês.",
+    "import": "Importar JSON do assistente",
+    "example": "Valores importados",
+    "limits": "Passe de nível 2–7, um presente por reinício. Pacotes de 10, 15 e 25. Recargas no jogo podem se repetir; cada oferta online conta uma vez. Confira os preços. Bônus de poder excluídos."
+  },
+  "it": {
+    "settings": "Impostazioni del piano",
+    "event": "Evento",
+    "goal": "Modulo di livello VI a 200 giri",
+    "progress": "su 200 giri",
+    "today": "Cosa fare oggi",
+    "forecast": "Previsione a fine evento",
+    "free": "Senza spendere lingotti",
+    "ceiling": "Massimo entro il budget",
+    "cost": "Costo del piano",
+    "tokens": "Gettoni disponibili",
+    "budget": "Budget residuo",
+    "days": "Giorni incluso oggi",
+    "draws": "Giri effettuati",
+    "inventory": "Inventario, missioni e negozio",
+    "bars": "Lingotti disponibili",
+    "luck": "Fortuna attuale",
+    "pass": "Livello riscattato del pass Prime",
+    "pack": "Pacchetti da {n} gettoni rimasti",
+    "passToday": "Oggi puoi riscattare il prossimo livello del pass",
+    "gift": "Il regalo di oggi è disponibile",
+    "daily": "Oggi è disponibile il pacchetto da 499 lingotti",
+    "web": "Includi le offerte web con bonus del 5%",
+    "tasks": "Missioni previste",
+    "skip": "Deseleziona le ricompense già riscattate o che vuoi saltare.",
+    "allRally": "Partecipa a 100 attacchi di gruppo",
+    "tier3": "Partecipa a 20 attacchi di gruppo di livello 3",
+    "tier2": "Avvia tre attacchi di gruppo di livello 2",
+    "sample": "Esempio. Il piano viene salvato in questo browser.",
+    "invalid": "Inserisci un valore tra {min} e {max}.",
+    "milestone": "Traguardo",
+    "gap": "Gettoni mancanti per {n}",
+    "end": "Evento terminato",
+    "claim": "Riscatta",
+    "spend": "Usa i gettoni prima della fine dell’evento.",
+    "reset": "Reset giornalieri rimasti: {n}. Riscatta il pass e i regali quotidiani.",
+    "buy": "Prendi il pacchetto da 10 di oggi prima del reset.",
+    "last": "Prendi i pacchetti previsti prima della scadenza.",
+    "next": "Controlla il prossimo forziere e il tempo rimasto.",
+    "random": "Forzieri casuali",
+    "choose": "Modulo a scelta",
+    "blueprints": "Progetti",
+    "extra": "Costo aggiuntivo",
+    "guarantee": "Giri fino al VII garantito con la fortuna attuale",
+    "open": "Apri Module Spin in inglese.",
+    "read": "Leggi da BlueStacks",
+    "failed": "Lettura non riuscita. Controlla l’assistente e la schermata in inglese.",
+    "import": "Importa JSON dell’assistente",
+    "example": "Valori importati",
+    "limits": "Pass di livello 2–7, un regalo per reset. Pacchetti da 10, 15 e 25. Le ricariche in gioco sono ripetibili; ogni offerta web conta una volta. Verifica i prezzi. Bonus potenza esclusi."
+  },
+  "pl": {
+    "settings": "Ustawienia planu",
+    "event": "Wydarzenie",
+    "goal": "Moduł poziomu VI za 200 obrotów",
+    "progress": "z 200 obrotów",
+    "today": "Co zrobić dzisiaj",
+    "forecast": "Prognoza na koniec wydarzenia",
+    "free": "Bez wydawania sztabek",
+    "ceiling": "Maksimum w ramach budżetu",
+    "cost": "Koszt planu",
+    "tokens": "Posiadane żetony",
+    "budget": "Pozostały budżet",
+    "days": "Pozostałe dni wraz z dzisiejszym",
+    "draws": "Wykonane obroty",
+    "inventory": "Zapasy, zadania i sklep",
+    "bars": "Posiadane sztabki",
+    "luck": "Obecne szczęście",
+    "pass": "Odebrany poziom przepustki Prime",
+    "pack": "Pozostałe pakiety po {n} żetonów",
+    "passToday": "Kolejny poziom przepustki dostępny dziś",
+    "gift": "Dzisiejszy prezent jest dostępny",
+    "daily": "Dzisiejszy pakiet za 499 sztabek jest dostępny",
+    "web": "Uwzględnij oferty internetowe z premią 5%",
+    "tasks": "Planowane zadania",
+    "skip": "Odznacz odebrane lub pomijane nagrody.",
+    "allRally": "Dołącz do 100 rajdów",
+    "tier3": "Dołącz do 20 rajdów poziomu 3",
+    "tier2": "Rozpocznij trzy rajdy poziomu 2",
+    "sample": "Przykład. Plan zapisuje się w tej przeglądarce.",
+    "invalid": "Wpisz wartość od {min} do {max}.",
+    "milestone": "Próg nagrody",
+    "gap": "Brakujące żetony do {n}",
+    "end": "Wydarzenie zakończone",
+    "claim": "Odbierz",
+    "spend": "Wykorzystaj żetony przed końcem wydarzenia.",
+    "reset": "Pozostałe resety: {n}. Odbieraj nagrody przepustki i codzienne prezenty.",
+    "buy": "Weź dzisiejszy pakiet 10 żetonów przed resetem.",
+    "last": "Weź zaplanowane pakiety przed upływem czasu.",
+    "next": "Sprawdź następną skrzynię i pozostały czas.",
+    "random": "Losowe skrzynie",
+    "choose": "Moduł do wyboru",
+    "blueprints": "Schematy",
+    "extra": "Dopłata",
+    "guarantee": "Obroty do gwarantowanego VII przy obecnym szczęściu",
+    "open": "Otwórz Module Spin w języku angielskim.",
+    "read": "Odczytaj z BlueStacks",
+    "failed": "Odczyt nie powiódł się. Sprawdź pomocnika i angielski ekran gry.",
+    "import": "Importuj JSON pomocnika",
+    "example": "Zaimportowano wartości",
+    "limits": "Przepustka poziomu 2–7, prezent przy każdym resecie. Pakiety 10, 15 i 25. Doładowania w grze można powtarzać; każda oferta internetowa liczy się raz. Sprawdź ceny. Bez premii za moc."
+  },
+  "id": {
+    "settings": "Pengaturan rencana",
+    "event": "Event",
+    "goal": "Modul level VI pada 200 putaran",
+    "progress": "dari 200 putaran",
+    "today": "Tugas hari ini",
+    "forecast": "Perkiraan akhir event",
+    "free": "Tanpa memakai emas batangan",
+    "ceiling": "Maksimum sesuai anggaran",
+    "cost": "Biaya rencana",
+    "tokens": "Token tersedia",
+    "budget": "Sisa anggaran",
+    "days": "Sisa hari termasuk hari ini",
+    "draws": "Putaran selesai",
+    "inventory": "Persediaan, tugas, dan toko",
+    "bars": "Emas batangan tersedia",
+    "luck": "Keberuntungan saat ini",
+    "pass": "Level Prime Pass yang sudah diklaim",
+    "pack": "Sisa paket berisi {n} token",
+    "passToday": "Level pass berikutnya tersedia hari ini",
+    "gift": "Hadiah gratis hari ini tersedia",
+    "daily": "Paket harian seharga 499 emas batangan tersedia",
+    "web": "Sertakan penawaran web dengan bonus 5%",
+    "tasks": "Tugas yang direncanakan",
+    "skip": "Hapus centang untuk hadiah yang sudah diklaim atau dilewati.",
+    "allRally": "Ikuti 100 serangan gabungan",
+    "tier3": "Ikuti 20 serangan gabungan level 3",
+    "tier2": "Mulai tiga serangan gabungan level 2",
+    "sample": "Contoh. Rencana disimpan di peramban ini.",
+    "invalid": "Masukkan nilai antara {min} dan {max}.",
+    "milestone": "Tonggak",
+    "gap": "Token yang kurang untuk {n}",
+    "end": "Event selesai",
+    "claim": "Klaim",
+    "spend": "Gunakan token sebelum event berakhir.",
+    "reset": "Sisa reset harian: {n}. Klaim hadiah pass dan hadiah harian.",
+    "buy": "Ambil paket 10 token hari ini sebelum reset.",
+    "last": "Ambil paket yang direncanakan sebelum waktu habis.",
+    "next": "Periksa peti berikutnya dan sisa waktu.",
+    "random": "Peti acak",
+    "choose": "Modul pilihan",
+    "blueprints": "Cetak biru",
+    "extra": "Biaya tambahan",
+    "guarantee": "Putaran hingga jaminan VII dengan keberuntungan saat ini",
+    "open": "Buka Module Spin dalam bahasa Inggris.",
+    "read": "Baca dari BlueStacks",
+    "failed": "Roda tidak terbaca. Periksa alat bantu dan layar permainan berbahasa Inggris.",
+    "import": "Impor JSON dari alat bantu",
+    "example": "Nilai berhasil diimpor",
+    "limits": "Pass level 2–7, satu hadiah tiap reset. Paket 10, 15, dan 25. Isi ulang dalam game dapat diulang; tiap penawaran web dihitung sekali. Periksa harga. Bonus kekuatan tidak dihitung."
+  },
+  "vi": {
+    "settings": "Cài đặt kế hoạch",
+    "event": "Sự kiện",
+    "goal": "Mô-đun cấp VI ở lượt quay thứ 200",
+    "progress": "/ 200 lượt quay",
+    "today": "Việc cần làm hôm nay",
+    "forecast": "Dự báo cuối sự kiện",
+    "free": "Không tiêu thỏi vàng",
+    "ceiling": "Tối đa theo ngân sách",
+    "cost": "Chi phí kế hoạch",
+    "tokens": "Xu đang có",
+    "budget": "Ngân sách còn lại",
+    "days": "Số ngày còn lại kể cả hôm nay",
+    "draws": "Số lượt đã quay",
+    "inventory": "Kho đồ, nhiệm vụ và cửa hàng",
+    "bars": "Thỏi vàng đang có",
+    "luck": "Điểm may mắn hiện tại",
+    "pass": "Cấp Prime Pass đã nhận thưởng",
+    "pack": "Số gói {n} xu còn lại",
+    "passToday": "Hôm nay có thể nhận cấp vé tiếp theo",
+    "gift": "Quà miễn phí hôm nay còn sẵn",
+    "daily": "Hôm nay còn gói giá 499 thỏi vàng",
+    "web": "Tính cả ưu đãi web thưởng thêm 5%",
+    "tasks": "Nhiệm vụ dự kiến",
+    "skip": "Bỏ chọn phần thưởng đã nhận hoặc định bỏ qua.",
+    "allRally": "Tham gia 100 lần tập kích",
+    "tier3": "Tham gia 20 lần tập kích cấp 3",
+    "tier2": "Khởi động ba lần tập kích cấp 2",
+    "sample": "Ví dụ. Kế hoạch được lưu trong trình duyệt này.",
+    "invalid": "Nhập giá trị từ {min} đến {max}.",
+    "milestone": "Mốc thưởng",
+    "gap": "Số xu còn thiếu để đạt {n}",
+    "end": "Sự kiện đã kết thúc",
+    "claim": "Nhận",
+    "spend": "Dùng xu trước khi sự kiện kết thúc.",
+    "reset": "Còn {n} lần đặt lại hằng ngày. Hãy nhận thưởng vé và quà mỗi ngày.",
+    "buy": "Lấy gói 10 xu hôm nay trước khi đặt lại.",
+    "last": "Lấy các gói trong kế hoạch trước khi hết giờ.",
+    "next": "Kiểm tra rương kế tiếp và thời gian còn lại.",
+    "random": "Rương ngẫu nhiên",
+    "choose": "Mô-đun tự chọn",
+    "blueprints": "Bản thiết kế",
+    "extra": "Chi phí thêm",
+    "guarantee": "Số lượt để chắc chắn nhận VII với điểm may mắn hiện tại",
+    "open": "Mở Module Spin bằng tiếng Anh.",
+    "read": "Đọc từ BlueStacks",
+    "failed": "Không đọc được vòng quay. Kiểm tra trợ lý và màn hình trò chơi tiếng Anh.",
+    "import": "Nhập tệp JSON của trợ lý",
+    "example": "Đã nhập dữ liệu",
+    "limits": "Vé cấp 2–7, mỗi lần đặt lại có một quà. Gói 10, 15, 25 xu. Có thể nạp nhiều lần trong trò chơi; mỗi ưu đãi web chỉ tính một lần. Kiểm tra giá. Chưa tính thưởng sức mạnh."
+  },
+  "ar": {
+    "settings": "إعدادات الخطة",
+    "event": "الفعالية",
+    "goal": "وحدة من المستوى السادس عند ٢٠٠ دورة",
+    "progress": "من ٢٠٠ دورة",
+    "today": "مهام اليوم",
+    "forecast": "التوقعات بنهاية الفعالية",
+    "free": "من دون إنفاق السبائك",
+    "ceiling": "الحد الأقصى ضمن الميزانية",
+    "cost": "تكلفة الخطة",
+    "tokens": "الرموز المتاحة",
+    "budget": "الميزانية المتبقية",
+    "days": "الأيام المتبقية بما فيها اليوم",
+    "draws": "الدورات المكتملة",
+    "inventory": "المخزون والمهام والمتجر",
+    "bars": "السبائك المتاحة",
+    "luck": "الحظ الحالي",
+    "pass": "آخر مستوى استلمت مكافأته من التذكرة المميزة",
+    "pack": "حزم {n} رمزًا المتبقية",
+    "passToday": "مكافأة المستوى التالي متاحة اليوم",
+    "gift": "هدية اليوم المجانية متاحة",
+    "daily": "حزمة اليوم مقابل ٤٩٩ سبيكة متاحة",
+    "web": "احتساب عروض الويب مع مكافأة ٥٪",
+    "tasks": "المهام المخطط لها",
+    "skip": "أزل علامة الاختيار عن المكافآت المستلمة أو التي ستتخطاها.",
+    "allRally": "شارك في ١٠٠ هجوم جماعي",
+    "tier3": "شارك في ٢٠ هجومًا جماعيًا من المستوى الثالث",
+    "tier2": "ابدأ ثلاثة هجمات جماعية من المستوى الثاني",
+    "sample": "مثال. تُحفظ الخطة في هذا المتصفح.",
+    "invalid": "أدخل قيمة بين {min} و{max}.",
+    "milestone": "محطة المكافأة",
+    "gap": "الرموز الناقصة للوصول إلى {n}",
+    "end": "انتهت الفعالية",
+    "claim": "استلم",
+    "spend": "استخدم الرموز قبل انتهاء الفعالية.",
+    "reset": "عدد مرات التجديد اليومي المتبقية: {n}. استلم مكافآت التذكرة والهدايا اليومية.",
+    "buy": "احصل على حزمة اليوم ذات العشرة رموز قبل التجديد.",
+    "last": "احصل على الحزم المخططة قبل انتهاء الوقت.",
+    "next": "تحقق من الصندوق التالي والوقت المتبقي.",
+    "random": "صناديق عشوائية",
+    "choose": "وحدة من اختيارك",
+    "blueprints": "مخططات",
+    "extra": "التكلفة الإضافية",
+    "guarantee": "الدورات اللازمة لضمان المستوى السابع وفق الحظ الحالي",
+    "open": "افتح شاشة Module Spin باللغة الإنجليزية.",
+    "read": "قراءة من BlueStacks",
+    "failed": "تعذرت قراءة العجلة. تحقق من الأداة وشاشة اللعبة بالإنجليزية.",
+    "import": "استيراد ملف JSON من الأداة",
+    "example": "تم استيراد القيم",
+    "limits": "مستويات التذكرة ٢–٧ وهدية مع كل تجديد. الحزم من ١٠ و١٥ و٢٥ رمزًا. يمكن تكرار الشحن داخل اللعبة ويُحسب كل عرض ويب مرة واحدة. تحقق من الأسعار. لا يشمل التقدير مكافآت القوة."
+  },
+  "th": {
+    "settings": "ตั้งค่าแผน",
+    "event": "กิจกรรม",
+    "goal": "รับโมดูลระดับ VI เมื่อหมุนครบ 200 ครั้ง",
+    "progress": "จาก 200 ครั้ง",
+    "today": "สิ่งที่ต้องทำวันนี้",
+    "forecast": "คาดการณ์เมื่อจบกิจกรรม",
+    "free": "ไม่ใช้ทองแท่ง",
+    "ceiling": "จำนวนสูงสุดภายในงบ",
+    "cost": "ค่าใช้จ่ายตามแผน",
+    "tokens": "เหรียญที่มี",
+    "budget": "งบคงเหลือ",
+    "days": "จำนวนวันที่เหลือรวมวันนี้",
+    "draws": "จำนวนครั้งที่หมุนแล้ว",
+    "inventory": "คลัง ภารกิจ และร้านค้า",
+    "bars": "ทองแท่งที่มี",
+    "luck": "ค่าโชคปัจจุบัน",
+    "pass": "ระดับ Prime Pass ที่รับรางวัลแล้ว",
+    "pack": "แพ็ก {n} เหรียญที่เหลือ",
+    "passToday": "รับรางวัลพาสระดับถัดไปได้วันนี้",
+    "gift": "ยังรับของขวัญฟรีวันนี้ได้",
+    "daily": "ยังซื้อแพ็กประจำวันราคา 499 ทองแท่งได้",
+    "web": "รวมข้อเสนอเว็บที่มีโบนัส 5%",
+    "tasks": "ภารกิจที่วางแผนไว้",
+    "skip": "เอาเครื่องหมายออกจากรางวัลที่รับแล้วหรือจะข้าม",
+    "allRally": "เข้าร่วมการรวมพล 100 ครั้ง",
+    "tier3": "เข้าร่วมการรวมพลระดับ 3 จำนวน 20 ครั้ง",
+    "tier2": "เปิดการรวมพลระดับ 2 สามครั้ง",
+    "sample": "ตัวอย่าง แผนจะบันทึกไว้ในเบราว์เซอร์นี้",
+    "invalid": "กรอกค่าระหว่าง {min} ถึง {max}",
+    "milestone": "หลักรางวัล",
+    "gap": "เหรียญที่ยังขาดเพื่อให้ถึง {n}",
+    "end": "กิจกรรมสิ้นสุดแล้ว",
+    "claim": "รับ",
+    "spend": "ใช้เหรียญก่อนกิจกรรมสิ้นสุด",
+    "reset": "เหลือการรีเซ็ตรายวัน {n} ครั้ง รับรางวัลพาสและของขวัญรายวัน",
+    "buy": "รับแพ็ก 10 เหรียญของวันนี้ก่อนรีเซ็ต",
+    "last": "รับแพ็กตามแผนก่อนหมดเวลา",
+    "next": "ตรวจสอบหีบถัดไปและเวลาที่เหลือ",
+    "random": "หีบสุ่ม",
+    "choose": "โมดูลที่เลือกได้",
+    "blueprints": "พิมพ์เขียว",
+    "extra": "ค่าใช้จ่ายเพิ่มเติม",
+    "guarantee": "จำนวนครั้งจนถึงการันตีระดับ VII ตามค่าโชคปัจจุบัน",
+    "open": "เปิดหน้า Module Spin ภาษาอังกฤษ",
+    "read": "อ่านจาก BlueStacks",
+    "failed": "อ่านวงล้อไม่ได้ ตรวจสอบตัวช่วยและหน้าจอเกมภาษาอังกฤษ",
+    "import": "นำเข้า JSON จากตัวช่วย",
+    "example": "นำเข้าค่าแล้ว",
+    "limits": "พาสระดับ 2–7 ได้ของขวัญหนึ่งชิ้นต่อการรีเซ็ต แพ็ก 10, 15 และ 25 เหรียญ เติมในเกมซ้ำได้ ข้อเสนอบนเว็บนับอย่างละหนึ่งครั้ง ตรวจสอบราคา ไม่รวมโบนัสพลัง"
+  },
+  "nl": {
+    "settings": "Planinstellingen",
+    "event": "Evenement",
+    "goal": "Module van niveau VI bij 200 draaien",
+    "progress": "van 200 draaien",
+    "today": "Wat te doen vandaag",
+    "forecast": "Verwachting aan het einde",
+    "free": "Zonder goudstaven uit te geven",
+    "ceiling": "Maximum binnen budget",
+    "cost": "Kosten van het plan",
+    "tokens": "Beschikbare fiches",
+    "budget": "Resterend budget",
+    "days": "Dagen inclusief vandaag",
+    "draws": "Uitgevoerde draaien",
+    "inventory": "Voorraad, taken en winkel",
+    "bars": "Beschikbare goudstaven",
+    "luck": "Huidige gelukswaarde",
+    "pass": "Geclaimd Prime Pass-niveau",
+    "pack": "Resterende pakketten van {n} fiches",
+    "passToday": "Volgend pasniveau vandaag beschikbaar",
+    "gift": "Gratis geschenk van vandaag beschikbaar",
+    "daily": "Dagpakket voor 499 goudstaven beschikbaar",
+    "web": "Webaanbiedingen met 5% bonus meetellen",
+    "tasks": "Geplande taken",
+    "skip": "Vink opgehaalde of overgeslagen beloningen uit.",
+    "allRally": "Neem deel aan 100 groepsaanvallen",
+    "tier3": "Neem deel aan 20 groepsaanvallen van niveau 3",
+    "tier2": "Start drie groepsaanvallen van niveau 2",
+    "sample": "Voorbeeld. Het plan wordt in deze browser opgeslagen.",
+    "invalid": "Vul een waarde tussen {min} en {max} in.",
+    "milestone": "Mijlpaal",
+    "gap": "Ontbrekende fiches voor {n}",
+    "end": "Evenement afgelopen",
+    "claim": "Ophalen",
+    "spend": "Gebruik je fiches voordat het evenement eindigt.",
+    "reset": "Resterende dagelijkse resets: {n}. Haal de pasbeloningen en daggeschenken op.",
+    "buy": "Neem het dagpakket van 10 vóór de reset.",
+    "last": "Neem de geplande pakketten voordat de tijd verloopt.",
+    "next": "Controleer de volgende kist en de resterende tijd.",
+    "random": "Willekeurige kisten",
+    "choose": "Module naar keuze",
+    "blueprints": "Blauwdrukken",
+    "extra": "Extra kosten",
+    "guarantee": "Draaien tot gegarandeerd niveau VII bij huidig geluk",
+    "open": "Open Module Spin in het Engels.",
+    "read": "Uitlezen uit BlueStacks",
+    "failed": "Het rad kon niet worden gelezen. Controleer de helper en het Engelse spelscherm.",
+    "import": "JSON van de helper importeren",
+    "example": "Waarden geïmporteerd",
+    "limits": "Pasniveau 2–7, één geschenk per reset. Pakketten van 10, 15 en 25. Opwaarderen in het spel kan vaker; elke webaanbieding telt één keer. Controleer de prijzen. Krachtbonussen tellen niet mee."
+  },
+  "ms": {
+    "settings": "Tetapan pelan",
+    "event": "Acara",
+    "goal": "Modul tahap VI pada 200 putaran",
+    "progress": "daripada 200 putaran",
+    "today": "Tugas hari ini",
+    "forecast": "Anggaran pada akhir acara",
+    "free": "Tanpa menggunakan jongkong",
+    "ceiling": "Maksimum mengikut bajet",
+    "cost": "Kos pelan",
+    "tokens": "Token tersedia",
+    "budget": "Baki bajet",
+    "days": "Baki hari termasuk hari ini",
+    "draws": "Putaran selesai",
+    "inventory": "Inventori, tugas dan kedai",
+    "bars": "Jongkong emas tersedia",
+    "luck": "Tuah semasa",
+    "pass": "Tahap Prime Pass yang telah dituntut",
+    "pack": "Baki pek {n} token",
+    "passToday": "Tahap pas seterusnya boleh dituntut hari ini",
+    "gift": "Hadiah percuma hari ini tersedia",
+    "daily": "Pek harian 499 jongkong tersedia",
+    "web": "Sertakan tawaran web dengan bonus 5%",
+    "tasks": "Tugas yang dirancang",
+    "skip": "Nyahpilih ganjaran yang sudah dituntut atau akan dilangkau.",
+    "allRally": "Sertai 100 serangan berkumpulan",
+    "tier3": "Sertai 20 serangan berkumpulan tahap 3",
+    "tier2": "Mulakan tiga serangan berkumpulan tahap 2",
+    "sample": "Contoh. Pelan disimpan dalam pelayar ini.",
+    "invalid": "Masukkan nilai antara {min} dengan {max}.",
+    "milestone": "Peringkat ganjaran",
+    "gap": "Token yang kurang untuk {n}",
+    "end": "Acara tamat",
+    "claim": "Tuntut",
+    "spend": "Gunakan token sebelum acara tamat.",
+    "reset": "Baki tetapan semula harian: {n}. Tuntut ganjaran pas dan hadiah harian.",
+    "buy": "Ambil pek 10 token hari ini sebelum tetapan semula.",
+    "last": "Ambil pek dalam pelan sebelum masa tamat.",
+    "next": "Semak peti seterusnya dan baki masa.",
+    "random": "Peti rawak",
+    "choose": "Modul pilihan",
+    "blueprints": "Pelan reka bentuk",
+    "extra": "Kos tambahan",
+    "guarantee": "Putaran sehingga jaminan VII mengikut tuah semasa",
+    "open": "Buka Module Spin dalam bahasa Inggeris.",
+    "read": "Baca daripada BlueStacks",
+    "failed": "Roda tidak dapat dibaca. Semak pembantu dan skrin permainan bahasa Inggeris.",
+    "import": "Import JSON pembantu",
+    "example": "Nilai diimport",
+    "limits": "Pas tahap 2–7, satu hadiah setiap tetapan semula. Pek 10, 15 dan 25 token. Tambah nilai dalam permainan boleh diulang; setiap tawaran web dikira sekali. Semak harga. Bonus kuasa dikecualikan."
+  },
+  "hi": {
+    "settings": "योजना सेटिंग",
+    "event": "इवेंट",
+    "goal": "200 स्पिन पर स्तर VI का मॉड्यूल",
+    "progress": "/ 200 स्पिन",
+    "today": "आज के काम",
+    "forecast": "इवेंट के अंत का अनुमान",
+    "free": "सोने की छड़ें खर्च किए बिना",
+    "ceiling": "बजट में अधिकतम",
+    "cost": "योजना की लागत",
+    "tokens": "उपलब्ध टोकन",
+    "budget": "बचा हुआ बजट",
+    "days": "आज सहित बचे दिन",
+    "draws": "पूरे किए गए स्पिन",
+    "inventory": "भंडार, कार्य और दुकान",
+    "bars": "उपलब्ध सोने की छड़ें",
+    "luck": "वर्तमान भाग्य",
+    "pass": "प्राप्त प्राइम पास स्तर",
+    "pack": "{n} टोकन वाले बचे पैक",
+    "passToday": "पास का अगला स्तर आज उपलब्ध है",
+    "gift": "आज का मुफ़्त उपहार उपलब्ध है",
+    "daily": "499 छड़ों वाला दैनिक पैक उपलब्ध है",
+    "web": "5% बोनस वाले वेब ऑफ़र शामिल करें",
+    "tasks": "नियोजित कार्य",
+    "skip": "प्राप्त या छोड़े जाने वाले पुरस्कारों का चयन हटाएँ।",
+    "allRally": "100 रैलियों में भाग लें",
+    "tier3": "स्तर 3 की 20 रैलियों में भाग लें",
+    "tier2": "स्तर 2 की तीन रैलियाँ शुरू करें",
+    "sample": "उदाहरण। योजना इसी ब्राउज़र में सहेजी जाती है।",
+    "invalid": "{min} से {max} के बीच मान डालें।",
+    "milestone": "पुरस्कार पड़ाव",
+    "gap": "{n} के लिए कम टोकन",
+    "end": "इवेंट समाप्त",
+    "claim": "प्राप्त करें",
+    "spend": "इवेंट समाप्त होने से पहले टोकन इस्तेमाल करें।",
+    "reset": "बचे दैनिक रीसेट: {n}। पास के पुरस्कार और दैनिक उपहार लें।",
+    "buy": "रीसेट से पहले आज का 10 टोकन वाला पैक लें।",
+    "last": "समय समाप्त होने से पहले तय पैक लें।",
+    "next": "अगली पेटी और बचा समय देखें।",
+    "random": "रैंडम पेटियाँ",
+    "choose": "पसंद का मॉड्यूल",
+    "blueprints": "ब्लूप्रिंट",
+    "extra": "अतिरिक्त लागत",
+    "guarantee": "वर्तमान भाग्य पर VII की गारंटी तक स्पिन",
+    "open": "Module Spin अंग्रेज़ी में खोलें।",
+    "read": "BlueStacks से पढ़ें",
+    "failed": "रीडर और अंग्रेज़ी गेम स्क्रीन जाँचें।",
+    "import": "हेल्पर का JSON आयात करें",
+    "example": "मान आयात किए गए",
+    "limits": "पास स्तर 2–7। हर रीसेट पर एक उपहार। 10, 15 और 25 के पैक। गेम में रिचार्ज दोहरा सकते हैं; हर वेब ऑफ़र एक बार गिना जाता है। कीमतें जाँचें। शक्ति बोनस शामिल नहीं हैं।"
+  },
+  "ur": {
+    "settings": "منصوبے کی ترتیبات",
+    "event": "ایونٹ",
+    "goal": "۲۰۰ اسپن پر درجہ ششم کا ماڈیول",
+    "progress": "از ۲۰۰ اسپن",
+    "today": "آج کے کام",
+    "forecast": "ایونٹ کے اختتام کا تخمینہ",
+    "free": "سونے کی سلاخیں خرچ کیے بغیر",
+    "ceiling": "بجٹ کے اندر زیادہ سے زیادہ",
+    "cost": "منصوبے کی لاگت",
+    "tokens": "دستیاب ٹوکن",
+    "budget": "باقی بجٹ",
+    "days": "آج سمیت باقی دن",
+    "draws": "مکمل اسپن",
+    "inventory": "ذخیرہ، کام اور دکان",
+    "bars": "دستیاب سونے کی سلاخیں",
+    "luck": "موجودہ قسمت",
+    "pass": "وصول شدہ پرائم پاس لیول",
+    "pack": "{n} ٹوکن والے باقی پیک",
+    "passToday": "پاس کا اگلا لیول آج دستیاب ہے",
+    "gift": "آج کا مفت تحفہ دستیاب ہے",
+    "daily": "۴۹۹ سلاخوں والا روزانہ پیک دستیاب ہے",
+    "web": "۵ فیصد بونس والی ویب پیشکشیں شامل کریں",
+    "tasks": "طے شدہ کام",
+    "skip": "وصول شدہ یا چھوڑے جانے والے انعامات کا انتخاب ہٹائیں۔",
+    "allRally": "۱۰۰ ریلیوں میں شامل ہوں",
+    "tier3": "لیول ۳ کی ۲۰ ریلیوں میں شامل ہوں",
+    "tier2": "لیول ۲ کی تین ریلیاں شروع کریں",
+    "sample": "مثال۔ منصوبہ اسی براؤزر میں محفوظ ہوتا ہے۔",
+    "invalid": "{min} سے {max} کے درمیان قدر درج کریں۔",
+    "milestone": "انعامی مرحلہ",
+    "gap": "{n} تک پہنچنے کے لیے درکار مزید ٹوکن",
+    "end": "ایونٹ ختم",
+    "claim": "وصول کریں",
+    "spend": "ایونٹ ختم ہونے سے پہلے ٹوکن استعمال کریں۔",
+    "reset": "باقی روزانہ ری سیٹ: {n}۔ پاس کے انعام اور روزانہ تحفے وصول کریں۔",
+    "buy": "ری سیٹ سے پہلے آج کا دس ٹوکن والا پیک لیں۔",
+    "last": "وقت ختم ہونے سے پہلے طے شدہ پیک لیں۔",
+    "next": "اگلا صندوق اور باقی وقت دیکھیں۔",
+    "random": "بے ترتیب صندوق",
+    "choose": "پسند کا ماڈیول",
+    "blueprints": "نقشے",
+    "extra": "اضافی لاگت",
+    "guarantee": "موجودہ قسمت پر درجہ ہفتم کی ضمانت تک اسپن",
+    "open": "Module Spin انگریزی میں کھولیں۔",
+    "read": "BlueStacks سے پڑھیں",
+    "failed": "ریڈر اور کھیل کی انگریزی اسکرین چیک کریں۔",
+    "import": "ہیلپر کی JSON فائل درآمد کریں",
+    "example": "اعداد درآمد ہو گئے",
+    "limits": "پاس کے لیول ۲ تا ۷، ہر ری سیٹ پر ایک تحفہ۔ ۱۰، ۱۵ اور ۲۵ کے پیک۔ کھیل میں بار بار ری چارج ممکن ہے؛ ہر ویب پیشکش ایک بار شامل ہے۔ قیمتیں چیک کریں۔ طاقت کے بونس شامل نہیں۔"
+  }
+};
+const selector = document.getElementById('language');
+function matchLanguage(tag){
+  const value=String(tag).toLowerCase();
+  if(value.startsWith('zh'))return /hant|tw|hk|mo/.test(value)?'zh-Hant':'zh-Hans';
+  if(value.startsWith('pt'))return 'pt-BR';
+  const base=value.split('-')[0];
+  return Object.hasOwn(locales,base)?base:null;
+}
+let locale;
+try{locale=matchLanguage(localStorage.getItem('module-launch.locale'));}catch{}
+locale ||= (navigator.languages||[]).map(matchLanguage).find(Boolean) || 'en';
+function t(key,params={}) {
+  return locales[locale][key].replace(/\{(\w+)\}/g,(_,name)=>params[name] ?? '');
+}
+const n = value=>Number(value).toLocaleString(locale);
+function labels(){
+  document.documentElement.lang=locale;
+  document.documentElement.dir=['ar','ur'].includes(locale)?'rtl':'ltr';
+  root.lang=locale;selector.value=locale;
+  for(const el of root.querySelectorAll('[data-i18n]'))el.textContent=t(el.dataset.i18n,{n:el.dataset.count})+(el.dataset.suffix||'');
+}
+labels();
+
+const fields = [...root.querySelectorAll('input[name]')];
+const out = key => root.querySelector('[data-out="'+key+'"]');
+const put = (key,text) => { out(key).textContent = text; };
+const euro = cents => (cents/100).toLocaleString(locale,{style:'currency',currency:'EUR'});
+const tiers = [10,50,100,200,300,500];
+const passTokens = [0,0,0,6,11,6,6,11];
+const game = [[100,109],[200,219],[500,599],[1000,1099],[2000,2299],[2500,2799],[5000,5499],[10000,10999]];
+const mall = [[1050,1099],[2100,2299],[2625,2799],[5250,5499]];
+// Minimum cost for at least a required balance. Each state points to a smaller shortfall.
+const gamePrice = [0], gamePick = [0];
+for(let need=1;need<=11500;need++){
+  let best=Infinity;
+  for(const [size,cents] of game){
+    const price=cents+gamePrice[Math.max(0,need-size)];
+    if(price<=best){best=price;gamePick[need]=size;}
+  }
+  gamePrice.push(best);
+}
+function funding(need,web){
+  let best;
+  for(let mask=0;mask<(web?16:1);mask++){
+    const online=mall.filter((_,i)=>mask & (1<<i));
+    const left=Math.max(0,need-online.reduce((n,p)=>n+p[0],0));
+    const cost=gamePrice[left]+online.reduce((n,p)=>n+p[1],0);
+    if(!best || cost<best.cost) best={cost,left,online};
+  }
+  return best;
+}
+function compute(s){
+  const active=s.days>0, future=Math.max(0,s.days-1);
+  const passCount=active?future+Number(s.passToday):0;
+  const pass=passTokens.slice(s.pass+1,s.pass+1+passCount).reduce((a,b)=>a+b,0);
+  const gifts=active?future+Number(s.gift):0;
+  const rally=active?(5*s.allRally+3*s.tier3+3*s.tier2):0;
+  const base=s.draws+(active?s.tokens:0)+pass+gifts+rally;
+  const options=[];
+  for(let a=0;a<=future+Number(active&&s.daily);a++)
+    for(let b=0;b<=(active?s.medium:0);b++)
+      for(let c=0;c<=(active?s.large:0);c++){
+        const gold=499*a+999*b+1999*c;
+        const funds=funding(Math.max(0,gold-s.bars),s.web);
+        if(funds.cost<=Math.round(100*s.budget)) options.push({a,b,c,gold,funds,total:base+10*a+15*b+25*c});
+      }
+  const max=Math.max(...options.map(p=>p.total));
+  const tier=tiers.filter(t=>t<=max).pop()||0;
+  const target=s.draws>=200?Math.max(200,tier):Math.min(200,tier);
+  const plan=options.filter(p=>p.total>=target).sort((x,y)=>x.funds.cost-y.funds.cost || x.gold-y.gold)[0];
+  return {active,future,pass,gifts,rally,base,max,tier,target,plan};
+}
+
+const dial = document.getElementById('gauge');
+let displayedDraws = null;
+function drawProgress(draws) {
+  displayedDraws = draws;
+  const {width,height} = dial.getBoundingClientRect();
+  if (!width || !height) return;
+  const scale = window.devicePixelRatio || 1;
+  dial.width = Math.round(width * scale);
+  dial.height = Math.round(height * scale);
+  const ctx = dial.getContext('2d');
+  ctx.scale(scale,scale);
+  const x=width/2, y=height*.86, r=Math.min(width*.45,height*.77);
+  const start=Math.PI, sweep=Math.PI, value=Math.min(draws || 0,200)/200;
+  ctx.lineCap='round';
+  const arc=(radius,end,color,thickness)=>{
+    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=thickness;
+    ctx.arc(x,y,radius,start,end);ctx.stroke();
+  };
+  arc(r,start+sweep,'#81a193',6);
+  if(value>0) arc(r,start+sweep*value,'#eecb82',6);
+  ctx.lineWidth=1;
+  for(let i=0;i<=40;i++){
+    const a=start+sweep*i/40, size=i%5===0?8:4;
+    ctx.strokeStyle=i/40<=value?'#f2d599':'#94b1a2';
+    ctx.beginPath();ctx.moveTo(x+(r-9)*Math.cos(a),y+(r-9)*Math.sin(a));
+    ctx.lineTo(x+(r-9-size)*Math.cos(a),y+(r-9-size)*Math.sin(a));ctx.stroke();
+  }
+}
+new ResizeObserver(()=>drawProgress(displayedDraws)).observe(dial);
+
+function render() {
+  const invalid = fields.find(f => !f.validity.valid);
+  out('error').hidden = !invalid;
+  out('result').hidden = !!invalid;
+  if (invalid) {
+    drawProgress(null); put('current','—');
+    put('error', invalid.parentElement.textContent.trim() + ' · ' + t('invalid',{min:invalid.min,max:invalid.max}));
+    return;
+  }
+  const s = Object.fromEntries(fields.map(f => [f.name, f.type==='checkbox' ? f.checked : f.valueAsNumber]));
+  const {active,future,pass,gifts,rally,base,max,tier,target,plan:p} = compute(s);
+  put('current',n(s.draws)); drawProgress(s.draws);
+  put('free',n(base)); put('ceiling',n(max));
+  put('breakdown', [t('draws')+' '+n(s.draws),t('tokens')+' +'+n(active?s.tokens:0),'Spin Pass +'+n(pass),'Daily Freebie +'+n(gifts),t('tasks')+' +'+n(rally)].join(' · '));
+  put('reward', t('milestone')+' · '+n(tier));
+  const items = {50:[['random','III × 10'],['blueprints','200']],100:[['random','V × 1, I × 100'],['blueprints','300']],200:[['choose','VI'],['random','I × 120'],['blueprints','400']]};
+  put('prize',(items[tier]||[]).map(([key,value])=>t(key)+' · '+value).join(' / '));
+  const next = tiers.find(v=>v>max);
+  put('gap',next ? t('gap',{n:n(next)})+' · '+n(next-max) : '');
+  const actions=[];
+  if (!active) actions.push(t('end'));
+  else {
+    if (s.gift) actions.push(t('claim')+' · Daily Freebie (+1)');
+    if (s.passToday && s.pass<7) actions.push(t('claim')+' · Spin Pass '+n(s.pass+1)+' (+'+n(passTokens[s.pass+1])+')');
+    if (s.tokens) actions.push(t('spend')+' ('+n(s.tokens)+')');
+    for (const [key,bonus] of [['allRally',5],['tier3',3],['tier2',3]]) if(s[key]) actions.push(t(key)+' (+'+n(bonus)+')');
+    if (p.a>future) actions.push(t('buy'));
+    if (future) actions.push(t('reset',{n:n(future)}));
+    else if(p.b||p.c) actions.push(t('last'));
+    if (!actions.length) actions.push(t('next'));
+  }
+  out('today').replaceChildren(...actions.map(action=>{const li=document.createElement('li');li.textContent=action;return li;}));
+  const packs=[[p.a,10],[p.b,15],[p.c,25]].filter(([count])=>count).map(([count,size])=>n(count)+' × '+n(size));
+  put('cost',active?[t('milestone')+' '+n(target),...packs,t('bars')+' −'+n(p.gold),t('extra')+' '+euro(p.funds.cost)].join(' · '):t('end'));
+  const counts=new Map();
+  for(let left=p.funds.left;left>0;){const size=gamePick[left];counts.set(size,(counts.get(size)||0)+1);left-=size;}
+  const pay=[...counts].map(([size,count])=>n(count)+' × '+n(size)).concat(p.funds.online.map(([size])=>'Web × '+n(size)));
+  put('wallet',pay.length?'Gold Bar Mall / Web · '+pay.join(' + '):'');
+  put('luck',active?t('guarantee')+' · '+n(201-s.luck)+' ('+t('milestone')+' '+n(s.draws+201-s.luck)+')':'');
+  return s;
+}
+function restore(state){
+  const saved=state?.privateContent?.moduleLaunch;
+  if(saved) for(const f of fields) {
+    const v=saved[f.name];
+    if(f.type==='checkbox' && typeof v==='boolean') f.checked=v;
+    else if(f.type==='number' && Number.isFinite(v) && v>=Number(f.min) && v<=Number(f.max)) f.value=v;
+  }
+  render();
+}
+const storageKey='codex:visualization-widget-state-v2:'+JSON.stringify([location.pathname,location.search]);
+function persist(){
+  const values=Object.fromEntries(fields.map(f=>[f.name,f.type==='checkbox'?f.checked:f.valueAsNumber]));
+  try{localStorage.setItem(storageKey,JSON.stringify({modelContent:null,privateContent:{moduleLaunch:values}}));}catch{}
+}
+root.addEventListener('input',()=>{if(render())persist();});
+let importMessage='';
+document.getElementById('import-json').addEventListener('change',async e=>{
+  const file=e.target.files[0]; if(!file)return;
+  try{
+    if(file.size>16384)throw Error();
+    const v=JSON.parse(await file.text());
+    if(![['tokens',99999],['draws',99999],['luck',200],['seconds',604800]].every(([k,max])=>Number.isSafeInteger(v[k])&&v[k]>=0&&v[k]<=max)||v.luck>v.draws)throw Error();
+    for(const [k,value] of Object.entries({tokens:v.tokens,draws:v.draws,luck:v.luck,days:Math.ceil(v.seconds/86400)}))root.querySelector('[name="'+k+'"]').value=value;
+    render(); persist(); importMessage='imported';
+  }catch{importMessage='failed';}
+  document.getElementById('import-status').textContent=t(importMessage);
+  e.target.value='';
+});
+let saved;
+try{saved=JSON.parse(localStorage.getItem(storageKey));}catch{}
+restore(saved);
+
+selector.addEventListener('change',()=>{
+  locale=selector.value;
+  try{localStorage.setItem('module-launch.locale',locale);}catch{}
+  labels();render();
+  if(importMessage)document.getElementById('import-status').textContent=t(importMessage);
+});
+})();
+</script></body></html>

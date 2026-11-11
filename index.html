@@ -75,6 +75,10 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 @media(max-width:420px){.scan-guide{grid-template-columns:minmax(0,1fr) 82px;gap:10px}}
 .optional-import{margin-top:14px;padding:0;border:0;border-top:1px solid var(--edge);border-radius:0;box-shadow:none;background:transparent}
 .optional-import summary{padding-top:12px;font-size:14px}.optional-import[open] summary{margin-bottom:8px}.optional-import .import{border:0;margin:0;padding:0}
+.manual-needed{border-inline-start:3px solid #9c671b;padding-inline-start:8px;background:#fff4d9;border-radius:5px}
+#manual-hint{position:relative;margin:0 0 12px;padding:12px 14px;background:#24493e;color:white;border-radius:12px;line-height:1.45}
+#manual-hint::after{content:"";position:absolute;inset-block-end:-6px;inset-inline-start:18px;width:12px;height:12px;transform:rotate(45deg);background:#24493e}
+#manual-action{margin:12px 0;justify-self:start}#manual-pending{border-inline-start:3px solid #9c671b;padding:8px 12px;background:#fff4d9}
 </style></head>
 <body><div id="module-launch">
 <nav aria-label="Last Z Planner"><div class="wordmark"><span class="orbit" aria-hidden="true"></span>Last Z Planner</div><a href="#parameters"><span data-i18n="settings" data-suffix=" ↓">Параметры плана ↓</span></a><select id="language" aria-label="Language / Язык" dir="ltr"><option value="en" lang="en">English</option><option value="ru" lang="ru">Русский</option><option value="uk" lang="uk">Українська</option><option value="de" lang="de">Deutsch</option><option value="tr" lang="tr">Türkçe</option><option value="es" lang="es">Español</option><option value="ar" lang="ar">العربية</option><option value="zh-Hans" lang="zh-Hans">简体中文</option><option value="zh-Hant" lang="zh-Hant">繁體中文</option><option value="ja" lang="ja">日本語</option><option value="ko" lang="ko">한국어</option><option value="fr" lang="fr">Français</option><option value="ca" lang="ca">Català</option><option value="pt-BR" lang="pt-BR">Português (Brasil)</option><option value="it" lang="it">Italiano</option><option value="pl" lang="pl">Polski</option><option value="id" lang="id">Bahasa Indonesia</option><option value="vi" lang="vi">Tiếng Việt</option><option value="th" lang="th">ไทย</option><option value="nl" lang="nl">Nederlands</option><option value="ms" lang="ms">Bahasa Melayu</option><option value="hi" lang="hi">हिन्दी</option><option value="ur" lang="ur">اردو</option></select></nav>
@@ -110,7 +114,7 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 </div><button type="submit" data-i18n="applyScreen"></button></div></div></form>
 </section>
 <main><div><p data-out="error" role="alert" class="text-destructive" hidden></p><div class="column" data-out="result" aria-live="polite">
-<div class="panel task"><h2><span data-i18n="today">Что делать сегодня</span></h2><ol data-out="today"></ol></div>
+<p hidden id="manual-pending" class="note" data-i18n="manualPending"></p><div class="panel task"><h2><span data-i18n="today">Что делать сегодня</span></h2><ol data-out="today"></ol></div>
 <section class="panel"><h2><span data-i18n="forecast">Прогноз к концу события</span></h2><div class="metrics"><div><span><span data-i18n="free">Без расхода слитков</span></span><strong data-out="free"></strong></div><div><span><span data-i18n="ceiling">Максимум с бюджетом</span></span><strong data-out="ceiling"></strong></div></div><p data-out="breakdown" class="note"></p>
 <div class="award compact"><h3 data-out="reward"></h3><p data-out="prize"></p><p data-out="gap" class="note"></p></div></section>
 <section class="panel compact"><h2><span data-i18n="cost">Стоимость маршрута</span></h2><p data-out="cost"></p><p data-out="wallet" class="note"></p><p data-out="luck" class="note"></p></section></div></div><aside class="column" id="parameters"><section class="panel"><h2><span data-i18n="settings">Параметры плана</span></h2><div class="viz-controls">
@@ -158,6 +162,12 @@ if (features.desktopHelperImport) {
 
 const locales = {
   "ru": {
+    "manualBudget": "Укажи, сколько ещё готов потратить. Можно оставить 0 €.",
+    "manualStock": "Введи остаток слитков и проверь пропуск и предложения магазина.",
+    "manualTasks": "Отметь только те задания, которые ещё планируешь выполнить.",
+    "manualNext": "Подтвердить и дальше",
+    "manualDone": "Показать мой план",
+    "manualPending": "Проверь выделенные поля для точного расчёта.",
     "directScan": "Планер сам считывает цифры со скриншота. Ничего устанавливать не нужно.",
     "optionalImport": "Импорт из файла (необязательно)",
     "screen": "Выбрать скриншот Module Spin",
@@ -223,6 +233,12 @@ const locales = {
     "limits": "Пропуск уровней 2–7, подарок за каждый сброс. Наборы по 10, 15 и 25. Игровые пополнения повторяемые, каждый веб-набор учитывается один раз. Сверь цены. Бонусы за мощность не включены."
   },
   "en": {
+    "manualBudget": "Enter how much more you want to spend. €0 is fine.",
+    "manualStock": "Enter your gold bars and check your pass and shop offers.",
+    "manualTasks": "Select the tasks you still plan to complete.",
+    "manualNext": "Confirm and continue",
+    "manualDone": "Show my plan",
+    "manualPending": "Check the highlighted fields to finish your plan.",
     "directScan": "The planner reads the numbers directly from your screenshot. No installation needed.",
     "optionalImport": "Optional file import",
     "screen": "Choose Module Spin screenshot",
@@ -288,6 +304,12 @@ const locales = {
     "limits": "Pass levels 2–7. One gift per reset. Packs: 10, 15, 25. In-game top-ups repeat; each web offer counts once. Check prices. Power bonuses excluded."
   },
   "es": {
+    "manualBudget": "Indica cuánto más quieres gastar. Puedes dejar 0 €.",
+    "manualStock": "Introduce tus lingotes y revisa el pase y las ofertas de la tienda.",
+    "manualTasks": "Marca las tareas que aún piensas completar.",
+    "manualNext": "Confirmar y continuar",
+    "manualDone": "Ver mi plan",
+    "manualPending": "Revisa los campos resaltados para completar tu plan.",
     "directScan": "El planificador lee los números directamente de tu captura. No necesitas instalar nada.",
     "optionalImport": "Importar desde un archivo (opcional)",
     "screen": "Elegir captura de Module Spin",
@@ -353,6 +375,12 @@ const locales = {
     "limits": "Pase de nivel 2–7 y un regalo por reinicio. Paquetes de 10, 15 y 25. Las recargas del juego se repiten; cada oferta web cuenta una vez. Comprueba los precios. Se excluyen los bonos de potencia."
   },
   "uk": {
+    "manualBudget": "Укажи, скільки ще готовий витратити. Можна залишити 0 €.",
+    "manualStock": "Введи залишок зливків і перевір перепустку та пропозиції магазину.",
+    "manualTasks": "Познач лише ті завдання, які ще плануєш виконати.",
+    "manualNext": "Підтвердити й далі",
+    "manualDone": "Показати мій план",
+    "manualPending": "Перевір виділені поля для точного розрахунку.",
     "directScan": "Планер сам зчитує числа зі знімка екрана. Нічого встановлювати не потрібно.",
     "optionalImport": "Імпорт із файлу (необов’язково)",
     "screen": "Вибрати знімок Module Spin",
@@ -418,6 +446,12 @@ const locales = {
     "limits": "Перепустка рівнів 2–7, подарунок за скидання. Набори по 10, 15 і 25. Ігрові поповнення повторювані, кожну вебпропозицію враховано раз. Перевір ціни. Бонуси за потужність виключено."
   },
   "de": {
+    "manualBudget": "Gib ein, wie viel du noch ausgeben möchtest. 0 € ist auch möglich.",
+    "manualStock": "Gib deine Goldbarren ein und prüfe deinen Pass und die Shopangebote.",
+    "manualTasks": "Wähle die Aufgaben, die du noch erledigen möchtest.",
+    "manualNext": "Bestätigen und weiter",
+    "manualDone": "Meinen Plan anzeigen",
+    "manualPending": "Prüfe die markierten Felder, um deinen Plan abzuschließen.",
     "directScan": "Der Planer liest die Zahlen direkt aus deinem Screenshot. Du musst nichts installieren.",
     "optionalImport": "Datei importieren (optional)",
     "screen": "Module-Spin-Screenshot auswählen",
@@ -483,6 +517,12 @@ const locales = {
     "limits": "Passstufen 2–7, ein Geschenk pro Tageswechsel. Pakete mit 10, 15 oder 25 Marken. Aufladungen im Spiel sind wiederholbar, Webangebote zählen je einmal. Preise prüfen. Stärkeboni sind ausgeschlossen."
   },
   "tr": {
+    "manualBudget": "Ne kadar daha harcamak istediğini gir. 0 € da seçebilirsin.",
+    "manualStock": "Altın külçelerini gir, geçiş kartını ve mağaza tekliflerini kontrol et.",
+    "manualTasks": "Hâlâ tamamlamayı planladığın görevleri seç.",
+    "manualNext": "Onayla ve devam et",
+    "manualDone": "Planımı göster",
+    "manualPending": "Planı tamamlamak için vurgulanan alanları kontrol et.",
     "directScan": "Planlayıcı sayıları doğrudan ekran görüntüsünden okur. Kurulum gerekmez.",
     "optionalImport": "Dosyadan içe aktar (isteğe bağlı)",
     "screen": "Module Spin ekran görüntüsü seç",
@@ -548,6 +588,12 @@ const locales = {
     "limits": "Bilet seviyeleri 2–7, her sıfırlamada bir hediye. Paketler 10, 15, 25 jeton. Oyun içi yüklemeler tekrarlanabilir; her web teklifi bir kez sayılır. Fiyatları kontrol et. Güç bonusları hariçtir."
   },
   "zh-Hans": {
+    "manualBudget": "输入还打算花多少钱。可以填 0 欧元。",
+    "manualStock": "输入金条余额，核对通行证和商店优惠。",
+    "manualTasks": "勾选你接下来打算完成的任务。",
+    "manualNext": "确认并继续",
+    "manualDone": "查看我的计划",
+    "manualPending": "请核对高亮字段以完成计划。",
     "directScan": "规划器会直接读取截图中的数字，无需安装任何软件。",
     "optionalImport": "从文件导入（可选）",
     "screen": "选择 Module Spin 截图",
@@ -613,6 +659,12 @@ const locales = {
     "limits": "通行证等级 2–7，每次重置赠送一份礼物。礼包含 10、15 或 25 枚代币。游戏内充值可重复，每种网页优惠只计一次。请核对价格。不含战力奖励。"
   },
   "zh-Hant": {
+    "manualBudget": "輸入還打算花多少錢。可以填 0 歐元。",
+    "manualStock": "輸入金條餘額，核對通行證和商店優惠。",
+    "manualTasks": "勾選接下來打算完成的任務。",
+    "manualNext": "確認並繼續",
+    "manualDone": "查看我的計畫",
+    "manualPending": "請核對反白欄位以完成計畫。",
     "directScan": "規劃器會直接讀取截圖中的數字，不必安裝任何軟體。",
     "optionalImport": "從檔案匯入（選用）",
     "screen": "選擇 Module Spin 截圖",
@@ -678,6 +730,12 @@ const locales = {
     "limits": "通行證等級 2–7，每次重設贈送一份禮物。禮包含 10、15 或 25 枚代幣。遊戲內儲值可重複，每種網頁優惠只計一次。請核對價格。不含戰力獎勵。"
   },
   "fr": {
+    "manualBudget": "Indique ce que tu veux encore dépenser. Tu peux laisser 0 €.",
+    "manualStock": "Saisis tes lingots et vérifie ton pass et les offres de la boutique.",
+    "manualTasks": "Coche les missions que tu comptes encore terminer.",
+    "manualNext": "Confirmer et continuer",
+    "manualDone": "Voir mon plan",
+    "manualPending": "Vérifie les champs en surbrillance pour terminer ton plan.",
     "directScan": "Le planificateur lit les chiffres directement sur ta capture. Tu n’as rien à installer.",
     "optionalImport": "Importer un fichier (facultatif)",
     "screen": "Choisir une capture de Module Spin",
@@ -743,6 +801,12 @@ const locales = {
     "limits": "Pass de niveau 2 à 7, un cadeau par jour. Lots de 10, 15 et 25. Recharges en jeu répétables, chaque offre web compte une fois. Vérifie les prix. Bonus de puissance exclus."
   },
   "ja": {
+    "manualBudget": "これから使う予算を入力してください。0ユーロでも構いません。",
+    "manualStock": "金塊の所持数を入力し、パスとショップの内容を確認してください。",
+    "manualTasks": "これから達成する予定のミッションを選んでください。",
+    "manualNext": "確認して次へ",
+    "manualDone": "プランを表示",
+    "manualPending": "強調表示された項目を確認してください。",
     "directScan": "プランナーがスクリーンショットから数値を読み取ります。インストールは不要です。",
     "optionalImport": "ファイルから読み込む（任意）",
     "screen": "Module Spin のスクリーンショットを選ぶ",
@@ -808,6 +872,12 @@ const locales = {
     "limits": "対象パスレベルは2～7。日次更新ごとにギフト1個。パックは10、15、25枚。ゲーム内チャージは繰り返し可、各ウェブ商品は1回まで。価格を確認してください。戦力ボーナスは含みません。"
   },
   "ko": {
+    "manualBudget": "앞으로 쓸 금액을 입력하세요. 0유로도 괜찮습니다.",
+    "manualStock": "보유한 금괴를 입력하고 패스와 상점 상품을 확인하세요.",
+    "manualTasks": "앞으로 완료할 임무를 선택하세요.",
+    "manualNext": "확인하고 계속",
+    "manualDone": "내 계획 보기",
+    "manualPending": "강조된 항목을 확인하면 계획이 완성됩니다.",
     "directScan": "플래너가 스크린샷에서 숫자를 바로 읽어옵니다. 따로 설치할 필요가 없습니다.",
     "optionalImport": "파일에서 가져오기(선택)",
     "screen": "Module Spin 스크린샷 선택",
@@ -873,6 +943,12 @@ const locales = {
     "limits": "패스 2~7레벨, 초기화마다 선물 1개. 팩은 10개, 15개, 25개입니다. 게임 내 충전은 반복 가능하며 웹 상품은 종류별로 한 번 계산합니다. 가격을 확인하세요. 전투력 보너스는 제외합니다."
   },
   "ca": {
+    "manualBudget": "Indica quant més vols gastar. Pots deixar-hi 0 €.",
+    "manualStock": "Introdueix els lingots i revisa el passi i les ofertes de la botiga.",
+    "manualTasks": "Marca les tasques que encara vols completar.",
+    "manualNext": "Confirma i continua",
+    "manualDone": "Mostra el meu pla",
+    "manualPending": "Revisa els camps ressaltats per completar el pla.",
     "directScan": "El planificador llegeix els números directament de la captura. No cal instal·lar res.",
     "optionalImport": "Importa des d’un fitxer (opcional)",
     "screen": "Tria una captura de Module Spin",
@@ -938,6 +1014,12 @@ const locales = {
     "limits": "Passi de nivell 2–7 i un regal per reinici. Paquets de 10, 15 i 25. Les recàrregues del joc es poden repetir; cada oferta web compta un cop. Comprova els preus. S’exclouen els bons de potència."
   },
   "pt-BR": {
+    "manualBudget": "Informe quanto ainda pretende gastar. Pode deixar 0 €.",
+    "manualStock": "Informe seus lingotes e confira o passe e as ofertas da loja.",
+    "manualTasks": "Marque as tarefas que ainda pretende concluir.",
+    "manualNext": "Confirmar e continuar",
+    "manualDone": "Ver meu plano",
+    "manualPending": "Confira os campos destacados para completar o plano.",
     "directScan": "O planejador lê os números direto da captura de tela. Você não precisa instalar nada.",
     "optionalImport": "Importar de um arquivo (opcional)",
     "screen": "Escolher captura do Module Spin",
@@ -1003,6 +1085,12 @@ const locales = {
     "limits": "Passe de nível 2–7, um presente por reinício. Pacotes de 10, 15 e 25. Recargas no jogo podem se repetir; cada oferta online conta uma vez. Confira os preços. Bônus de poder excluídos."
   },
   "it": {
+    "manualBudget": "Indica quanto vuoi ancora spendere. Puoi lasciare 0 €.",
+    "manualStock": "Inserisci i tuoi lingotti e controlla il pass e le offerte del negozio.",
+    "manualTasks": "Seleziona le missioni che intendi ancora completare.",
+    "manualNext": "Conferma e continua",
+    "manualDone": "Mostra il mio piano",
+    "manualPending": "Controlla i campi evidenziati per completare il piano.",
     "directScan": "Il planner legge i numeri direttamente dallo screenshot. Non devi installare nulla.",
     "optionalImport": "Importa da un file (facoltativo)",
     "screen": "Scegli uno screenshot di Module Spin",
@@ -1068,6 +1156,12 @@ const locales = {
     "limits": "Pass di livello 2–7, un regalo per reset. Pacchetti da 10, 15 e 25. Le ricariche in gioco sono ripetibili; ogni offerta web conta una volta. Verifica i prezzi. Bonus potenza esclusi."
   },
   "pl": {
+    "manualBudget": "Wpisz, ile jeszcze chcesz wydać. Możesz zostawić 0 €.",
+    "manualStock": "Wpisz liczbę sztabek i sprawdź przepustkę oraz oferty sklepu.",
+    "manualTasks": "Zaznacz zadania, które jeszcze planujesz wykonać.",
+    "manualNext": "Potwierdź i kontynuuj",
+    "manualDone": "Pokaż mój plan",
+    "manualPending": "Sprawdź wyróżnione pola, aby ukończyć plan.",
     "directScan": "Planer odczytuje liczby bezpośrednio ze zrzutu ekranu. Nie musisz niczego instalować.",
     "optionalImport": "Import z pliku (opcjonalnie)",
     "screen": "Wybierz zrzut ekranu Module Spin",
@@ -1133,6 +1227,12 @@ const locales = {
     "limits": "Przepustka poziomu 2–7, prezent przy każdym resecie. Pakiety 10, 15 i 25. Doładowania w grze można powtarzać; każda oferta internetowa liczy się raz. Sprawdź ceny. Bez premii za moc."
   },
   "id": {
+    "manualBudget": "Masukkan jumlah yang masih ingin kamu belanjakan. Boleh diisi €0.",
+    "manualStock": "Masukkan saldo emas batangan dan periksa pass serta penawaran toko.",
+    "manualTasks": "Pilih tugas yang masih ingin kamu selesaikan.",
+    "manualNext": "Konfirmasi dan lanjutkan",
+    "manualDone": "Lihat rencana saya",
+    "manualPending": "Periksa kolom yang disorot untuk menyelesaikan rencana.",
     "directScan": "Perencana membaca angka langsung dari tangkapan layar. Tidak perlu memasang apa pun.",
     "optionalImport": "Impor dari berkas (opsional)",
     "screen": "Pilih tangkapan layar Module Spin",
@@ -1198,6 +1298,12 @@ const locales = {
     "limits": "Pass level 2–7, satu hadiah tiap reset. Paket 10, 15, dan 25. Isi ulang dalam game dapat diulang; tiap penawaran web dihitung sekali. Periksa harga. Bonus kekuatan tidak dihitung."
   },
   "vi": {
+    "manualBudget": "Nhập số tiền bạn còn muốn chi. Có thể để 0 €.",
+    "manualStock": "Nhập số thỏi vàng và kiểm tra thẻ sự kiện cùng ưu đãi cửa hàng.",
+    "manualTasks": "Chọn các nhiệm vụ bạn còn định hoàn thành.",
+    "manualNext": "Xác nhận và tiếp tục",
+    "manualDone": "Xem kế hoạch của tôi",
+    "manualPending": "Kiểm tra các mục được tô sáng để hoàn tất kế hoạch.",
     "directScan": "Công cụ đọc các con số trực tiếp từ ảnh chụp màn hình. Bạn không cần cài đặt gì thêm.",
     "optionalImport": "Nhập từ tệp (không bắt buộc)",
     "screen": "Chọn ảnh chụp Module Spin",
@@ -1263,6 +1369,12 @@ const locales = {
     "limits": "Vé cấp 2–7, mỗi lần đặt lại có một quà. Gói 10, 15, 25 xu. Có thể nạp nhiều lần trong trò chơi; mỗi ưu đãi web chỉ tính một lần. Kiểm tra giá. Chưa tính thưởng sức mạnh."
   },
   "ar": {
+    "manualBudget": "أدخل المبلغ الإضافي الذي ترغب في إنفاقه. يمكنك تركه عند صفر يورو.",
+    "manualStock": "أدخل رصيد السبائك وراجع التصريح وعروض المتجر.",
+    "manualTasks": "حدّد المهام التي ما زلت تنوي إكمالها.",
+    "manualNext": "تأكيد ومتابعة",
+    "manualDone": "عرض خطتي",
+    "manualPending": "راجع الحقول المميزة لإكمال خطتك.",
     "directScan": "يقرأ المخطّط الأرقام مباشرة من لقطة الشاشة. لا تحتاج إلى تثبيت أي شيء.",
     "optionalImport": "استيراد من ملف (اختياري)",
     "screen": "اختر لقطة شاشة Module Spin",
@@ -1328,6 +1440,12 @@ const locales = {
     "limits": "مستويات التذكرة ٢–٧ وهدية مع كل تجديد. الحزم من ١٠ و١٥ و٢٥ رمزًا. يمكن تكرار الشحن داخل اللعبة ويُحسب كل عرض ويب مرة واحدة. تحقق من الأسعار. لا يشمل التقدير مكافآت القوة."
   },
   "th": {
+    "manualBudget": "ใส่จำนวนเงินที่ยังต้องการใช้ จะใส่ 0 ยูโรก็ได้",
+    "manualStock": "ใส่จำนวนทองแท่ง แล้วตรวจสอบพาสและข้อเสนอในร้านค้า",
+    "manualTasks": "เลือกภารกิจที่ยังตั้งใจจะทำให้เสร็จ",
+    "manualNext": "ยืนยันและไปต่อ",
+    "manualDone": "ดูแผนของฉัน",
+    "manualPending": "ตรวจสอบช่องที่ไฮไลต์เพื่อจัดทำแผนให้เสร็จ",
     "directScan": "เครื่องมือจะอ่านตัวเลขจากภาพหน้าจอโดยตรง ไม่ต้องติดตั้งอะไรเพิ่ม",
     "optionalImport": "นำเข้าจากไฟล์ (ไม่บังคับ)",
     "screen": "เลือกภาพหน้าจอ Module Spin",
@@ -1393,6 +1511,12 @@ const locales = {
     "limits": "พาสระดับ 2–7 ได้ของขวัญหนึ่งชิ้นต่อการรีเซ็ต แพ็ก 10, 15 และ 25 เหรียญ เติมในเกมซ้ำได้ ข้อเสนอบนเว็บนับอย่างละหนึ่งครั้ง ตรวจสอบราคา ไม่รวมโบนัสพลัง"
   },
   "nl": {
+    "manualBudget": "Vul in hoeveel je nog wilt uitgeven. € 0 is ook goed.",
+    "manualStock": "Vul je goudstaven in en controleer je pas en de winkelaanbiedingen.",
+    "manualTasks": "Selecteer de taken die je nog wilt voltooien.",
+    "manualNext": "Bevestigen en doorgaan",
+    "manualDone": "Mijn plan bekijken",
+    "manualPending": "Controleer de gemarkeerde velden om je plan af te ronden.",
     "directScan": "De planner leest de getallen direct uit je screenshot. Je hoeft niets te installeren.",
     "optionalImport": "Importeren uit bestand (optioneel)",
     "screen": "Module Spin-screenshot kiezen",
@@ -1458,6 +1582,12 @@ const locales = {
     "limits": "Pasniveau 2–7, één geschenk per reset. Pakketten van 10, 15 en 25. Opwaarderen in het spel kan vaker; elke webaanbieding telt één keer. Controleer de prijzen. Krachtbonussen tellen niet mee."
   },
   "ms": {
+    "manualBudget": "Masukkan jumlah yang masih ingin dibelanjakan. Anda boleh biarkan €0.",
+    "manualStock": "Masukkan baki jongkong emas dan semak pas serta tawaran kedai.",
+    "manualTasks": "Pilih tugas yang masih ingin diselesaikan.",
+    "manualNext": "Sahkan dan teruskan",
+    "manualDone": "Lihat pelan saya",
+    "manualPending": "Semak medan yang diserlahkan untuk melengkapkan pelan.",
     "directScan": "Perancang membaca nombor terus daripada tangkapan skrin. Anda tidak perlu memasang apa-apa.",
     "optionalImport": "Import daripada fail (pilihan)",
     "screen": "Pilih tangkapan skrin Module Spin",
@@ -1523,6 +1653,12 @@ const locales = {
     "limits": "Pas tahap 2–7, satu hadiah setiap tetapan semula. Pek 10, 15 dan 25 token. Tambah nilai dalam permainan boleh diulang; setiap tawaran web dikira sekali. Semak harga. Bonus kuasa dikecualikan."
   },
   "hi": {
+    "manualBudget": "बताएँ कि आप और कितना खर्च करना चाहते हैं। €0 भी रख सकते हैं।",
+    "manualStock": "सोने की छड़ों की संख्या भरें और पास व दुकान के ऑफ़र जाँचें।",
+    "manualTasks": "वे काम चुनें जिन्हें आप अभी पूरा करना चाहते हैं।",
+    "manualNext": "पुष्टि करें और आगे बढ़ें",
+    "manualDone": "मेरा प्लान दिखाएँ",
+    "manualPending": "प्लान पूरा करने के लिए हाइलाइट किए गए फ़ील्ड जाँचें।",
     "directScan": "प्लानर सीधे स्क्रीनशॉट से आँकड़े पढ़ता है। कुछ भी इंस्टॉल करने की ज़रूरत नहीं है।",
     "optionalImport": "फ़ाइल से आयात करें (वैकल्पिक)",
     "screen": "Module Spin का स्क्रीनशॉट चुनें",
@@ -1588,6 +1724,12 @@ const locales = {
     "limits": "पास स्तर 2–7। हर रीसेट पर एक उपहार। 10, 15 और 25 के पैक। गेम में रिचार्ज दोहरा सकते हैं; हर वेब ऑफ़र एक बार गिना जाता है। कीमतें जाँचें। शक्ति बोनस शामिल नहीं हैं।"
   },
   "ur": {
+    "manualBudget": "وہ رقم درج کریں جو آپ مزید خرچ کرنا چاہتے ہیں۔ صفر یورو بھی رکھ سکتے ہیں۔",
+    "manualStock": "سونے کی سلاخوں کی تعداد درج کریں اور پاس اور دکان کی پیشکشیں دیکھیں۔",
+    "manualTasks": "وہ کام منتخب کریں جو آپ اب بھی مکمل کرنا چاہتے ہیں۔",
+    "manualNext": "تصدیق کریں اور آگے بڑھیں",
+    "manualDone": "میرا پلان دکھائیں",
+    "manualPending": "پلان مکمل کرنے کے لیے نمایاں خانے دیکھیں۔",
     "directScan": "پلانر اسکرین شاٹ سے اعداد خود پڑھ لیتا ہے۔ کچھ بھی انسٹال کرنے کی ضرورت نہیں۔",
     "optionalImport": "فائل سے درآمد کریں (اختیاری)",
     "screen": "Module Spin کا اسکرین شاٹ منتخب کریں",
@@ -1885,7 +2027,12 @@ async function readPreview(){
     try {values=await window.readSpinScreen(preview,gameLanguage.value);} catch {/* Keep the image available for manual review. */}
     for(const [key,input] of Object.entries(scanFields)) input.value=values[key]??'';
     review.hidden=false;
-    scanStatus(Object.values(scanFields).some(input=>input.value==='')?'missingScreen':'');
+    const missing=Object.values(scanFields).filter(input=>input.value==='');
+    for(const input of Object.values(scanFields)) {
+      input.closest('label').classList.toggle('manual-needed',missing.includes(input));
+    }
+    scanStatus(missing.length?'missingScreen':'');
+    if(missing.length) missing[0].focus();
   } finally {gameLanguage.disabled=false;picker.disabled=false;}
 }
 gameLanguage.addEventListener('change',async()=>{
@@ -1911,6 +2058,9 @@ picker.addEventListener('change',async()=>{
     scanStatus('badScreen');
   } finally {picker.disabled=false;}
 });
+review.addEventListener('input',event=>{
+  if(event.target.validity?.valid) event.target.closest('label')?.classList.remove('manual-needed');
+});
 review.addEventListener('submit',event=>{
   event.preventDefault();
   const time=/^(\d):([01]?\d|2[0-3]):([0-5]\d):([0-5]\d)$/.exec(scanFields.time.value.trim());
@@ -1921,12 +2071,93 @@ review.addEventListener('submit',event=>{
       draws:scanFields.draws.valueAsNumber,seconds:((days*24+hours)*60+minutes)*60+seconds});
     clearReview();
     scanStatus('example');
+    showManualStep(0, true);
   } catch {scanStatus('invalidScreen');}
+});
+
+// Screenshot confirmation updates the wheel counters. Review the other inputs in page order.
+const manualGroups = [
+  {hint:'manualBudget', names:['budget']},
+  {hint:'manualStock', names:['bars','pass','medium','large','passToday','gift','daily','web']},
+  {hint:'manualTasks', names:['allRally','tier3','tier2']}
+].map(group=>({...group, inputs:group.names.map(name=>fields.find(field=>field.name===name))}));
+const manualKey=storageKey+':manual-review';
+const manualHint=document.createElement('p');
+manualHint.id='manual-hint';
+manualHint.setAttribute('role','status');
+const manualAction=document.createElement('button');
+manualAction.id='manual-action';
+manualAction.type='button';
+let manualStep=-1;
+
+function showManualStep(step, moveFocus) {
+  manualStep=step;
+  const group=manualGroups[step];
+  for (const [index,entry] of manualGroups.entries()) {
+    for (const input of entry.inputs) {
+      input.closest('label').classList.toggle('manual-needed',Boolean(group) && index>=step);
+      if(index===step) input.setAttribute('aria-describedby',manualHint.id);
+      else input.removeAttribute('aria-describedby');
+    }
+  }
+  document.getElementById('manual-pending').hidden=!group;
+  try {
+    if(group) sessionStorage.setItem(manualKey,String(step));
+    else sessionStorage.removeItem(manualKey);
+  } catch {}
+  if(!group) {
+    manualHint.remove(); manualAction.remove();
+    if(moveFocus) {
+      const heading=out('today').previousElementSibling;
+      heading.tabIndex=-1; heading.focus();
+    }
+    return;
+  }
+  const first=group.inputs[0], last=group.inputs[group.inputs.length-1];
+  const container=first.closest('.viz-controls,.compact');
+  const details=first.closest('details');
+  if(details) details.open=true;
+  container.before(manualHint);
+  last.closest('.viz-controls,.compact').after(manualAction);
+  manualHint.dataset.i18n=group.hint;
+  manualHint.textContent=t(group.hint);
+  manualAction.dataset.i18n=step===manualGroups.length-1?'manualDone':'manualNext';
+  manualAction.textContent=t(manualAction.dataset.i18n);
+  if(moveFocus) {
+    first.focus({preventScroll:true});
+    manualHint.scrollIntoView({block:'center'});
+    if(first.type==='number') first.select();
+  }
+}
+
+function confirmManualStep() {
+  const lastStep=manualStep===manualGroups.length-1;
+  const inputs=lastStep?fields:manualGroups[manualStep].inputs;
+  const invalid=inputs.find(input=>!input.validity.valid);
+  if(invalid) {
+    const owner=manualGroups.findIndex(group=>group.inputs.includes(invalid));
+    if(owner>=0 && owner!==manualStep) showManualStep(owner,false);
+    const details=invalid.closest('details');
+    if(details) details.open=true;
+    invalid.focus(); invalid.reportValidity(); return;
+  }
+  showManualStep(manualStep+1,true);
+}
+manualAction.addEventListener('click',confirmManualStep);
+root.addEventListener('keydown',event=>{
+  if(event.key==='Enter' && event.target.type==='number' && manualGroups[manualStep]?.inputs.includes(event.target)) {
+    event.preventDefault();
+    confirmManualStep();
+  }
 });
 
 let saved;
 try{saved=JSON.parse(localStorage.getItem(storageKey));}catch{}
 restore(saved);
+try {
+  const pending=sessionStorage.getItem(manualKey);
+  if(['0','1','2'].includes(pending)) showManualStep(Number(pending),false);
+} catch {}
 
 selector.addEventListener('change',()=>{
   locale=selector.value;

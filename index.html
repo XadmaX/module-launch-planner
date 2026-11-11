@@ -74,7 +74,9 @@ nav{flex-wrap:wrap}#language{max-width:100%;border:1px solid var(--edge);border-
 <label class="form-label"><span data-i18n="days">Игровых дней, включая сегодня</span><input class="form-control" name="days" type="number" min="0" max="7" value="5" required></label>
 <label class="form-label"><span data-i18n="draws">Уже сделано вращений (Draws)</span><input class="form-control" name="draws" type="number" min="0" max="99999" value="60" required></label>
 </div>
-<p class="note" style="margin-top:12px"><span data-i18n="sample">Демонстрационный сценарий. Введи свои значения. План сохраняется в этом браузере.</span></p><label class="form-label import"><span data-i18n="import"></span><input type="file" id="import-json" accept=".json,application/json"></label><p id="import-status" role="status"></p></section><details><summary><span data-i18n="inventory">Остатки, задания и условия магазина</span></summary>
+<p class="note" style="margin-top:12px"><span data-i18n="sample">Демонстрационный сценарий. Введи свои значения. План сохраняется в этом браузере.</span></p>
+<p id="helper" class="note" style="margin-top:12px"><a data-i18n="helperGuide" href="https://github.com/XadmaX/module-launch-planner/blob/main/README.md#optional-read-the-numbers-from-a-screenshot">Как установить и запустить хелпер</a> <span dir="ltr">(Windows / macOS)</span></p>
+<label class="form-label import"><span data-i18n="import"></span><input type="file" id="import-json" accept=".json,application/json"></label><p id="import-status" role="status"></p></section><details><summary><span data-i18n="inventory">Остатки, задания и условия магазина</span></summary>
 <div class="stack">
 <div class="viz-controls">
 <label class="form-label"><span data-i18n="bars">Слитки на руках</span><input class="form-control" name="bars" type="number" min="0" max="999999" value="0" required></label>
@@ -102,6 +104,7 @@ const root = document.getElementById('module-launch');
 
 const locales = {
   "ru": {
+    "helperGuide": "Как установить и запустить хелпер",
     "settings": "Параметры плана",
     "event": "Событие",
     "goal": "Модуль VI за 200 вращений",
@@ -153,6 +156,7 @@ const locales = {
     "limits": "Пропуск уровней 2–7, подарок за каждый сброс. Наборы по 10, 15 и 25. Игровые пополнения повторяемые, каждый веб-набор учитывается один раз. Сверь цены. Бонусы за мощность не включены."
   },
   "en": {
+    "helperGuide": "How to install and run the helper",
     "settings": "Plan settings",
     "event": "Event",
     "goal": "Level VI module at 200 draws",
@@ -204,6 +208,7 @@ const locales = {
     "limits": "Pass levels 2–7. One gift per reset. Packs: 10, 15, 25. In-game top-ups repeat; each web offer counts once. Check prices. Power bonuses excluded."
   },
   "es": {
+    "helperGuide": "Cómo instalar y usar el lector",
     "settings": "Ajustes del plan",
     "event": "Evento",
     "goal": "Módulo de nivel VI a los 200 giros",
@@ -255,6 +260,7 @@ const locales = {
     "limits": "Pase de nivel 2–7 y un regalo por reinicio. Paquetes de 10, 15 y 25. Las recargas del juego se repiten; cada oferta web cuenta una vez. Comprueba los precios. Se excluyen los bonos de potencia."
   },
   "uk": {
+    "helperGuide": "Як установити й запустити помічник",
     "settings": "Параметри плану",
     "event": "Подія",
     "goal": "Модуль VI за 200 обертань",
@@ -306,6 +312,7 @@ const locales = {
     "limits": "Перепустка рівнів 2–7, подарунок за скидання. Набори по 10, 15 і 25. Ігрові поповнення повторювані, кожну вебпропозицію враховано раз. Перевір ціни. Бонуси за потужність виключено."
   },
   "de": {
+    "helperGuide": "Helfer installieren und starten",
     "settings": "Planeinstellungen",
     "event": "Event",
     "goal": "Modul der Stufe VI bei 200 Drehungen",
@@ -357,6 +364,7 @@ const locales = {
     "limits": "Passstufen 2–7, ein Geschenk pro Tageswechsel. Pakete mit 10, 15 oder 25 Marken. Aufladungen im Spiel sind wiederholbar, Webangebote zählen je einmal. Preise prüfen. Stärkeboni sind ausgeschlossen."
   },
   "tr": {
+    "helperGuide": "Yardımcı aracı kurma ve çalıştırma",
     "settings": "Plan ayarları",
     "event": "Etkinlik",
     "goal": "200 çevirmede VI. seviye modül",
@@ -408,6 +416,7 @@ const locales = {
     "limits": "Bilet seviyeleri 2–7, her sıfırlamada bir hediye. Paketler 10, 15, 25 jeton. Oyun içi yüklemeler tekrarlanabilir; her web teklifi bir kez sayılır. Fiyatları kontrol et. Güç bonusları hariçtir."
   },
   "zh-Hans": {
+    "helperGuide": "如何安装和运行助手",
     "settings": "计划设置",
     "event": "活动",
     "goal": "转动 200 次可获得 VI 级模组",
@@ -459,6 +468,7 @@ const locales = {
     "limits": "通行证等级 2–7，每次重置赠送一份礼物。礼包含 10、15 或 25 枚代币。游戏内充值可重复，每种网页优惠只计一次。请核对价格。不含战力奖励。"
   },
   "zh-Hant": {
+    "helperGuide": "如何安裝及執行助手",
     "settings": "計畫設定",
     "event": "活動",
     "goal": "轉動 200 次可獲得 VI 級模組",
@@ -510,6 +520,7 @@ const locales = {
     "limits": "通行證等級 2–7，每次重設贈送一份禮物。禮包含 10、15 或 25 枚代幣。遊戲內儲值可重複，每種網頁優惠只計一次。請核對價格。不含戰力獎勵。"
   },
   "fr": {
+    "helperGuide": "Installer et lancer l’assistant",
     "settings": "Paramètres du plan",
     "event": "Événement",
     "goal": "Module de niveau VI à 200 tours",
@@ -561,6 +572,7 @@ const locales = {
     "limits": "Pass de niveau 2 à 7, un cadeau par jour. Lots de 10, 15 et 25. Recharges en jeu répétables, chaque offre web compte une fois. Vérifie les prix. Bonus de puissance exclus."
   },
   "ja": {
+    "helperGuide": "ヘルパーのインストールと起動方法",
     "settings": "プラン設定",
     "event": "イベント",
     "goal": "200回でレベルVIモジュールを獲得",
@@ -612,6 +624,7 @@ const locales = {
     "limits": "対象パスレベルは2～7。日次更新ごとにギフト1個。パックは10、15、25枚。ゲーム内チャージは繰り返し可、各ウェブ商品は1回まで。価格を確認してください。戦力ボーナスは含みません。"
   },
   "ko": {
+    "helperGuide": "도우미 설치 및 실행 방법",
     "settings": "계획 설정",
     "event": "이벤트",
     "goal": "200회 회전 시 VI등급 모듈 획득",
@@ -663,6 +676,7 @@ const locales = {
     "limits": "패스 2~7레벨, 초기화마다 선물 1개. 팩은 10개, 15개, 25개입니다. 게임 내 충전은 반복 가능하며 웹 상품은 종류별로 한 번 계산합니다. 가격을 확인하세요. 전투력 보너스는 제외합니다."
   },
   "ca": {
+    "helperGuide": "Com instal·lar i executar el lector",
     "settings": "Ajustos del pla",
     "event": "Esdeveniment",
     "goal": "Mòdul de nivell VI amb 200 girs",
@@ -714,6 +728,7 @@ const locales = {
     "limits": "Passi de nivell 2–7 i un regal per reinici. Paquets de 10, 15 i 25. Les recàrregues del joc es poden repetir; cada oferta web compta un cop. Comprova els preus. S’exclouen els bons de potència."
   },
   "pt-BR": {
+    "helperGuide": "Como instalar e executar o assistente",
     "settings": "Configurações do plano",
     "event": "Evento",
     "goal": "Módulo de nível VI com 200 giros",
@@ -765,6 +780,7 @@ const locales = {
     "limits": "Passe de nível 2–7, um presente por reinício. Pacotes de 10, 15 e 25. Recargas no jogo podem se repetir; cada oferta online conta uma vez. Confira os preços. Bônus de poder excluídos."
   },
   "it": {
+    "helperGuide": "Come installare e avviare l’assistente",
     "settings": "Impostazioni del piano",
     "event": "Evento",
     "goal": "Modulo di livello VI a 200 giri",
@@ -816,6 +832,7 @@ const locales = {
     "limits": "Pass di livello 2–7, un regalo per reset. Pacchetti da 10, 15 e 25. Le ricariche in gioco sono ripetibili; ogni offerta web conta una volta. Verifica i prezzi. Bonus potenza esclusi."
   },
   "pl": {
+    "helperGuide": "Jak zainstalować i uruchomić pomocnika",
     "settings": "Ustawienia planu",
     "event": "Wydarzenie",
     "goal": "Moduł poziomu VI za 200 obrotów",
@@ -867,6 +884,7 @@ const locales = {
     "limits": "Przepustka poziomu 2–7, prezent przy każdym resecie. Pakiety 10, 15 i 25. Doładowania w grze można powtarzać; każda oferta internetowa liczy się raz. Sprawdź ceny. Bez premii za moc."
   },
   "id": {
+    "helperGuide": "Cara memasang dan menjalankan alat bantu",
     "settings": "Pengaturan rencana",
     "event": "Event",
     "goal": "Modul level VI pada 200 putaran",
@@ -918,6 +936,7 @@ const locales = {
     "limits": "Pass level 2–7, satu hadiah tiap reset. Paket 10, 15, dan 25. Isi ulang dalam game dapat diulang; tiap penawaran web dihitung sekali. Periksa harga. Bonus kekuatan tidak dihitung."
   },
   "vi": {
+    "helperGuide": "Cách cài đặt và chạy công cụ hỗ trợ",
     "settings": "Cài đặt kế hoạch",
     "event": "Sự kiện",
     "goal": "Mô-đun cấp VI ở lượt quay thứ 200",
@@ -969,6 +988,7 @@ const locales = {
     "limits": "Vé cấp 2–7, mỗi lần đặt lại có một quà. Gói 10, 15, 25 xu. Có thể nạp nhiều lần trong trò chơi; mỗi ưu đãi web chỉ tính một lần. Kiểm tra giá. Chưa tính thưởng sức mạnh."
   },
   "ar": {
+    "helperGuide": "كيفية تثبيت الأداة وتشغيلها",
     "settings": "إعدادات الخطة",
     "event": "الفعالية",
     "goal": "وحدة من المستوى السادس عند ٢٠٠ دورة",
@@ -1020,6 +1040,7 @@ const locales = {
     "limits": "مستويات التذكرة ٢–٧ وهدية مع كل تجديد. الحزم من ١٠ و١٥ و٢٥ رمزًا. يمكن تكرار الشحن داخل اللعبة ويُحسب كل عرض ويب مرة واحدة. تحقق من الأسعار. لا يشمل التقدير مكافآت القوة."
   },
   "th": {
+    "helperGuide": "วิธีติดตั้งและเรียกใช้ตัวช่วย",
     "settings": "ตั้งค่าแผน",
     "event": "กิจกรรม",
     "goal": "รับโมดูลระดับ VI เมื่อหมุนครบ 200 ครั้ง",
@@ -1071,6 +1092,7 @@ const locales = {
     "limits": "พาสระดับ 2–7 ได้ของขวัญหนึ่งชิ้นต่อการรีเซ็ต แพ็ก 10, 15 และ 25 เหรียญ เติมในเกมซ้ำได้ ข้อเสนอบนเว็บนับอย่างละหนึ่งครั้ง ตรวจสอบราคา ไม่รวมโบนัสพลัง"
   },
   "nl": {
+    "helperGuide": "De helper installeren en starten",
     "settings": "Planinstellingen",
     "event": "Evenement",
     "goal": "Module van niveau VI bij 200 draaien",
@@ -1122,6 +1144,7 @@ const locales = {
     "limits": "Pasniveau 2–7, één geschenk per reset. Pakketten van 10, 15 en 25. Opwaarderen in het spel kan vaker; elke webaanbieding telt één keer. Controleer de prijzen. Krachtbonussen tellen niet mee."
   },
   "ms": {
+    "helperGuide": "Cara memasang dan menjalankan pembantu",
     "settings": "Tetapan pelan",
     "event": "Acara",
     "goal": "Modul tahap VI pada 200 putaran",
@@ -1173,6 +1196,7 @@ const locales = {
     "limits": "Pas tahap 2–7, satu hadiah setiap tetapan semula. Pek 10, 15 dan 25 token. Tambah nilai dalam permainan boleh diulang; setiap tawaran web dikira sekali. Semak harga. Bonus kuasa dikecualikan."
   },
   "hi": {
+    "helperGuide": "हेल्पर इंस्टॉल और चलाने का तरीका",
     "settings": "योजना सेटिंग",
     "event": "इवेंट",
     "goal": "200 स्पिन पर स्तर VI का मॉड्यूल",
@@ -1224,6 +1248,7 @@ const locales = {
     "limits": "पास स्तर 2–7। हर रीसेट पर एक उपहार। 10, 15 और 25 के पैक। गेम में रिचार्ज दोहरा सकते हैं; हर वेब ऑफ़र एक बार गिना जाता है। कीमतें जाँचें। शक्ति बोनस शामिल नहीं हैं।"
   },
   "ur": {
+    "helperGuide": "ہیلپر انسٹال کرنے اور چلانے کا طریقہ",
     "settings": "منصوبے کی ترتیبات",
     "event": "ایونٹ",
     "goal": "۲۰۰ اسپن پر درجہ ششم کا ماڈیول",

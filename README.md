@@ -12,7 +12,7 @@ An unofficial, offline event planner for Last Z players.
 
 ## Optional: read the numbers from a screenshot
 
-The public helper reads a **saved image** on your computer. It does not connect to BlueStacks. If you already have a suitable screenshot from your phone or emulator, skip straight to the reader setup.
+[Download the helper ZIP](https://github.com/XadmaX/module-launch-planner/archive/refs/heads/main.zip) and extract it on your Windows PC or Mac. The helper reads a **saved image** on your computer. It does not connect to BlueStacks. If you already have a suitable screenshot from your phone or emulator, skip straight to the reader setup.
 
 ### 1. Get a suitable screenshot
 
@@ -63,7 +63,7 @@ With **wheel.png** in the extracted planner folder, run the command for your sys
 | Windows (PowerShell) | `.\.venv\Scripts\python.exe read_snapshot.py wheel.png -o snapshot.json` |
 | macOS (Terminal) | `./.venv/bin/python read_snapshot.py wheel.png -o snapshot.json` |
 
-After the command finishes successfully, open **index.html**, click **Import helper JSON** (the wording follows your planner language) and choose **snapshot.json**. Compare the four readings with the image. Budget and store availability are still yours to enter. For the next reading, replace **wheel.png** and repeat just this step. If recognition fails, take a fresh screenshot or type the values manually; do not import an older JSON by mistake. No image is uploaded.
+After the command finishes successfully, open the [online planner](https://last-z-module-launch.framedrabbit4.chatgpt.site/#helper) or your local **index.html**, click **Import helper JSON** (the wording follows your planner language) and choose **snapshot.json**. Compare the four readings with the image. Budget and store availability are still yours to enter. For the next reading, replace **wheel.png** and repeat just this step. If recognition fails, take a fresh screenshot or type the values manually; do not import an older JSON by mistake. No image is uploaded.
 
 ## Planning assumptions
 
